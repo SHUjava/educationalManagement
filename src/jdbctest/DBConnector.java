@@ -12,7 +12,8 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    static final String PASS = "Zbb123150@";
+    //static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
     Connection conn = null;
     Statement stmt = null;
 
