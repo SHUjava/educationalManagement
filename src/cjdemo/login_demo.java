@@ -8,7 +8,7 @@ import javax.swing.*;
  *  @description : 学生成绩管理系统登录页面
  *  @author : Shu-rainbow
  *  @createDate : 2021/12/10
- *  @UpdateDate : 2022/1/4
+ *  @UpdateDate : 2022/1/6
  *  @version : v1.1
  */
 public class login_demo {

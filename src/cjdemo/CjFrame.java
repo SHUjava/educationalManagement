@@ -5,10 +5,7 @@ import jdbctest.DBConnector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 
 /**
@@ -24,6 +21,12 @@ import java.sql.SQLException;
  * @updateContent: 1.删除多余的状态文本框
  *                 2.成绩显示表格内容不允许被修改
  *                 3.添加JavaDoc注释
+ *
+ * @updateDate:    2022/1/6
+ * @updateContent: 1.将项目代码托管到GitHub
+ *                 2.登录时账号、密码文本框提示内容在输入时不能自动清除
+ *                 3.登录身份默认选择为“学生”
+ *
  */
 public class CjFrame extends JFrame {
     /**
@@ -34,8 +37,8 @@ public class CjFrame extends JFrame {
      * id :           传给子页面ID标识
      */
     //账号、密码文本框组件
-    JTextField id_textField = new JTextField("1001001",20);
-    JTextField pw_textField = new JTextField("123456",20);
+    JTextField id_textField = new JTextField(20);
+    JTextField pw_textField = new JTextField(20);
     String choose = "";
     int id = 0;
 
@@ -49,6 +52,8 @@ public class CjFrame extends JFrame {
         this.setLayout(null);
         this.setResizable(false);
 
+        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"1001001"));
+        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,"123456"));
         //设置容器
 //        JPanel root_panel = new JPanel();
 //        this.setContentPane(root_panel);
@@ -74,6 +79,7 @@ public class CjFrame extends JFrame {
         this.add(login_button);
         //按钮添加监听器
         login_button.addActionListener((e)->{
+//            System.out.println(choose);
             if (is_login("student") && choose.equals("学生") ) {
                login_success();
                 try {
@@ -109,7 +115,7 @@ public class CjFrame extends JFrame {
         JLabel label_test = new JLabel("身份:");
         label_test.setFont(new Font("楷体",Font.BOLD,12));
         this.add(label_test);
-        JRadioButton radioButton1_test = new JRadioButton("学生");
+        JRadioButton radioButton1_test = new JRadioButton("学生",true);
         radioButton1_test.addActionListener(new MyActionListener());
         JRadioButton radioButton2_test = new JRadioButton("教师");
         radioButton2_test.addActionListener(new MyActionListener());
@@ -216,6 +222,44 @@ public class CjFrame extends JFrame {
             }
 
         }
+    }
+
+    /**
+     * @function: 内部类，JTextField的焦点监听器，当鼠标点击时，清除提示词
+     */
+    private class JTextFieldHintListener implements FocusListener
+    {
+        private String hintText;
+        private JTextField textField;
+        public JTextFieldHintListener(JTextField jTextField,String hintText) {
+            this.textField = jTextField;
+            this.hintText = hintText;
+            jTextField.setText(hintText);  //默认直接显示
+            jTextField.setForeground(Color.GRAY);
+        }
+
+        @Override
+        public void focusGained(FocusEvent e) {
+            //获取焦点时，清空提示内容
+            String temp = textField.getText();
+            if(temp.equals(hintText)) {
+                textField.setText("");
+                textField.setForeground(Color.BLACK);
+            }
+
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            //失去焦点时，没有输入内容，显示提示内容
+            String temp = textField.getText();
+            if(temp.equals("")) {
+                textField.setForeground(Color.GRAY);
+                textField.setText(hintText);
+            }
+
+        }
+
     }
 
 
