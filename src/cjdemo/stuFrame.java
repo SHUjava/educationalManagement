@@ -60,6 +60,7 @@ public class stuFrame extends JFrame {
         JPanel panel_show = new JPanel();
         contentPane.add(panel_show);
         JTable table = new JTable(tableData, col_name);
+        table.setEnabled(false);
         panel_show.add(new JScrollPane(table));
         panel_show.setVisible(false);
 

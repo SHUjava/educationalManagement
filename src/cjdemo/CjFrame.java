@@ -11,15 +11,38 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
 
+/**
+ * @description:   显示成绩管理系统登录首页
+ * @classname:     CjFrame
+ * @localProblem:  1.登录时账号、密码文本框提示内容在输入时不能自动清除
+ *                 2.登录状态文本框多余
+ *                 3.成绩显示表格内容可以被随意编辑
+ *                 4.代码缺少注释
+ *                 5.大量代码存在冗余
+ *
+ * @updateDate:    2022/1/4
+ * @updateContent: 1.删除多余的状态文本框
+ *                 2.成绩显示表格内容不允许被修改
+ *                 3.添加JavaDoc注释
+ */
 public class CjFrame extends JFrame {
+    /**
+     * 账号、密码文本框组件
+     * id_textField : 账号文本框
+     * pw_textField : 密码文本框
+     * choose :       登录身份选择
+     * id :           传给子页面ID标识
+     */
     //账号、密码文本框组件
-    JTextField id_textField = new JTextField("例如:19123048",20);
-    JTextField pw_textField = new JTextField("例如:19123048",20);
-    JTextField status = new JTextField("当前未登录",20);
-    String status_text = "";
+    JTextField id_textField = new JTextField("1001001",20);
+    JTextField pw_textField = new JTextField("123456",20);
     String choose = "";
     int id = 0;
 
+    /**
+     * @function: 成绩登录页面构造函数
+     * @param title [上级页面传入] 页面的标题
+     */
     public CjFrame(String title) {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,7 +58,7 @@ public class CjFrame extends JFrame {
 //        root_panel.add(pw_textField);
         this.add(id_textField);
         this.add(pw_textField);
-        this.add(status);
+
 
         //创建label
         JLabel id_label = new JLabel("账号");
@@ -77,11 +100,7 @@ public class CjFrame extends JFrame {
                 //将账号和密码信息清空
                 id_textField.setText("");
                 pw_textField.setText("");
-                status_text += "登录失败,请重新登录";
-                status.setText(status_text);
-//                status.setText("登录失败,请重新登录");
-                JOptionPane.showMessageDialog(null,status_text);
-                status_text = "";
+                JOptionPane.showMessageDialog(null,"登录失败,请重新登录");
 
 
             }
@@ -122,7 +141,7 @@ public class CjFrame extends JFrame {
         radioButton2_test.setBounds(260,225,100,50);
         radioButton3_test.setBounds(380,225,100,50);
         login_button.setBounds(250,280,100,40);
-        status.setBounds(140,340,320,50);
+//        status.setBounds(140,340,320,50);
 
 
         //设置窗口大小
@@ -134,17 +153,24 @@ public class CjFrame extends JFrame {
 
     }
 
+    /**
+     * @function:登陆成功时显示登陆成功
+     */
     private void login_success() {
         System.out.println("登录成功");
 //                status_text  += ;
-        status_text += "登录成功";
-        status.setText(status_text);
-        JOptionPane.showMessageDialog(null,status_text);
-        status_text = "";
+
+
+        JOptionPane.showMessageDialog(null,"登录成功");
+
 
     }
 
 
+    /**
+     * @param mode: 身份选择
+     * @return 登陆成功返回true,否则false
+     */
     private boolean is_login(String mode) {
         //登录是否成功
         DBConnector connector = new DBConnector();
@@ -166,6 +192,9 @@ public class CjFrame extends JFrame {
             return false;
         }
     }
+    /**
+     * @function: 创建监听器
+     */
     private class MyActionListener implements ActionListener
     {
 
@@ -173,18 +202,15 @@ public class CjFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             if(command.equals("学生")){
-                status_text += "选择了学生身份\n";
                 choose = "学生";
                 System.out.println("选择了学生身份");
             }
             else if(command.equals("教师")){
-                status_text += "选择了教师身份\n";
                 choose = "教师";
                 System.out.println("选择了教师身份");
             }
             else
             {
-                status_text += "选择了管理员身份\n";
                 choose = "管理员";
                 System.out.println("选择了管理员身份");
             }

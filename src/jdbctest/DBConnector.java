@@ -104,14 +104,9 @@ public class DBConnector {
                         "from score,course,student\n" +
                         "where course.course_order = '"+int_args[0]+"' and course.teacher_id ='"+int_args[1]+"' and score.course_id=course.course_id and score.student_id=student.student_id\n" +
                         "order by score.score;\n";
-                System.out.println("1111");
-
                 rs = stmt.executeQuery(sql);
-                System.out.println("1111");
                 while(rs.next())
                 {
-//                    System.out.println("1111");
-
                     int course_order = rs.getInt("course_order");
                     String course_name = rs.getString("course_name");
                     String course_time = rs.getString("course_time");
@@ -128,8 +123,6 @@ public class DBConnector {
                     row.addElement(student_name);
                     row.addElement(score);
                     tmp.addElement(row);
-                    System.out.println("1111");
-
                 }
                 rs.close();
             default:
