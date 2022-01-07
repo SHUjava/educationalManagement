@@ -28,6 +28,9 @@ import java.sql.SQLException;
  *                 2.登录时账号、密码文本框提示内容在输入时不能自动清除
  *                 3.登录身份默认选择为“学生”
  *
+ * @updateDate:    2022/1/7
+ * @updateContent: 1.将密码输入文本框内容设置为“·”,增强安全性
+ *
  */
 public class CjFrame extends JFrame {
     /**
@@ -39,7 +42,7 @@ public class CjFrame extends JFrame {
      */
     //账号、密码文本框组件
     JTextField id_textField = new JTextField(20);
-    JTextField pw_textField = new JTextField(20);
+    JPasswordField pw_textField = new JPasswordField(20);
     String choose = "";
     int id = 0;
 
