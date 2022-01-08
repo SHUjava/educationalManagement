@@ -78,9 +78,7 @@ public class CjFrame extends JFrame {
                login_success();
                 try {
                     new stuFrame(id);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                } catch (CustomException ex) {
+                } catch (SQLException | CustomException ex) {
                     ex.printStackTrace();
                 }
                 this.setVisible(false);
@@ -174,8 +172,8 @@ public class CjFrame extends JFrame {
     private boolean is_login(String mode) {
         //登录是否成功
         DBConnector connector = new DBConnector();
-        String Str_id = new String();
-        String Str_pw = new String();
+        String Str_id;
+        String Str_pw;
         Str_id = id_textField.getText().trim();
         Str_pw = pw_textField.getText().trim();
         if (Str_id.length() == 0 || Str_pw.length() == 0) return false;

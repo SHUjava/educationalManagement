@@ -48,7 +48,7 @@ public class stuFrame extends JFrame {
         int_args[0] = 3002001;
         int_args[1] = 2002001;
         DBConnector conn = new DBConnector();
-        Object[][] tableData = new Object[0][0];
+        Object[][] tableData;
         try {
             tableData = conn.search("课程成绩查询", int_args, str_args);
         } catch (CustomException e) {
