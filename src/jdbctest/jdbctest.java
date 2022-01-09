@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class jdbctest {
     Integer stu_id;
-    Vector result = new Vector();
+    Vector<Object> result = new Vector<>();
     // MySQL 8.0 以上版本 - JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
@@ -43,8 +43,8 @@ public class jdbctest {
                 // 通过字段检索
                 int course_id = rs.getInt("course_id");
                 int score = rs.getInt("score");
-                Statement stmt2 = conn.createStatement();;
-                sql = "SELECT * FROM course where course_id = "+ Integer.toString(course_id);
+                Statement stmt2 = conn.createStatement();
+                sql = "SELECT * FROM course where course_id = "+ course_id;
                 ResultSet rs2 = stmt2.executeQuery(sql);
                 rs2.next();
                 int course_order = rs2.getInt("course_order");
@@ -56,7 +56,7 @@ public class jdbctest {
                 stmt2.close();
 
                 // 输出数据
-                Vector tmp = new Vector();
+                Vector<Object> tmp = new Vector<>();
                 tmp.addElement(course_order);
                 tmp.addElement(course_name);
                 tmp.addElement(teacher_id);
@@ -69,17 +69,15 @@ public class jdbctest {
             rs.close();
             stmt.close();
             conn.close();
-        }catch(SQLException se){
+        } catch(Exception se){
             // 处理 JDBC 错误
             se.printStackTrace();
-        }catch(Exception e){
-            // 处理 Class.forName 错误
-            e.printStackTrace();
-        }finally{
+        }// 处理 Class.forName 错误
+        finally{
             // 关闭资源
             try{
                 if(stmt!=null) stmt.close();
-            }catch(SQLException se2){
+            }catch(SQLException ignored){
             }// 什么都不做
             try{
                 if(conn!=null) conn.close();
@@ -89,7 +87,7 @@ public class jdbctest {
         }
     }
 
-    public Vector getResult() {
+    public Vector<Object> getResult() {
         request();
         System.out.println(result);
         return result;

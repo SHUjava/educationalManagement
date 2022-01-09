@@ -15,7 +15,7 @@ public class login_demo {
     /**
      * @description : 主函数，跳转到登录首页
      */
-    public static void main(String args[])
+    public static void main(String[] args)
     {
         /**
          * frame:登录首页

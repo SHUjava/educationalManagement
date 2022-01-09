@@ -29,20 +29,17 @@ public class DBConnector {
             // 执行查询
             System.out.println(" 实例化Statement对象...");
             stmt = conn.createStatement();
-        }catch(SQLException se){
+        } catch(Exception se){
             // 处理 JDBC 错误
             se.printStackTrace();
-        }catch(Exception e){
-            // 处理 Class.forName 错误
-            e.printStackTrace();
-        }
+        }// 处理 Class.forName 错误
+
 
     }
 
     public boolean login(String mode, int profile, String password) throws SQLException {
-        if (mode=="admin"){
-            if(profile == 7777777 && Objects.equals(password, "7777777"))return true;
-            return false;
+        if (Objects.equals(mode, "admin")){
+            return profile == 7777777 && Objects.equals(password, "7777777");
         }
         String sql;
         ResultSet rs;
@@ -52,7 +49,7 @@ public class DBConnector {
         rs = ps.executeQuery();
         rs.next();
         String pwd;
-        if (mode == "student") {
+        if (Objects.equals(mode, "student")) {
             pwd = rs.getString("student_password");
         }
         else{
@@ -67,7 +64,7 @@ public class DBConnector {
 
     public Object[][] search(String mode, int[] int_args, String[] str_args) throws CustomException, SQLException {
         Object[][] result;
-        Vector tmp = new Vector();
+        Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
         switch (mode) {
@@ -87,7 +84,7 @@ public class DBConnector {
                     String course_time = rs.getString("course_time");
                     int course_credit = rs.getInt("course_credit");
                     int score = rs.getInt("score");
-                    Vector row = new Vector();
+                    Vector<Object> row = new Vector<>();
                     row.addElement(course_order);
                     row.addElement(course_name);
                     row.addElement(teacher_id);
@@ -115,7 +112,7 @@ public class DBConnector {
                     int student_id = rs.getInt("student_id");
                     String student_name = rs.getString("student_name");
                     int score = rs.getInt("score");
-                    Vector row = new Vector();
+                    Vector<Object> row = new Vector<>();
                     row.addElement(course_order);
                     row.addElement(course_name);
                     row.addElement(course_time);
@@ -127,10 +124,8 @@ public class DBConnector {
                 }
                 rs.close();
             default:
-                Object tempp = tmp.get(0);
-                Vector temppp = (Vector)tempp;
                 int row = tmp.size();
-                int col = temppp.size();
+                int col = tmp.get(0).size();
                 result = new Object[row][col];
                 //读取数据库
 
@@ -138,9 +133,7 @@ public class DBConnector {
                 {
                     for(int j=0;j<col;j++)
                     {
-                        Object tmpp = tmp.get(i);
-                        Vector tmppp = (Vector)tmpp;
-                        result[i][j] = tmppp.get(j);
+                        result[i][j] = (Vector<?>)(tmp.get(i)).get(j);
                     }
                 }
         }
