@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="cjdemo:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/cjdemo_jar</output-path>
-    <root id="archive" name="cjdemo.jar">
-      <element id="module-output" name="cjdemo" />
-    </root>
-  </artifact>
-</component>

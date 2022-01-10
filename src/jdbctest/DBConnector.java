@@ -1,8 +1,5 @@
 package jdbctest;
 
-import com.mysql.cj.protocol.a.NativeConstants;
-
-import java.io.ObjectStreamException;
 import java.sql.*;
 import java.util.Objects;
 import java.util.Vector;
@@ -13,8 +10,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
-    static final String PASS = "1240863915gg";
+    static final String PASS = "yang0417";
+//    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
 
