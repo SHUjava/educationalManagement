@@ -65,8 +65,8 @@ public class stuFrame extends JFrame {
 
         int[] int_args = new int[2];
         String[] str_args = new String[0];
-        int_args[0] = 3002001;
-        int_args[1] = 2002001;
+        int_args[0] = 2001001;
+        int_args[1] = 3001001;
         DBConnector conn = new DBConnector();
         Object[][] tableData;
         try {

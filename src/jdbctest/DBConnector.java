@@ -12,8 +12,9 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    static final String PASS = "Zbb123150@";
+//    static final String PASS = "Zbb123150@";
 //    static final String PASS = "yang0417";
+    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
 
@@ -63,66 +64,71 @@ public class DBConnector {
     }
 
     public Object[][] search(String mode, int[] int_args, String[] str_args) throws CustomException, SQLException {
-        Object[][] result;
+        Object[][] result = new Object[0][];
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
         switch (mode) {
             case "学生成绩查询":
                 if(int_args.length != 1 || str_args.length != 0){
-                    throw new CustomException("输入参数个数不正确"+int_args.length+str_args.length);
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
-                sql = "select course.course_order,course.course_name,course.teacher_id,teacher.teacher_name,course.course_time,course.course_credit, score.score\n" +
-                        "from score,course,teacher\n" +
-                        "where score.course_id=course.course_id and score.student_id='"+int_args[0]+"' and teacher.teacher_id=course.teacher_id;\n";
+                sql = "select 课程编号, 课程名, 学分, 成绩, 绩点\n" +
+                        "from used_score\n" +
+                        "where 学号='"+int_args[0]+"';\n";
                 rs = stmt.executeQuery(sql);
+                int id = 0;
                 while(rs.next())
                 {
-                    int course_order = rs.getInt("course_order");
-                    String course_name = rs.getString("course_name");
-                    int teacher_id = rs.getInt("teacher_id");
-                    String course_time = rs.getString("course_time");
-                    int course_credit = rs.getInt("course_credit");
-                    int score = rs.getInt("score");
+                    id++;
+                    int course_order = rs.getInt("课程编号");
+                    String course_name = rs.getString("课程名");
+                    int credit = rs.getInt("学分");
+                    int score = (int)Double.parseDouble(rs.getString("成绩"));
+                    double gpa = rs.getDouble("绩点");
                     Vector<Object> row = new Vector<>();
+                    row.addElement(id);
                     row.addElement(course_order);
                     row.addElement(course_name);
-                    row.addElement(teacher_id);
-                    row.addElement(course_time);
-                    row.addElement(course_credit);
+                    row.addElement(credit);
                     row.addElement(score);
+                    row.addElement(gpa);
                     tmp.addElement(row);
                 }
                 rs.close();
+                System.out.println(tmp);
+                break;
             case "课程成绩查询":
                 if(int_args.length != 2 || str_args.length != 0){
-                    throw new CustomException("输入参数个数不正确"+int_args.length+str_args.length);
+                    throw new CustomException("输入参数个数不正确"+int_args.length+str_args.length+"123456");
                 }
-                sql = "select course.course_order,course.course_name,course.course_time,course.course_credit,score.student_id,student.student_name,score.score\n" +
-                        "from score,course,student\n" +
-                        "where course.course_order = '"+int_args[0]+"' and course.teacher_id ='"+int_args[1]+"' and score.course_id=course.course_id and score.student_id=student.student_id\n" +
-                        "order by score.score;\n";
+                sql = "select used_score.课程编号, used_score.课程名, used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.绩点\n" +
+                        "from used_score, student\n" +
+                        "where used_score.工号 = '2001001' and used_score.课程编号 ='3001001' and used_score.学号=student.student_id\n" +
+                        "order by used_score.成绩;";
                 rs = stmt.executeQuery(sql);
                 while(rs.next())
                 {
-                    int course_order = rs.getInt("course_order");
-                    String course_name = rs.getString("course_name");
-                    String course_time = rs.getString("course_time");
-                    int course_credit = rs.getInt("course_credit");
-                    int student_id = rs.getInt("student_id");
+                    int course_order = rs.getInt("课程编号");
+                    String course_name = rs.getString("课程名");
+                    int student_id = rs.getInt("学号");
                     String student_name = rs.getString("student_name");
-                    int score = rs.getInt("score");
+                    int daily_score = rs.getInt("平时成绩");
+                    int exam_score = rs.getInt("考试成绩");
+                    double gpa = rs.getDouble("绩点");
                     Vector<Object> row = new Vector<>();
                     row.addElement(course_order);
                     row.addElement(course_name);
-                    row.addElement(course_time);
-                    row.addElement(course_credit);
                     row.addElement(student_id);
                     row.addElement(student_name);
-                    row.addElement(score);
+                    row.addElement(daily_score);
+                    row.addElement(exam_score);
+                    row.addElement(gpa);
                     tmp.addElement(row);
                 }
                 rs.close();
+                System.out.println(tmp);
+                break;
             default:
                 int row = tmp.size();
                 int col = tmp.get(0).size();
