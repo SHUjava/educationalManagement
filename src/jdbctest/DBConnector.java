@@ -9,8 +9,8 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-//    static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
+    static final String PASS = "Zbb123150@";
+//    static final String PASS = "yang0417";
 //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -124,21 +124,21 @@ public class DBConnector {
                     tmp.addElement(row);
                 }
                 rs.close();
-                System.out.println(tmp);
                 break;
-            default:
-                int row = tmp.size();
-                int col = tmp.get(0).size();
-                result = new Object[row][col];
-                //读取数据库
 
-                for(int i=0;i<row;i++)
-                {
-                    for(int j=0;j<col;j++)
-                    {
-                        result[i][j] = (Vector<?>)(tmp.get(i)).get(j);
-                    }
-                }
+
+        }
+        int row = tmp.size();
+        int col = tmp.get(0).size();
+        result = new Object[row][col];
+        //读取数据库
+
+        for(int i=0;i<row;i++)
+        {
+            for(int j=0;j<col;j++)
+            {
+                result[i][j] = ((Vector<?>)tmp.get(i)).get(j);
+            }
         }
         return result;
     }

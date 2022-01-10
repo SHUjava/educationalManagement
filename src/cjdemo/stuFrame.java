@@ -17,7 +17,6 @@ import jdbctest.CustomException;
  */
 public class stuFrame extends JFrame {
     int id;
-    JScrollPane scrollPane;
     JPanel panel_show;
 
     /**
@@ -71,12 +70,13 @@ public class stuFrame extends JFrame {
         Object[][] tableData;
         try {
             tableData = conn.search("课程成绩查询", int_args, str_args);
+            System.out.println(tableData);
         } catch (CustomException e) {
             System.out.println(e.getMessage());
             return;
         }
 //        System.out.println(tableData.length);
-        String[] col_name = {"course_order", "course_name", "teacher_id", "course_time", "course_credit", "score"};
+        String[] col_name = {"course_order", "course_name", "teacher_id", "course_time", "course_credit", "score","score1"};
 
         /**
          * @function： 创建成绩显示表格cjtable

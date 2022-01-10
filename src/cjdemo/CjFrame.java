@@ -115,7 +115,6 @@ public class CjFrame extends JFrame {
                 pw_textField.setText("");
                 JOptionPane.showMessageDialog(null,"登录失败,请重新登录");
 
-
             }
         });
 
