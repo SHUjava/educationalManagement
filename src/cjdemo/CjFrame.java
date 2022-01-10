@@ -31,6 +31,11 @@ import java.sql.SQLException;
  * @updateDate:    2022/1/7
  * @updateContent: 1.将密码输入文本框内容设置为“·”,增强安全性
  *
+ * @updateDate: 2022/1/8
+ * @updateContent: 1.修改学生页面窗格的布局
+ *                 2.增加欢迎xxx某位学生的文本框
+ *                 3.对于学生界面的组件增加了更多的注释
+ *
  */
 public class CjFrame extends JFrame {
     /**
