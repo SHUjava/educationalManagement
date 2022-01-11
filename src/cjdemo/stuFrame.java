@@ -2,10 +2,13 @@ package cjdemo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import jdbctest.DBConnector;
 import jdbctest.CustomException;
+import jdbctest.Export;
 
 /**
  * @description : 显示学生界面，包含成绩查询功能
@@ -98,6 +101,27 @@ public class stuFrame extends JFrame {
         panel_show = new JPanel();
         panel_show.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
         panel_show.setPreferredSize(new Dimension(500,700));
+        /**
+         *  @function: 在成绩显示面板上部增加导出按钮 by yjh
+         */
+        JButton buttonExport = new JButton("导出");
+        buttonExport.setFont(new Font("Dialog",1,10));
+        buttonExport.setPreferredSize(new Dimension(50,30));
+        buttonExport.addActionListener((e) ->  {
+            FileDialog fd = new FileDialog(this, "导出", FileDialog.SAVE);
+            fd.setLocation(400, 250);
+            fd.setVisible(true);
+            String stringfile = fd.getDirectory()+fd.getFile()+".xls";
+            try {
+                Export export = new Export();
+                export.exportTable(cjtable, new File(stringfile));
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+                ex.printStackTrace();
+            }
+        });
+        panel_show.add(buttonExport);
+
         this.add(panel_show,"East");
         panel_show.add(new JScrollPane(cjtable));
         panel_show.setVisible(false);
