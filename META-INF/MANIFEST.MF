@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 Manifest-Version: 1.0
 Main-Class: cjdemo.login_demo
 
+=======
+Manifest-Version: 1.0
+Main-Class: cjdemo.login_demo
+
+>>>>>>> master
