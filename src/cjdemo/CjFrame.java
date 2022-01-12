@@ -57,12 +57,16 @@ public class CjFrame extends JFrame {
      */
     public CjFrame(String title) {
         super(title);
+        //添加图标校徽
+        ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
+        this.setIconImage(imageIcon.getImage().getScaledInstance(100,140,100));
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setResizable(false);
 
-        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"1001001"));
-        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,"123456"));
+        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"学号/工号"));
+        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,"密码"));
         //设置容器
 //        JPanel root_panel = new JPanel();
 //        this.setContentPane(root_panel);
@@ -74,10 +78,18 @@ public class CjFrame extends JFrame {
         this.add(pw_textField);
 
 
-        //创建label
-        JLabel id_label = new JLabel("账号");
-        JLabel pw_label = new JLabel("密码");
-        //添加Label
+
+//        创建label
+        JLabel id_label = new JLabel("账号:");
+        //给此标签主动设置焦点，避免最初焦点定位到账号输入框，使提示文字消失
+        id_label.setFocusable(true);
+        id_label.requestFocus();
+        id_label.setFont(new Font("Dialog",1,14));
+//        id_label.dispatchEvent(new FocusEvent(id_label,FocusEvent.FOCUS_GAINED,true));
+//        id_label.requestFocusInWindow();
+        JLabel pw_label = new JLabel("密码:");
+        pw_label.setFont(new Font("Dialog",1,14));
+//        添加Label
         this.add(id_label);
         this.add(pw_label);
 
@@ -118,9 +130,9 @@ public class CjFrame extends JFrame {
             }
         });
 
-        JLabel label_test = new JLabel("身份:");
-        label_test.setFont(new Font("楷体",Font.BOLD,12));
-        this.add(label_test);
+        JLabel label_status = new JLabel("身份:");
+        label_status.setFont(new Font("楷体",Font.BOLD,12));
+        this.add(label_status);
         JRadioButton radioButton1_test = new JRadioButton("学生",true);
         radioButton1_test.addActionListener(new MyActionListener());
         JRadioButton radioButton2_test = new JRadioButton("教师");
@@ -148,7 +160,7 @@ public class CjFrame extends JFrame {
         id_textField.setBounds(140,60,300,50);
         pw_label.setBounds(90,80,100,200);
         pw_textField.setBounds(140,150,300,50);
-        label_test.setBounds(90,200,100,100);
+        label_status.setBounds(90,200,100,100);
         radioButton1_test.setBounds(140,225,100,50);
         radioButton2_test.setBounds(260,225,100,50);
         radioButton3_test.setBounds(380,225,100,50);

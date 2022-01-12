@@ -29,7 +29,8 @@ public class stuFrame extends JFrame {
      */
     public  stuFrame(int ID) throws SQLException, CustomException {
         id = ID;
-
+        ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
+        this.setIconImage(imageIcon.getImage().getScaledInstance(100,140,100));
         this.setResizable(false);
         // 调用setBounds方法调整页面的左上角坐标以及页面的大小
 //        this.setBounds(100, 100, 1000, 800);
@@ -53,15 +54,16 @@ public class stuFrame extends JFrame {
 
         JLabel stuInfo = new JLabel();
         stuInfo.setPreferredSize(new Dimension(120,60));
-        Font font = new Font("Dialog",1,12);
+        Font font = new Font("Dialog",1,14);
         Font labelFont = new Font("Dialog",1,14);
         stuInfo.setText("欢迎您："+this.id);
         stuInfo.setFont(labelFont);
         stuPanel.add(stuInfo);
 
         JButton exitButton = new JButton("安全退出");
-        exitButton.setPreferredSize(new Dimension(100,60));
+        exitButton.setPreferredSize(new Dimension(100,30));
         exitButton.setFont(font);
+        exitButton.setContentAreaFilled(false);
         stuPanel.add(exitButton);
 
 
@@ -105,8 +107,11 @@ public class stuFrame extends JFrame {
          *  @function: 在成绩显示面板上部增加导出按钮 by yjh
          */
         JButton buttonExport = new JButton("导出");
-        buttonExport.setFont(new Font("Dialog",1,10));
-        buttonExport.setPreferredSize(new Dimension(50,30));
+//        buttonExport.setBorderPainted(false);
+        buttonExport.setContentAreaFilled(false);
+//        buttonExport.setBackground(Color.GREEN);
+        buttonExport.setFont(new Font("Dialog",1,14));
+        buttonExport.setPreferredSize(new Dimension(70,30));
         buttonExport.addActionListener((e) ->  {
             FileDialog fd = new FileDialog(this, "导出", FileDialog.SAVE);
             fd.setLocation(400, 250);
@@ -136,19 +141,20 @@ public class stuFrame extends JFrame {
         this.add(panel_function,"Center");
 
 
-        JButton button = new JButton("成绩查询");
-        button.setFont(font);
-        button.setPreferredSize(new Dimension(100,60));
+        JButton buttonQuery = new JButton("成绩查询");
+        buttonQuery.setContentAreaFilled(false);
+        buttonQuery.setFont(font);
+        buttonQuery.setPreferredSize(new Dimension(100,30));
 
         /**
          * @function: 为【成绩查询】按钮创建监听器，点击后成绩显示窗格状态改为【显示】
          * 函数参数采用lambda表达式
          */
-        button.addActionListener((e) -> {
+        buttonQuery.addActionListener((e) -> {
             panel_show.setVisible(true);
         });
         //将【成绩查询】按钮组件添加到功能栏面板中
-        panel_function.add(button);
+        panel_function.add(buttonQuery);
 
     }
 
