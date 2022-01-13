@@ -10,8 +10,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-//    static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
+    static final String PASS = "Zbb123150@";
+//    static final String PASS = "yang0417";
 //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -59,6 +59,24 @@ public class DBConnector {
             return true;
         }
         return false;
+    }
+    public String queryName(String mode, int ID)
+    {
+        String sql;
+        String name=null;
+        sql = "select " + mode +"_name" + " from " +mode+" where "+mode+"_id = "+ID;
+        System.out.println(sql);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                 name = rs.getString(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(name);
+        return name;
     }
 
     public Object[][] search(String mode, int[] int_args, String[] str_args) throws CustomException, SQLException {
