@@ -116,14 +116,15 @@ public class stuFrame extends JFrame {
             FileDialog fd = new FileDialog(this, "导出", FileDialog.SAVE);
             fd.setLocation(400, 250);
             fd.setVisible(true);
-            String stringfile = fd.getDirectory()+fd.getFile()+".xls";
-            try {
+            //String stringfile = fd.getDirectory()+fd.getFile()+".xls";
+            String stringfile = fd.getDirectory()+fd.getFile();
+            //try {
                 Export export = new Export();
                 export.exportTable(cjtable, new File(stringfile));
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
-                ex.printStackTrace();
-            }
+//            } catch (IOException ex) {
+//                System.out.println(ex.getMessage());
+//                ex.printStackTrace();
+//            }
         });
         panel_show.add(buttonExport);
 
