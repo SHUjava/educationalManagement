@@ -20,6 +20,7 @@ import jdbctest.Export;
  */
 public class stuFrame extends JFrame {
     int id;
+    String name;
     JPanel panel_show;
 
     /**
@@ -27,8 +28,10 @@ public class stuFrame extends JFrame {
      * @throws SQLException
      * @throws CustomException
      */
-    public  stuFrame(int ID) throws SQLException, CustomException {
-        id = ID;
+    public  stuFrame(int ID,String name) throws SQLException, CustomException {
+        //初始化ID，NAME
+        this.id = ID;
+        this.name = name;
         ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
         this.setIconImage(imageIcon.getImage().getScaledInstance(100,140,100));
         this.setResizable(false);
@@ -49,16 +52,22 @@ public class stuFrame extends JFrame {
          */
         JPanel  stuPanel = new JPanel();
         stuPanel.setPreferredSize(new Dimension(700,80));
-        stuPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,10,5));
+        stuPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,3,5));
         this.add(stuPanel,"North");
 
         JLabel stuInfo = new JLabel();
         stuInfo.setPreferredSize(new Dimension(120,60));
-        Font font = new Font("Dialog",1,14);
-        Font labelFont = new Font("Dialog",1,14);
-        stuInfo.setText("欢迎您："+this.id);
+        Font font = new Font("Dialog",1,12);
+        Font labelFont = new Font("Dialog",1,12);
+        stuInfo.setText("欢迎您："+this.name);
         stuInfo.setFont(labelFont);
         stuPanel.add(stuInfo);
+
+        JButton changePW = new JButton("修改密码");
+        changePW.setPreferredSize(new Dimension(100,30));
+        changePW.setFont(font);
+        changePW.setContentAreaFilled(false);
+        stuPanel.add(changePW);
 
         JButton exitButton = new JButton("安全退出");
         exitButton.setPreferredSize(new Dimension(100,30));
@@ -88,44 +97,58 @@ public class stuFrame extends JFrame {
          */
         JTable cjtable = new JTable(tableData, col_name);
 //        cjtable.setBounds(0,0,700,300);
-        cjtable.setSize(700,300);
+        cjtable.setSize(550,300);
 //        cjtable.setPreferredSize(new Dimension(700,300));
         // 将表格设置为不可编辑
         cjtable.setEnabled(false);
 
         /**
-         *  @function: 创建成绩显示面板,显示学生成绩
+         *  @function: 创建成绩显示面板,显示学生成绩以及导出等按钮
          */
 //        scrollPane = new JScrollPane(cjtable);
 //        scrollPane.setPreferredSize(new Dimension(800,700));
 //        scrollPane.setVisible(true);
 //        this.add(scrollPane,"East");
         panel_show = new JPanel();
-        panel_show.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
-        panel_show.setPreferredSize(new Dimension(500,700));
+        panel_show.setLayout(new FlowLayout(FlowLayout.RIGHT,5,0));
+        panel_show.setPreferredSize(new Dimension(550,500));
+
         /**
          *  @function: 在成绩显示面板上部增加导出按钮 by yjh
          */
+        JPanel panel_export = new JPanel();
+        panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+        panel_export.setPreferredSize(new Dimension(550,50));
+        panel_show.add(panel_export);
+
         JButton buttonExport = new JButton("导出");
 //        buttonExport.setBorderPainted(false);
         buttonExport.setContentAreaFilled(false);
 //        buttonExport.setBackground(Color.GREEN);
-        buttonExport.setFont(new Font("Dialog",1,14));
+        buttonExport.setFont(new Font("Dialog",1,12));
         buttonExport.setPreferredSize(new Dimension(70,30));
         buttonExport.addActionListener((e) ->  {
             FileDialog fd = new FileDialog(this, "导出", FileDialog.SAVE);
             fd.setLocation(400, 250);
             fd.setVisible(true);
-            String stringfile = fd.getDirectory()+fd.getFile()+".xls";
-            try {
+            //String stringfile = fd.getDirectory()+fd.getFile()+".xls";
+            String stringfile = fd.getDirectory()+fd.getFile();
+            //try {
                 Export export = new Export();
                 export.exportTable(cjtable, new File(stringfile));
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
-                ex.printStackTrace();
-            }
+//            } catch (IOException ex) {
+//                System.out.println(ex.getMessage());
+//                ex.printStackTrace();
+//            }
         });
-        panel_show.add(buttonExport);
+        panel_export.add(buttonExport);
+
+        JButton buttonPrint = new JButton("打印");
+        buttonPrint.setContentAreaFilled(false);
+        buttonPrint.setFont(new Font("Dialog",1,12));
+        buttonPrint.setPreferredSize(new Dimension(70,30));
+
+        panel_export.add(buttonPrint);
 
         this.add(panel_show,"East");
         panel_show.add(new JScrollPane(cjtable));
@@ -137,14 +160,14 @@ public class stuFrame extends JFrame {
          */
         JPanel panel_function = new JPanel();
         panel_function.setLayout(new FlowLayout(FlowLayout.LEFT,5,5));
-        panel_function.setPreferredSize(new Dimension(100,700));
+        panel_function.setPreferredSize(new Dimension(100,500));
         this.add(panel_function,"Center");
 
 
         JButton buttonQuery = new JButton("成绩查询");
         buttonQuery.setContentAreaFilled(false);
         buttonQuery.setFont(font);
-        buttonQuery.setPreferredSize(new Dimension(100,30));
+        buttonQuery.setPreferredSize(new Dimension(90,30));
 
         /**
          * @function: 为【成绩查询】按钮创建监听器，点击后成绩显示窗格状态改为【显示】

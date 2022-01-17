@@ -37,7 +37,7 @@ import java.sql.SQLException;
  *                 3.对于学生界面的组件增加了更多的注释
  *
  */
-public class CjFrame extends JFrame {
+public class CjFrame extends JFrame  {
     /**
      * 账号、密码文本框组件
      * id_textField : 账号文本框
@@ -49,7 +49,8 @@ public class CjFrame extends JFrame {
     JTextField id_textField = new JTextField(20);
     JPasswordField pw_textField = new JPasswordField(20);
     String choose = "";
-    int id = 0 ;
+    int id = 0;
+    String name;
 
     /**
      * @function: 成绩登录页面构造函数
@@ -104,7 +105,7 @@ public class CjFrame extends JFrame {
             if (is_login("student") && choose.equals("学生") ) {
                login_success();
                 try {
-                    new stuFrame(id);
+                    new stuFrame(id,name);
                 } catch (SQLException | CustomException ex) {
                     ex.printStackTrace();
                 }
@@ -112,8 +113,8 @@ public class CjFrame extends JFrame {
             }
             else if(is_login("teacher") && choose.equals("教师")){
                 login_success();
-                try {
-                    new teacherFrame(id);
+                try{
+                new teacherFrame(id,name);
                 } catch (SQLException | CustomException ex){
                     ex.printStackTrace();
                 }
@@ -211,8 +212,10 @@ public class CjFrame extends JFrame {
         try {
             if (connector.login(mode, intID, Str_pw)) {
                 id = Integer.parseInt(Str_id);
+                name = connector.queryName(mode,id);
                 return true;
-            } else
+            }
+            else
                 return false;
         }
         catch (Exception e){

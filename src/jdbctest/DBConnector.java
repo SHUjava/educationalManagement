@@ -60,6 +60,24 @@ public class DBConnector {
         }
         return false;
     }
+    public String queryName(String mode, int ID)
+    {
+        String sql;
+        String name=null;
+        sql = "select " + mode +"_name" + " from " +mode+" where "+mode+"_id = "+ID;
+        System.out.println(sql);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                 name = rs.getString(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(name);
+        return name;
+    }
 
     public Object[][] search(String mode, int[] int_args, String[] str_args) throws CustomException, SQLException {
         Object[][] result = new Object[0][];
