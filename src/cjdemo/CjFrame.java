@@ -49,7 +49,7 @@ public class CjFrame extends JFrame {
     JTextField id_textField = new JTextField(20);
     JPasswordField pw_textField = new JPasswordField(20);
     String choose = "";
-    int id = 0;
+    int id = 0 ;
 
     /**
      * @function: 成绩登录页面构造函数
@@ -112,7 +112,11 @@ public class CjFrame extends JFrame {
             }
             else if(is_login("teacher") && choose.equals("教师")){
                 login_success();
-                new teacherFrame();
+                try {
+                    new teacherFrame(id);
+                } catch (SQLException | CustomException ex){
+                    ex.printStackTrace();
+                }
                 this.setVisible(false);
             }
             else if(is_login("admin") && choose.equals("管理员")){
