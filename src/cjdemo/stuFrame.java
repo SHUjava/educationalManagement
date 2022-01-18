@@ -51,7 +51,7 @@ public class stuFrame extends JFrame {
         ((JPanel)this.getContentPane()).setBorder(BorderFactory.createEmptyBorder(5,10,10,10));
 
         /**
-         * @function: 创建显示欢迎学生的窗格。
+         * @function: 创建显示学生基础信息的窗格。
          */
         JPanel  stuPanel = new JPanel();
         stuPanel.setPreferredSize(new Dimension(700,80));
@@ -62,7 +62,7 @@ public class stuFrame extends JFrame {
         stuInfo.setPreferredSize(new Dimension(120,60));
         Font font = new Font("Dialog",1,12);
         Font labelFont = new Font("Dialog",1,12);
-        stuInfo.setText("欢迎您："+this.name);
+        stuInfo.setText("欢迎你："+this.name);
         stuInfo.setFont(labelFont);
         stuPanel.add(stuInfo);
 
