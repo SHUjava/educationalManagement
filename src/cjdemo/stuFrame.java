@@ -1,7 +1,10 @@
 package cjdemo;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -120,27 +123,9 @@ public class stuFrame extends JFrame {
         panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
         panel_export.setPreferredSize(new Dimension(550,50));
         panel_show.add(panel_export);
-
-        JButton buttonExport = new JButton("导出");
-//        buttonExport.setBorderPainted(false);
-        buttonExport.setContentAreaFilled(false);
-//        buttonExport.setBackground(Color.GREEN);
-        buttonExport.setFont(new Font("Dialog",1,12));
-        buttonExport.setPreferredSize(new Dimension(70,30));
-        buttonExport.addActionListener((e) ->  {
-            FileDialog fd = new FileDialog(this, "导出", FileDialog.SAVE);
-            fd.setLocation(400, 250);
-            fd.setVisible(true);
-            //String stringfile = fd.getDirectory()+fd.getFile()+".xls";
-            String stringfile = fd.getDirectory()+fd.getFile();
-            //try {
-                Export export = new Export();
-                export.exportTable(cjtable, new File(stringfile));
-//            } catch (IOException ex) {
-//                System.out.println(ex.getMessage());
-//                ex.printStackTrace();
-//            }
-        });
+        // 以下三行是一个简单的Export类调用的样例 for 张宝
+        Export export = new Export(cjtable);
+        JButton buttonExport = export.getButtonExport();
         panel_export.add(buttonExport);
 
         JButton buttonPrint = new JButton("打印");
