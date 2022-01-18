@@ -9,9 +9,9 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-//    static final String PASS = "Zx010426";
-    //static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
+    static final String PASS = "Zx010426";
+//    static final String PASS = "Zbb123150@";
+//    static final String PASS = "yang0417";
 //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -144,7 +144,39 @@ public class DBConnector {
                 }
                 rs.close();
                 break;
-
+            case "教师成绩查询":
+                if(int_args.length != 1 || str_args.length != 3){//工号，课程号  课程名称，课程学期，上课时间
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
+                        "from used_score, student\n" +
+                        "where used_score.工号 = '" + int_args[0] +
+                        "' and used_score.课程编号 ='"+ int_args[1] +
+                        "'\n" +
+                        "order by used_score.学号;";
+                rs = stmt.executeQuery(sql);
+                id = 0;
+                while(rs.next())
+                {
+                    id++;
+                    int student_id = rs.getInt("学号");
+                    String student_name = rs.getString("student_name");
+                    int daily_score = rs.getInt("平时成绩");
+                    int exam_score = rs.getInt("考试成绩");
+                    int score = rs.getInt("成绩");
+                    double gpa = rs.getDouble("绩点");
+                    Vector<Object> row = new Vector<>();
+                    row.addElement(student_id);
+                    row.addElement(student_name);
+                    row.addElement(daily_score);
+                    row.addElement(exam_score);
+                    row.addElement(score);
+                    row.addElement(gpa);
+                    tmp.addElement(row);
+                }
+                rs.close();
+                System.out.println(tmp);
+                break;
 
         }
         int row = tmp.size();
