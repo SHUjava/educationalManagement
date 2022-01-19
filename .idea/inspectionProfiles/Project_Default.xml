@@ -30,7 +30,7 @@
       <option name="IGNORE_JAVADOC_PERIOD" value="true" />
       <option name="IGNORE_DUPLICATED_THROWS" value="false" />
       <option name="IGNORE_POINT_TO_ITSELF" value="false" />
-      <option name="myAdditionalJavadocTags" value="function:登陆成功时显示登陆成功,function:,updateContent:,updateDate:,localProblem:,classname:,description:" />
+      <option name="myAdditionalJavadocTags" value="function:登陆成功时显示登陆成功,function:,updateContent:,updateDate:,localProblem:,classname:,description:,function" />
     </inspection_tool>
   </profile>
 </component>

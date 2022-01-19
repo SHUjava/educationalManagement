@@ -2,13 +2,9 @@ package cjdemo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 
-import jdbctest.DBConnector;
 import jdbctest.CustomException;
-import jdbctest.Export;
 
 public class teacherFrame extends JFrame {
     int id;

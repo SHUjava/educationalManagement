@@ -1,17 +1,11 @@
 package cjdemo;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 
 import jdbctest.DBConnector;
 import jdbctest.CustomException;
-import jdbctest.Export;
 
 /**
  * @description : 显示学生界面，包含成绩查询功能
@@ -127,12 +121,9 @@ public class stuFrame extends JFrame {
         Export export = new Export(cjtable);
         JButton buttonExport = export.getButtonExport();
         panel_export.add(buttonExport);
-
-        JButton buttonPrint = new JButton("打印");
-        buttonPrint.setContentAreaFilled(false);
-        buttonPrint.setFont(new Font("Dialog",1,12));
-        buttonPrint.setPreferredSize(new Dimension(70,30));
-
+        // 以下三行是一个简单的Print类调用的样例 for 张宝
+        Print print = new Print(cjtable, this);
+        JButton buttonPrint = print.getButtonPrint();
         panel_export.add(buttonPrint);
 
         this.add(panel_show,"East");

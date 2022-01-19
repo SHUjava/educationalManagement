@@ -1,4 +1,4 @@
-package jdbctest;
+package cjdemo;
 
 import java.awt.*;
 import java.io.File;
@@ -14,7 +14,10 @@ import jxl.write.Label;
  * 这个类提供了JTable导出为Excel的功能
  *
  * @author YangJunhao
- * @version 1.0
+ * @version 2.0
+ * @updateDate: 2022/1/18
+ * @updateContent: 1.重写Export构造函数，弃用FileDialog，改用JFileChooser
+ * 2.默认导出为.xls格式，在JFileChooser支持下实现
  */
 public class Export {
     JButton buttonExport;
@@ -42,12 +45,15 @@ public class Export {
     }
 
     /**
-     * @return 提供导出功能的JButton，需要自己添加到容器中
+     * @return 返回提供导出功能的JButton，需要自己添加到容器中
      */
     public JButton getButtonExport() {
         return buttonExport;
     }
 
+    /**
+     * @function 将JTable的内容读入Excel中
+     */
     public void exportTable(JTable table, File file) {
         try {
             WritableWorkbook workbook1 = Workbook.createWorkbook(file);
