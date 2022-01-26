@@ -10,8 +10,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-//    static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
+    static final String PASS = "Zbb123150@";
+//    static final String PASS = "yang0417";
 //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
