@@ -3,6 +3,8 @@ package cjdemo;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Vector;
 
 import jdbctest.DBConnector;
 import jdbctest.CustomException;
@@ -80,8 +82,10 @@ public class stuFrame extends JFrame {
         DBConnector conn = new DBConnector();
         Object[][] tableData;
         try {
-            tableData = conn.search("课程成绩查询", int_args, str_args);
-            System.out.println(tableData);
+            Vector<Object> additional = new Vector<>();
+            tableData = conn.search("管理员班级成绩查询", int_args, str_args, additional);
+            System.out.println(Arrays.deepToString(tableData));
+            System.out.println(additional);
         } catch (CustomException e) {
             System.out.println(e.getMessage());
             return;
