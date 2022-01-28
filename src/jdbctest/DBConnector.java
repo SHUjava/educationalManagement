@@ -16,6 +16,8 @@ public class DBConnector {
     Connection conn = null;
     Statement stmt = null;
 
+    String[] major = {"计算机系", "物理系"};
+
     public DBConnector(){
         try {
             // 注册 JDBC 驱动
@@ -153,6 +155,144 @@ public class DBConnector {
                 additional.addElement(int_args[1]);
                 additional.addElement(credit);
                 break;
+            case "管理员学生查询":
+                if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                if((int_args[0]<1000000 || int_args[0] >9999999) && int_args[0] != 0){
+                    throw new CustomException("学号输入有误"+int_args[0]);
+                }
+                if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女") && str_args[1] != null){
+                    throw new CustomException("性别输入有误"+int_args[0]);
+                }
+                boolean flag = true;
+                for (String m:major){
+                    if (Objects.equals(m, str_args[2])) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag){
+                    throw new CustomException("院系输入有误"+int_args[0]);
+                }
+                if((int_args[1]<1980 || int_args[1] >2030) && int_args[1] != 0){
+                    throw new CustomException("入学时间输入有误"+int_args[0]);
+                }
+                String part1;
+                String part2;
+                String part3;
+                String part4;
+                String part5;
+                String and = " ";
+                if (int_args[0] == 0) {
+                    part1 = "";
+                }else{
+                    part1 = "student_id = "+int_args[0];
+                    and = " and ";
+                }
+                if (int_args[1] == 0) {
+                    part2 = "";
+                }else{
+                    part2 = and + "student_grade = "+int_args[1];
+                    and = " and ";
+                }
+                if (str_args[0] == null) {
+                    part3 = "";
+                }else{
+                    part3 = and + "student_name = '"+str_args[0]+"'";
+                    and = " and ";
+                }
+
+                if (part3.contains("or") || part3.contains(";")){
+                    throw new CustomException("姓名输入有误"+int_args[0]);
+                }
+                if (str_args[1] == null) {
+                    part4 = "";
+                }else{
+                    part4 = and + "student_sex = '"+str_args[1]+"'";
+                    and = " and ";
+                }
+                if (str_args[2] == null) {
+                    part5 = "";
+                }else{
+                    part5 = and + "student_major = '"+str_args[2]+"'";
+                    and = " and ";
+                }
+                sql = "select student_id, student_name, student_sex, student_major, student_grade from student where "
+                        +part1+part2+part3+part4+part5+";";
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    int student_id = rs.getInt("student_id");
+                    String student_name = rs.getString("student_name");
+                    String student_sex = rs.getString("student_sex");
+                    String student_major = rs.getString("student_major");
+                    int student_grade = rs.getInt("student_grade");
+                    Vector<Object> row = new Vector<>();
+                    row.addElement(student_id);
+                    row.addElement(student_name);
+                    row.addElement(student_sex);
+                    row.addElement(student_major);
+                    row.addElement(student_grade);
+                    tmp.addElement(row);
+                }
+                rs.close();
+                break;
+            case "管理员教师查询":
+                if(int_args.length != 1 || str_args.length != 2){//工号、姓名、院系
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                if((int_args[0]<1000000 || int_args[0] >9999999) && int_args[0] != 0){
+                    throw new CustomException("工号输入有误"+int_args[0]);
+                }
+                flag = true;
+                for (String m:major){
+                    if (Objects.equals(m, str_args[1])) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag){
+                    throw new CustomException("院系输入有误"+int_args[0]);
+                }
+                and = "";
+                if (int_args[0] == 0) {
+                    part1 = "";
+                }else{
+                    part1 = "teacher_id = "+int_args[0];
+                    and = " and ";
+                }
+                if (str_args[0] == null) {
+                    part2 = "";
+                }else{
+                    part2 = and + "teacher_name = '"+str_args[0]+"'";
+                    and = " and ";
+                }
+
+                if (part2.contains("or") || part2.contains(";")){
+                    throw new CustomException("姓名输入有误"+int_args[0]);
+                }
+                if (str_args[1] == null) {
+                    part3 = "";
+                }else{
+                    part3 = and + "teacher_major = '"+str_args[1]+"'";
+                    and = " and ";
+                }
+                sql = "select teacher_id, teacher_name, teacher_major from teacher where "
+                        +part1+part2+part3+";";
+                System.out.println(sql);
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    int teacher_id = rs.getInt("teacher_id");
+                    String teacher_name = rs.getString("teacher_name");
+                    String teacher_major = rs.getString("teacher_major");
+                    Vector<Object> row = new Vector<>();
+                    row.addElement(teacher_id);
+                    row.addElement(teacher_name);
+                    row.addElement(teacher_major);
+                    tmp.addElement(row);
+                }
+                rs.close();
+                break;
             case "教师成绩查询":
                 if(int_args.length != 1 || str_args.length != 3){//工号，课程号  课程名称，课程学期，上课时间
                     throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
@@ -208,6 +348,23 @@ public class DBConnector {
         ResultSet rs;
         switch (mode) {
             case "学生":
+                if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                if(int_args[0]<1000000 || int_args[0] >9999999){
+                    throw new CustomException("学号输入有误"+int_args[0]);
+                }
+                if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女")){
+                    throw new CustomException("性别输入有误"+int_args[0]);
+                }
+                if(int_args[1]<1980 || int_args[1] >2030){
+                    throw new CustomException("入学时间输入有误"+int_args[0]);
+                }
+                sql = "INSERT INTO `educationalmanagementdb`.`student` " +
+                        "(`student_id`, `student_name`, `student_password`, `student_sex`, `student_major`, `student_grade`) " +
+                        "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"', '"+str_args[2]+"', '"+int_args[1]+"');";
+                stmt.execute(sql);
+            case "教师":
                 if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
                     throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }

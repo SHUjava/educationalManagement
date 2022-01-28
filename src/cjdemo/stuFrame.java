@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.security.spec.ECField;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Vector;
 
 import jdbctest.DBConnector;
@@ -75,22 +76,21 @@ public class stuFrame extends JFrame {
         stuPanel.add(exitButton);
 
 
-        int[] int_args = new int[2];
-        String[] str_args = new String[3];
-        int_args[0] = 1002003;
-        int_args[1] = 2020;
-        str_args[0] = "学生六";
-        str_args[1] = "女";
-        str_args[2] = "物理系";
+        int[] int_args = new int[1];
+        String[] str_args = new String[2];
+        int_args[0] = 0;
+        str_args[0] = null;
+        str_args[1] = "计算机系";
         DBConnector conn = new DBConnector();
         Object[][] tableData;
         try {
             Vector<Object> additional = new Vector<>();
-            conn.delete("学生", int_args, str_args);
+            tableData = conn.search("管理员教师查询", int_args, str_args, additional);
+            System.out.println(Arrays.deepToString(tableData));
         } catch (CustomException e) {
             e.printStackTrace();
         } catch (Exception ignored){
-
+            return;
         }
         int a = 1;
         if (a==1){
