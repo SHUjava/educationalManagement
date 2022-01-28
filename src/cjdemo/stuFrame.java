@@ -76,16 +76,19 @@ public class stuFrame extends JFrame {
         stuPanel.add(exitButton);
 
 
-        int[] int_args = new int[1];
-        String[] str_args = new String[2];
+        int[] int_args = new int[3];
+        String[] str_args = new String[3];
         int_args[0] = 0;
-        str_args[0] = null;
-        str_args[1] = "计算机系";
+        int_args[1] = 0;
+        int_args[2] = 0;
+        str_args[0] = "线性";
+        str_args[1] = null;
+        str_args[2] = null;
         DBConnector conn = new DBConnector();
         Object[][] tableData;
         try {
             Vector<Object> additional = new Vector<>();
-            tableData = conn.search("管理员教师查询", int_args, str_args, additional);
+            tableData = conn.search("管理员课程查询", int_args, str_args, additional);
             System.out.println(Arrays.deepToString(tableData));
         } catch (CustomException e) {
             e.printStackTrace();

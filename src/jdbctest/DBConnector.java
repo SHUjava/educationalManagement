@@ -165,16 +165,6 @@ public class DBConnector {
                 if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女") && str_args[1] != null){
                     throw new CustomException("性别输入有误"+int_args[0]);
                 }
-                boolean flag = true;
-                for (String m:major){
-                    if (Objects.equals(m, str_args[2])) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag){
-                    throw new CustomException("院系输入有误"+int_args[0]);
-                }
                 if((int_args[1]<1980 || int_args[1] >2030) && int_args[1] != 0){
                     throw new CustomException("入学时间输入有误"+int_args[0]);
                 }
@@ -183,6 +173,7 @@ public class DBConnector {
                 String part3;
                 String part4;
                 String part5;
+                String part6;
                 String and = " ";
                 if (int_args[0] == 0) {
                     part1 = "";
@@ -199,7 +190,7 @@ public class DBConnector {
                 if (str_args[0] == null) {
                     part3 = "";
                 }else{
-                    part3 = and + "student_name = '"+str_args[0]+"'";
+                    part3 = and + "student_name like '%"+str_args[0]+"%'";
                     and = " and ";
                 }
 
@@ -209,14 +200,17 @@ public class DBConnector {
                 if (str_args[1] == null) {
                     part4 = "";
                 }else{
-                    part4 = and + "student_sex = '"+str_args[1]+"'";
+                    part4 = and + "student_sex like '%"+str_args[1]+"%'";
                     and = " and ";
                 }
                 if (str_args[2] == null) {
                     part5 = "";
                 }else{
-                    part5 = and + "student_major = '"+str_args[2]+"'";
+                    part5 = and + "student_major like '%"+str_args[2]+"%'";
                     and = " and ";
+                }
+                if (part5.contains(" or ") || part5.contains(";")){
+                    throw new CustomException("院系输入有误"+int_args[0]);
                 }
                 sql = "select student_id, student_name, student_sex, student_major, student_grade from student where "
                         +part1+part2+part3+part4+part5+";";
@@ -244,16 +238,6 @@ public class DBConnector {
                 if((int_args[0]<1000000 || int_args[0] >9999999) && int_args[0] != 0){
                     throw new CustomException("工号输入有误"+int_args[0]);
                 }
-                flag = true;
-                for (String m:major){
-                    if (Objects.equals(m, str_args[1])) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag){
-                    throw new CustomException("院系输入有误"+int_args[0]);
-                }
                 and = "";
                 if (int_args[0] == 0) {
                     part1 = "";
@@ -264,18 +248,21 @@ public class DBConnector {
                 if (str_args[0] == null) {
                     part2 = "";
                 }else{
-                    part2 = and + "teacher_name = '"+str_args[0]+"'";
+                    part2 = and + "teacher_name like '%"+str_args[0]+"%'";
                     and = " and ";
                 }
-
-                if (part2.contains("or") || part2.contains(";")){
+                if (part2.contains(" or ") || part2.contains(";")){
                     throw new CustomException("姓名输入有误"+int_args[0]);
                 }
                 if (str_args[1] == null) {
                     part3 = "";
                 }else{
-                    part3 = and + "teacher_major = '"+str_args[1]+"'";
+                    part3 = and + "teacher_major like '%"+str_args[1]+"%'";
                     and = " and ";
+                }
+                System.out.println(part3);
+                if (part3.contains(" or ") || part3.contains(";")){
+                    throw new CustomException("院系输入有误"+int_args[0]);
                 }
                 sql = "select teacher_id, teacher_name, teacher_major from teacher where "
                         +part1+part2+part3+";";
@@ -289,6 +276,88 @@ public class DBConnector {
                     row.addElement(teacher_id);
                     row.addElement(teacher_name);
                     row.addElement(teacher_major);
+                    tmp.addElement(row);
+                }
+                rs.close();
+                break;
+            case "管理员课程查询":
+                if(int_args.length != 3 || str_args.length != 3){//课号、课名、学分、工号、学期、上课时间
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                if((int_args[0]<1000000 || int_args[0] >9999999) && int_args[0] != 0){
+                    throw new CustomException("课号输入有误"+int_args[0]);
+                }
+                if((int_args[1]<1 || int_args[1] >8) && int_args[0] != 0){
+                    throw new CustomException("学分输入有误"+int_args[1]);
+                }
+                if((int_args[2]<1000000 || int_args[2] >9999999) && int_args[0] != 0){
+                    throw new CustomException("工号输入有误"+int_args[0]);
+                }
+                and = "";
+                if (int_args[0] == 0) {
+                    part1 = "";
+                }else{
+                    part1 = "course_id = "+int_args[0];
+                    and = " and ";
+                }
+                if (str_args[0] == null) {
+                    part2 = "";
+                }else{
+                    part2 = and + "course_name like '%"+str_args[0]+"%'";
+                    and = " and ";
+                }
+                if (part2.contains("or") || part2.contains(";")){
+                    throw new CustomException("课名输入有误"+int_args[1]);
+                }
+                if (int_args[1] == 0) {
+                    part3 = "";
+                }else{
+                    part3 = "course_credit = "+int_args[1];
+                    and = " and ";
+                }
+                if (int_args[2] == 0) {
+                    part4 = "";
+                }else{
+                    part4 = "course_credit = "+int_args[2];
+                    and = " and ";
+                }
+                if (str_args[1] == null) {
+                    part5 = "";
+                }else{
+                    part5 = and + "course_semester like '%"+str_args[1]+"%'";
+                    and = " and ";
+                }
+                if (part5.contains("or") || part5.contains(";")){
+                    throw new CustomException("学期输入有误"+int_args[1]);
+                }
+                if (str_args[0] == null) {
+                    part6 = "";
+                }else{
+                    part6 = and + "course_time like '%"+str_args[2]+"%'";
+                    and = " and ";
+                }
+                if (part6.contains("or") || part6.contains(";")){
+                    throw new CustomException("上课时间输入有误"+int_args[1]);
+                }
+                sql = "select course_order, course_name, course_credit, teacher_id, course_semester, course_time " +
+                        "from course where "
+                        +part1+part2+part3+";";
+                System.out.println(sql);
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    int course_order = rs.getInt("course_order");
+                    course_name = rs.getString("course_name");
+                    int course_credit = rs.getInt("course_credit");
+                    int teacher_id = rs.getInt("teacher_id");
+                    String course_semester = rs.getString("course_semester");
+                    String course_time = rs.getString("course_time");
+                    Vector<Object> row = new Vector<>();
+                    row.addElement(course_order);
+                    row.addElement(course_name);
+                    row.addElement(course_credit);
+                    row.addElement(teacher_id);
+                    row.addElement(course_semester);
+                    row.addElement(course_time);
                     tmp.addElement(row);
                 }
                 rs.close();
