@@ -450,59 +450,47 @@ public class DBConnector {
                         "(`student_id`, `student_name`, `student_password`, `student_sex`, `student_major`, `student_grade`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"', '"+str_args[2]+"', '"+int_args[1]+"');";
                 stmt.execute(sql);
+            case "课程":
+                if(int_args.length != 4 || str_args.length != 3){//课号、课名、学分、工号、学期、时间、平时分占成
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                if(int_args[0]<1000000 || int_args[0] >9999999){
+                    throw new CustomException("课号输入有误"+int_args[0]);
+                }
+                if(int_args[1]<1 || int_args[1] >8){
+                    throw new CustomException("学分输入有误"+int_args[0]);
+                }
+                if(int_args[2]<1000000 || int_args[2] >9999999){
+                    throw new CustomException("工号输入有误"+int_args[0]);
+                }
+                if(int_args[3]<0 || int_args[3] >10){
+                    throw new CustomException("平时分占比输入有误"+int_args[0]);
+                }
+                double ratio = ((double)int_args[3])/10;
+                sql = "INSERT INTO `educationalmanagementdb`.`course` " +
+                        "(`course_order`, `course_name`, `course_credit`, `teacher_id`, `course_semester`, `course_time`, `score_ratio`) " +
+                        "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '"+int_args[1]+"', '"+int_args[2]+
+                        "', '"+str_args[1]+"', '"+str_args[2]+"', '"+ratio+"');";
+                stmt.execute(sql);
         }
     }
 
-    //用于删除某些记录，支持模糊查询，缺失的数字用0代替，字符串用null代替
-    public void delete(String mode, int[] int_args, String[] str_args)
+    //用于删除某些记录，由于管理员的查询已支持模糊查询(缺失的数字用0代替，字符串用null代替)所以这里不支持模糊删除
+    //删除课程输入的不是主键，所以需要关闭数据库的安全模式
+    public void delete(String mode, int[] id)
             throws CustomException, SQLException{
         String sql;
-        ResultSet rs;
         switch (mode) {
             case "学生":
-                if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
-                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
-                }
-                if((int_args[0]<1000000 || int_args[0] >9999999) && int_args[0] != 0){
-                    throw new CustomException("学号输入有误"+int_args[0]);
-                }
-                if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女") && str_args[1] != null){
-                    throw new CustomException("性别输入有误"+int_args[0]);
-                }
-                if((int_args[1]<1980 || int_args[1] >2030) && int_args[1] != 0){
-                    throw new CustomException("入学时间输入有误"+int_args[0]);
-                }
-                String part1;
-                String part2;
-                String part3;
-                String part4;
-                String part5;
-                if (int_args[0] == 0) {
-                    part1 = "";
-                }else{
-                    part1 = "student_id = "+int_args[0];
-                }
-                if (int_args[1] == 0) {
-                    part2 = "";
-                }else{
-                    part2 = " and student_grade = "+int_args[1];
-                }
-                if (str_args[0] == null) {
-                    part3 = "";
-                }else{
-                    part3 = " and student_name = '"+str_args[0]+"'";
-                }
-                if (str_args[1] == null) {
-                    part4 = "";
-                }else{
-                    part4 = " and student_sex = '"+str_args[1]+"'";
-                }
-                if (str_args[2] == null) {
-                    part5 = "";
-                }else{
-                    part5 = " and student_major = '"+str_args[2]+"'";
-                }
-                sql = "delete from student where "+part1+part2+part3+part4+part5+";";
+                sql = "delete from student where student_id = "+id[0]+";";
+                System.out.println(sql);
+                stmt.execute(sql);
+            case"教师":
+                sql = "delete from teacher where teacher_id = "+id[0]+";";
+                System.out.println(sql);
+                stmt.execute(sql);
+            case"班级":
+                sql = "delete from course where course_id = "+id[0]+" and teacher_id = "+id[1]+";";
                 System.out.println(sql);
                 stmt.execute(sql);
         }
