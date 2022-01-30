@@ -76,12 +76,9 @@ public class stuFrame extends JFrame {
         stuPanel.add(exitButton);
 
 
-        int[] int_args = new int[4];
+        int[] int_args = new int[1];
         String[] str_args = new String[3];
-        int_args[0] = 3001004;
-        int_args[1] = 4;
-        int_args[2] = 2001002;
-        int_args[3] = 3;
+        int_args[0] = 2003001;
         str_args[0] = "数据库";
         str_args[1] = "2020-2021春季";
         str_args[2] = "周一11-13";
@@ -89,7 +86,7 @@ public class stuFrame extends JFrame {
         Object[][] tableData;
         try {
             Vector<Object> additional = new Vector<>();
-            conn.insert("课程", int_args, str_args);
+            conn.delete("教师", int_args);
             //System.out.println(Arrays.deepToString(tableData));
         } catch (CustomException e) {
             e.printStackTrace();
