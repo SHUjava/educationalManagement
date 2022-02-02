@@ -93,10 +93,10 @@ public class stuFrame extends JFrame {
 //        } catch (Exception ignored){
 //            return;
 //        }
-        int a = 1;
-        if (a==1){
-            return;
-        }
+//        int a = 1;
+//        if (a==1){
+//            return;
+//        }
         tableData = new Object[2][2];
 //        System.out.println(tableData.length);
         String[] col_name = {"course_order", "course_name", "teacher_id", "course_time", "course_credit", "score","score1"};
