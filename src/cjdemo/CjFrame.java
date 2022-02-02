@@ -48,7 +48,7 @@ public class CjFrame extends JFrame  {
     //账号、密码文本框组件
     JTextField id_textField = new JTextField(20);
     JPasswordField pw_textField = new JPasswordField(20);
-    String choose = "";
+    String choose = "学生";
     int id = 0;
     String name;
 

@@ -1,6 +1,8 @@
 package cjdemo;
 
 import java.awt.*;
+import java.awt.print.PrinterException;
+import java.text.MessageFormat;
 import javax.swing.*;
 
 import static java.awt.Toolkit.getDefaultToolkit;
@@ -27,12 +29,13 @@ public class Print {
         buttonPrint.setFont(new java.awt.Font("Dialog", 1, 12));
         buttonPrint.setPreferredSize(new Dimension(70, 30));
         buttonPrint.addActionListener(e -> {
-            p = getDefaultToolkit().getPrintJob(frame, "ok", null);
-            g = p.getGraphics();    //p获取一个用于打印的 Graphics对象
-            g.translate(120, 200);
-            table.printAll(g);     //打印当前文本区及其内容
-            g.dispose();          //释放对象 g
-            p.end();
+            MessageFormat footer = new MessageFormat("Page - {0}");
+            MessageFormat header = new MessageFormat("学生成绩");
+            try {
+                table.print(JTable.PrintMode.FIT_WIDTH,header,footer,true,null,false,null);
+            } catch (PrinterException event) {
+                event.printStackTrace();
+            }
         });
     }
     /**

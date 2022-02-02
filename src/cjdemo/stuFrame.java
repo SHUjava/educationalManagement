@@ -2,7 +2,10 @@ package cjdemo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.security.spec.ECField;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Vector;
 
 import jdbctest.DBConnector;
 import jdbctest.CustomException;
@@ -73,19 +76,28 @@ public class stuFrame extends JFrame {
         stuPanel.add(exitButton);
 
 
-        int[] int_args = new int[2];
-        String[] str_args = new String[0];
-        int_args[0] = 2001001;
-        int_args[1] = 3001001;
+        int[] int_args = new int[1];
+        String[] str_args = new String[3];
+        int_args[0] = 2003001;
+        str_args[0] = "数据库";
+        str_args[1] = "2020-2021春季";
+        str_args[2] = "周一11-13";
         DBConnector conn = new DBConnector();
         Object[][] tableData;
         try {
-            tableData = conn.search("课程成绩查询", int_args, str_args);
-            System.out.println(tableData);
+            Vector<Object> additional = new Vector<>();
+            conn.delete("教师", int_args);
+            //System.out.println(Arrays.deepToString(tableData));
         } catch (CustomException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } catch (Exception ignored){
             return;
         }
+        int a = 1;
+        if (a==1){
+            return;
+        }
+        tableData = new Object[2][2];
 //        System.out.println(tableData.length);
         String[] col_name = {"course_order", "course_name", "teacher_id", "course_time", "course_credit", "score","score1"};
 
