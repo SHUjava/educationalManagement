@@ -84,15 +84,15 @@ public class stuFrame extends JFrame {
         str_args[2] = "周一11-13";
         DBConnector conn = new DBConnector();
         Object[][] tableData;
-        try {
-            Vector<Object> additional = new Vector<>();
-            conn.delete("教师", int_args);
-            //System.out.println(Arrays.deepToString(tableData));
-        } catch (CustomException e) {
-            e.printStackTrace();
-        } catch (Exception ignored){
-            return;
-        }
+//        try {
+//            Vector<Object> additional = new Vector<>();
+//            conn.delete("教师", int_args);
+//            //System.out.println(Arrays.deepToString(tableData));
+//        } catch (CustomException e) {
+//            e.printStackTrace();
+//        } catch (Exception ignored){
+//            return;
+//        }
         int a = 1;
         if (a==1){
             return;
