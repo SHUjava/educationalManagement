@@ -145,13 +145,21 @@ public class DBConnector {
                 rs.close();
                 break;
             case "教师成绩查询":
-                if(int_args.length != 1 || str_args.length != 3){//工号，课程号  课程名称，课程学期，上课时间
+                if(int_args.length != 1 || str_args.length != 3){//工号  课程名称，课程学期，上课时间
                     throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
+                sql = "select course_id from course where teacher_id = '" + int_args[0] +
+                        "' and course_name = '" + str_args[0] +
+                        "' and course_semester = '" + str_args[1] +
+                        "' and course_time = '" + str_args[2] +
+                        "'\n";
+                rs = stmt.executeQuery(sql);
+                rs.next();
+                int course_order = rs.getInt("course_order");
                 sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
                         "from used_score, student\n" +
                         "where used_score.工号 = '" + int_args[0] +
-                        "' and used_score.课程编号 ='"+ int_args[1] +
+                        "' and used_score.课程编号 ='"+ course_order +
                         "'\n" +
                         "order by used_score.学号;";
                 rs = stmt.executeQuery(sql);
@@ -177,7 +185,70 @@ public class DBConnector {
                 rs.close();
                 System.out.println(tmp);
                 break;
-
+            case "教师成绩修改":
+                if(int_args.length != 3 || str_args.length != 4){
+                    //工号，学号，修改后成绩  课程名称，课程学期，上课时间，平时成绩/考试成绩
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                sql = "select course_id from course where teacher_id = '" + int_args[0] +
+                        "' and course_name = '" + str_args[0] +
+                        "' and course_semester = '" + str_args[1] +
+                        "' and course_time = '" + str_args[2] +
+                        "'\n";
+                rs = stmt.executeQuery(sql);
+                rs.next();
+                int course_id = rs.getInt("course_id");
+                String score_witch;
+                if(str_args[3]=="平时成绩"){
+                    score_witch="usual_score";
+                }
+                else{
+                    score_witch="test_score";
+                }
+                sql = "update score set " + score_witch + " = '" + str_args[2]+"' where student_id = '"+ int_args[1] +
+                        "' and course_id = '" + course_id +"'\n";
+                stmt = conn.prepareStatement(sql);
+                int row_count = stmt.executeUpdate(str_args[2]);//记录被修改的行数
+                if(row_count==1){
+                    System.out.println("修改成绩成功");
+                }
+                break;
+            case "教师成绩录入":
+                break;
+            case "修改密码":
+                if(int_args.length != 2 || str_args.length != 2){
+                    //身份标志位（0：教师，1：学生），id  第一遍输入密码，第二遍输入密码
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+                }
+                if(str_args[0]!=str_args[1]){
+                    System.out.println("两次输入密码不一致");
+                    break;
+                }
+                if(str_args[0].length()<6){
+                    System.out.println("密码过短（短于6个字符）");
+                    break;
+                }
+                if(str_args[0].length()>20){
+                    System.out.println("密码过长（长于20个字符）");
+                    break;
+                }
+                if(int_args[0]==0){
+                    sql = "update teacher set teacher_password = '"+str_args[0]+"' where teacher_id = '"+int_args[1]+"'";
+                    stmt = conn.prepareStatement(sql);
+                    row_count = stmt.executeUpdate(str_args[0]);
+                    if(row_count==1){
+                        System.out.println("修改密码成功");
+                    }
+                }
+                else if(int_args[0]==1){
+                    sql = "update student set student_password = "+str_args[0]+"where student_id = "+int_args[1];
+                    stmt = conn.prepareStatement(sql);
+                    row_count = stmt.executeUpdate(str_args[0]);
+                    if(row_count==1){
+                        System.out.println("修改密码成功");
+                    }
+                }
+                break;
         }
         int row = tmp.size();
         int col = tmp.get(0).size();
