@@ -18,7 +18,7 @@ import jdbctest.CustomException;
  *                    3.JPanel类型的成绩表格显示面板panel_show
  *
  */
-public class stuFrame extends JFrame {
+public class stuFrame extends JFrame implements Exit {
     int id;
     String name;
     JPanel panel_show;
@@ -70,6 +70,9 @@ public class stuFrame extends JFrame {
         stuPanel.add(changePW);
 
         JButton exitButton = new JButton("安全退出");
+        exitButton.addActionListener(e->{
+            doExit();
+        });
         exitButton.setPreferredSize(new Dimension(100,30));
         exitButton.setFont(font);
         exitButton.setContentAreaFilled(false);
@@ -169,4 +172,25 @@ public class stuFrame extends JFrame {
 
     }
 
+    @Override
+    /**
+     * @function : 实现安全退出功能。
+     */
+    public void doExit() {
+        //使用安全退出时，最好将下面注释的代码将页面默认关闭设置为（DO_NOTHING_ON_CLOSE）什么都不做
+        //经测试，下面的代码不修改也可以，好耶ovo
+        // this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        int n = JOptionPane.showConfirmDialog(null,"您确定要退出吗？"
+                ,"退出提示",JOptionPane.YES_NO_OPTION);
+        //取消选择是-1，确定退出是0，取消是1
+        System.out.println(n);
+        if (n==0){
+            //关闭当前界面，并不是推出整个程序。
+            dispose();
+            //返回登陆页面
+            JFrame frame = new CjFrame("成绩管理系统登录界面");
+
+        }
+
+    }
 }

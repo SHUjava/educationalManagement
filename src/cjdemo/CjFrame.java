@@ -37,7 +37,7 @@ import java.sql.SQLException;
  *                 3.对于学生界面的组件增加了更多的注释
  *
  */
-public class CjFrame extends JFrame  {
+public class CjFrame extends JFrame implements Exit {
     /**
      * 账号、密码文本框组件
      * id_textField : 账号文本框
@@ -67,7 +67,7 @@ public class CjFrame extends JFrame  {
         this.setResizable(false);
 
         id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"学号/工号"));
-        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,"密码"));
+        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,"123456"));
         //设置容器
 //        JPanel root_panel = new JPanel();
 //        this.setContentPane(root_panel);
@@ -109,7 +109,7 @@ public class CjFrame extends JFrame  {
                 } catch (SQLException | CustomException ex) {
                     ex.printStackTrace();
                 }
-                this.setVisible(false);
+                doExit();
             }
             else if(is_login("teacher") && choose.equals("教师")){
                 login_success();
@@ -223,6 +223,16 @@ public class CjFrame extends JFrame  {
             return false;
         }
     }
+
+    @Override
+    /**
+     * @function: 进行页面切换时关闭当前界面，而不是将页面设置为不可见
+     */
+    public void doExit() {
+        dispose();//关闭当前界面并不是退出整个程序。
+
+    }
+
     /**
      * @function: 创建监听器
      */

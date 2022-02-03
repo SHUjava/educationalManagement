@@ -2,11 +2,13 @@ package cjdemo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import jdbctest.CustomException;
 
-public class teacherFrame extends JFrame {
+public class teacherFrame extends JFrame implements Exit {
     int id;
     String name;
     JPanel panel_show;
@@ -21,7 +23,10 @@ public class teacherFrame extends JFrame {
         this.id = id;
         this.name = name;
         this.setTitle(id+"教师成绩管理页面");
+
+        //添加图标校徽
         ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
+        this.setIconImage(imageIcon.getImage().getScaledInstance(100,140,100));
         this.setBounds(100,100,1000,800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
@@ -63,6 +68,12 @@ public class teacherFrame extends JFrame {
          * @function: 创建安全退出的按钮exitButton.
          */
         JButton exitButton = new JButton("安全退出");
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                doExit();
+            }
+        });
         exitButton.setPreferredSize(new Dimension(100,30));
         exitButton.setFont(font);
         exitButton.setContentAreaFilled(false);
@@ -103,6 +114,25 @@ public class teacherFrame extends JFrame {
         changeGradeButton.setContentAreaFilled(false);
         functionPanel.add(changeGradeButton);
 
+
+    }
+
+    @Override
+    public void doExit() {
+        //使用安全退出时，最好将下面注释的代码将页面默认关闭设置为（DO_NOTHING_ON_CLOSE）什么都不做
+        //经测试，下面的代码不修改也可以，好耶ovo
+        // this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        int n = JOptionPane.showConfirmDialog(null,"您确定要退出吗？"
+                ,"退出提示",JOptionPane.YES_NO_OPTION);
+        //取消选择是-1，确定退出是0，取消是1
+        System.out.println(n);
+        if (n==0){
+            //关闭当前界面，并不是推出整个程序。
+            dispose();
+            //返回登陆页面
+            JFrame frame = new CjFrame("成绩管理系统登录界面");
+
+        }
 
     }
 }
