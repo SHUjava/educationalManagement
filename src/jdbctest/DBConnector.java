@@ -10,8 +10,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
     //static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
+    //static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -384,17 +384,78 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(tmp);
         double creditSum = 0;
         double gpaSum = 0;
         for (int j = 0; j < tmp.size(); j++) {
             creditSum += tmp.get(j).get(0);
             gpaSum += tmp.get(j).get(0) * tmp.get(j).get(1);
         }
-        double aver = gpaSum / creditSum;
+        double aver=0.0;
+        if(creditSum!=0){
+            aver = gpaSum / creditSum;
+        }
         java.math.BigDecimal b = new java.math.BigDecimal(aver);
         aver = b.setScale(2,java.math.RoundingMode.HALF_UP).doubleValue();
         return aver;
+    }
+
+    public int getStuGrade(int ID)
+    {
+        String sql;
+        int grade = 2019;
+        sql = "select student_grade from student where student_id = " + ID;
+        System.out.println(sql);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                grade = rs.getInt(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(grade);
+        return grade;
+    }
+
+    public Object[][] getEverySemesterGPA(int ID, String semester){
+        int grade = this.getStuGrade(ID);
+        String tmp = grade+"-"+(grade+1)+"秋季";
+        Object[][] history = new Object[12][2];
+        // 不考虑夏季学期
+        for(int i=0;i<12;i++){
+            history[i][0] = tmp;
+            if(!tmp.equals(semester)){
+                if(tmp.charAt(9)=='春'){
+                    int year1 = java.lang.Integer.parseInt(tmp.substring(0, 4));
+                    int year2 = java.lang.Integer.parseInt(tmp.substring(5, 9));
+                    tmp=(year1+1)+"-"+(year2+1)+"秋季";
+                }
+                else if(tmp.charAt(9)=='秋'){
+                    tmp=tmp.substring(0, 9)+"冬季";
+                }
+                else if(tmp.charAt(9)=='冬'){
+                    tmp=tmp.substring(0, 9)+"春季";
+                }
+            }
+            else{
+                break;
+            }
+        }
+        for(int i=0;i<12;i++){
+            history[i][1]=getAverageScore(ID,history[i][0].toString());
+            if(history[i+1][0]==null){
+                break;
+            }
+        }
+//        for(int i=0;i<12;i++){
+//            System.out.println(history[i][0]);
+//            System.out.println(Double.parseDouble(String.valueOf(history[i][1])));
+//            if(history[i+1][0]==null){
+//                break;
+//            }
+//        }
+        return history;
     }
 }
 
