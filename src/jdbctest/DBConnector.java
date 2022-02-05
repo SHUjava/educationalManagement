@@ -1,6 +1,7 @@
 package jdbctest;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -61,9 +62,8 @@ public class DBConnector {
     }
 
 
-    public String queryName(String mode, int ID)
-    {
-        if(mode.equals("admin")){
+    public String queryName(String mode, int ID) {
+        if (mode.equals("admin")) {
             return "管理员";
         }
         String sql;
@@ -362,10 +362,10 @@ public class DBConnector {
     }
 
     /**
-     * @author YangJunhao
      * @param ID,semester 学号，学期
+     * @return double 均绩
+     * @author YangJunhao
      * @function 生成该同学某学期的均绩
-     * @return aver double型均绩
      */
     public double getAverageScore(int ID, String semester) {
         String sql = "select 学分,绩点 from used_score where 学号='" + ID + "'and 学期='" + semester + "';";
@@ -390,17 +390,22 @@ public class DBConnector {
             creditSum += tmp.get(j).get(0);
             gpaSum += tmp.get(j).get(0) * tmp.get(j).get(1);
         }
-        double aver=0.0;
-        if(creditSum!=0){
+        double aver = 0.0;
+        if (creditSum != 0) {
             aver = gpaSum / creditSum;
         }
         java.math.BigDecimal b = new java.math.BigDecimal(aver);
-        aver = b.setScale(2,java.math.RoundingMode.HALF_UP).doubleValue();
+        aver = b.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();
         return aver;
     }
 
-    public int getStuGrade(int ID)
-    {
+    /**
+     * @param ID 学号
+     * @return int 年级
+     * @author YangJunhao
+     * @function 返回某同学的年级
+     */
+    public int getStuGrade(int ID) {
         String sql;
         int grade = 2019;
         sql = "select student_grade from student where student_id = " + ID;
@@ -418,36 +423,40 @@ public class DBConnector {
         return grade;
     }
 
-    public Object[][] getEverySemesterGPA(int ID, String semester){
+    /**
+     * @param ID,semester 学号，学期
+     * @return Object[][] [["学期"，均绩],[]]
+     * @author YangJunhao
+     * @function 生成该同学某学期及过往每个学期的均绩，供生成绩点走势图调用
+     */
+    public Object[][] getEverySemesterGPA(int ID, String semester) {
         int grade = this.getStuGrade(ID);
-        String tmp = grade+"-"+(grade+1)+"秋季";
+        String tmp = grade + "-" + (grade + 1) + "秋季";
         Object[][] history = new Object[12][2];
         // 不考虑夏季学期
-        for(int i=0;i<12;i++){
+        for (int i = 0; i < 12; i++) {
             history[i][0] = tmp;
-            if(!tmp.equals(semester)){
-                if(tmp.charAt(9)=='春'){
+            if (!tmp.equals(semester)) {
+                if (tmp.charAt(9) == '春') {
                     int year1 = java.lang.Integer.parseInt(tmp.substring(0, 4));
                     int year2 = java.lang.Integer.parseInt(tmp.substring(5, 9));
-                    tmp=(year1+1)+"-"+(year2+1)+"秋季";
+                    tmp = (year1 + 1) + "-" + (year2 + 1) + "秋季";
+                } else if (tmp.charAt(9) == '秋') {
+                    tmp = tmp.substring(0, 9) + "冬季";
+                } else if (tmp.charAt(9) == '冬') {
+                    tmp = tmp.substring(0, 9) + "春季";
                 }
-                else if(tmp.charAt(9)=='秋'){
-                    tmp=tmp.substring(0, 9)+"冬季";
-                }
-                else if(tmp.charAt(9)=='冬'){
-                    tmp=tmp.substring(0, 9)+"春季";
-                }
-            }
-            else{
+            } else {
                 break;
             }
         }
-        for(int i=0;i<12;i++){
-            history[i][1]=getAverageScore(ID,history[i][0].toString());
-            if(history[i+1][0]==null){
+        for (int i = 0; i < 12; i++) {
+            history[i][1] = getAverageScore(ID, history[i][0].toString());
+            if (history[i + 1][0] == null) {
                 break;
             }
         }
+        //System.out.println(Arrays.deepToString(history));
 //        for(int i=0;i<12;i++){
 //            System.out.println(history[i][0]);
 //            System.out.println(Double.parseDouble(String.valueOf(history[i][1])));
@@ -456,6 +465,74 @@ public class DBConnector {
 //            }
 //        }
         return history;
+    }
+
+    /**
+     * @param ID,semester 学号，学期
+     * @return Object[] [院系, 年级总人数, 排名, 百分比]
+     * @author YangJunhao
+     * @function 生成该同学某学期的成绩排名
+     */
+    public Object[] getRanking(int ID, String semester) {
+        Object[] result = new Object[4];
+        String sql;
+        ResultSet rs;
+        String college = "";
+        sql = "select student_major from student where student_id = " + ID;
+        try {
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                college = rs.getString(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        result[0] = college;
+        Vector<Vector<Double>> stu = new Vector<>();
+        sql = "SELECT DISTINCT 学号 FROM used_score,student WHERE 学号=student_id AND student_grade IN\n" +
+                "(SELECT student_grade FROM student WHERE student_id=" + ID + ");\n";
+        try {
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                double id = rs.getInt(1);
+                Vector<Double> tmp = new Vector<>();
+                tmp.addElement(id);
+                tmp.addElement(0.0);
+                stu.addElement(tmp);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        result[1] = stu.size();
+        for (int i = 0; i < stu.size(); i++) {
+            stu.get(i).set(1, getAverageScore((int) stu.get(i).get(0).doubleValue(), semester));
+        }
+        class MyCompare implements java.util.Comparator //内部类，实现Comparator，定义自己的比较方法
+        {
+            public int compare(Object o1, Object o2) {
+                Vector<Double> e1 = (Vector<Double>) o1;
+                Vector<Double> e2 = (Vector<Double>) o2;
+                return e2.get(1).compareTo(e1.get(1));  //降序
+            }
+        }
+        //System.out.println(stu);
+        java.util.Comparator ct = new MyCompare();
+        java.util.Collections.sort(stu, ct);
+        for (int i = 0; i < stu.size(); i++) {
+            if ((int) stu.get(i).get(0).doubleValue() == ID) {
+                result[2] = i + 1;
+                break;
+            }
+        }
+        java.text.NumberFormat numberFormat = java.text.NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(4);  // 设置精确到小数点后2位
+        String per = numberFormat.format((int) result[2] * 1.0 / (int) result[1] * 100);
+        result[3] = per + "%";
+        //System.out.println(stu);
+        System.out.println(Arrays.deepToString(result));
+        return result;
     }
 }
 
