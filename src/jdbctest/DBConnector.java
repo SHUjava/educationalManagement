@@ -5,17 +5,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
 
-import java.awt.Color;
-import java.io.File;
-import org.jfree.chart.ChartColor;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.ui.RefineryUtilities;
-
 public class DBConnector {
     // MySQL 8.0 以上版本 - JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -1234,7 +1223,7 @@ public class DBConnector {
         rs.close();
         System.out.println(tmp);//输出班级前10名的具体信息
     }
-    public void teacherGradeAnalysisPicture(int[] int_args, String[] str_args) throws CustomException, SQLException {
+    public int[] teacherGradeAnalysisPicture(int[] int_args, String[] str_args) throws CustomException, SQLException {
         //教师课程成绩分析报告图片部分，包括输出班级成绩分布饼状图
         String sql;
         ResultSet rs;
@@ -1295,45 +1284,15 @@ public class DBConnector {
         rs.next();
         int gradeE = rs.getInt("人数");
         rs.close();
-        DefaultPieDataset dataset = new DefaultPieDataset();
-        dataset.setValue(">90", gradeA);
-        dataset.setValue("80~90", gradeB);
-        dataset.setValue("70~80", gradeC);
-        dataset.setValue("60~70", gradeD);
-        dataset.setValue("<60", gradeE);
+        int[] row = new int[5];
+        row[0]=gradeA;
+        row[1]=gradeB;
+        row[2]=gradeC;
+        row[3]=gradeD;
+        row[4]=gradeE;
+        return row;
+    }
 
-        JFreeChart chart = ChartFactory.createPieChart("成绩分布", // chart
-                dataset, // data
-                true, // include legend
-                true, false);
-        setChart(chart);
-        PiePlot pieplot = (PiePlot) chart.getPlot();
-        pieplot.setSectionPaint(">90", Color.decode("#749f83"));
-        pieplot.setSectionPaint("80~90", Color.decode("#2f4554"));
-        pieplot.setSectionPaint("70~80", Color.decode("#61a0a8"));
-        pieplot.setSectionPaint("60~70", Color.decode("#91c7ae"));
-        pieplot.setSectionPaint("<60", Color.decode("#c23531"));
-        try {
-            ChartUtilities.saveChartAsPNG(new File("d:\\PieChart.png"), chart, 1500, 800);
-            System.err.println("成功");
-        } catch (Exception e) {
-            System.err.println("创建图形时出错");
-        }
-    }
-    public static void setChart(JFreeChart chart) {
-        //绘制饼状图时使用
-        chart.setTextAntiAlias(true);
-        PiePlot pieplot = (PiePlot) chart.getPlot();
-        // 设置图表背景颜色
-        pieplot.setBackgroundPaint(ChartColor.WHITE);
-        pieplot.setLabelBackgroundPaint(null);// 标签背景颜色
-        pieplot.setLabelOutlinePaint(null);// 标签边框颜色
-        pieplot.setLabelShadowPaint(null);// 标签阴影颜色
-        pieplot.setOutlinePaint(null); // 设置绘图面板外边的填充颜色
-        pieplot.setShadowPaint(null); // 设置绘图面板阴影的填充颜色
-        pieplot.setSectionOutlinesVisible(false);
-        pieplot.setNoDataMessage("没有可供使用的数据！");
-    }
 }
 
 

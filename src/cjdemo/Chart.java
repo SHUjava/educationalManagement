@@ -1,5 +1,6 @@
 package cjdemo;
 
+import jdbctest.CustomException;
 import jdbctest.DBConnector;
 import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartFactory;
@@ -15,10 +16,24 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import java.awt.Color;
+import java.io.File;
+
+
+import org.jfree.chart.ChartColor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.ui.RefineryUtilities;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Objects;
+import java.util.Vector;
 
 /**
  *
@@ -134,6 +149,52 @@ public class Chart {
     //构建一个方法，用于获取存放了图形的面板(封装：隐藏具体实现)
     public ChartPanel getChartPanel(){
         return frame;
+    }
+
+    public static DefaultPieDataset getDataset3(int[] int_args, String[] str_args) throws SQLException, CustomException {
+        //获取班级成绩分布数据
+        DefaultPieDataset ds = new DefaultPieDataset();
+        DBConnector test = new DBConnector();
+        int[] distribution = test.teacherGradeAnalysisPicture(int_args,str_args);
+        ds.setValue(">90", distribution[0]);
+        ds.setValue("80~90", distribution[1]);
+        ds.setValue("70~80", distribution[2]);
+        ds.setValue("60~70", distribution[3]);
+        ds.setValue("<60", distribution[4]);
+        return ds;
+    }
+    public static void setChart(JFreeChart chart) {
+        //绘制饼状图时使用
+        chart.setTextAntiAlias(true);
+        PiePlot pieplot = (PiePlot) chart.getPlot();
+        // 设置图表背景颜色
+        pieplot.setBackgroundPaint(ChartColor.WHITE);
+        pieplot.setLabelBackgroundPaint(null);// 标签背景颜色
+        pieplot.setLabelOutlinePaint(null);// 标签边框颜色
+        pieplot.setLabelShadowPaint(null);// 标签阴影颜色
+        pieplot.setOutlinePaint(null); // 设置绘图面板外边的填充颜色
+        pieplot.setShadowPaint(null); // 设置绘图面板阴影的填充颜色
+        pieplot.setSectionOutlinesVisible(false);
+        pieplot.setNoDataMessage("没有可供使用的数据！");
+    }
+    public void teacherGradeAnalysis(DefaultPieDataset ds){
+        JFreeChart chart = ChartFactory.createPieChart("成绩分布", // chart
+                ds, // data
+                true, // include legend
+                true, false);
+        setChart(chart);
+        PiePlot pieplot = (PiePlot) chart.getPlot();
+        pieplot.setSectionPaint(">90", Color.decode("#749f83"));
+        pieplot.setSectionPaint("80~90", Color.decode("#2f4554"));
+        pieplot.setSectionPaint("70~80", Color.decode("#61a0a8"));
+        pieplot.setSectionPaint("60~70", Color.decode("#91c7ae"));
+        pieplot.setSectionPaint("<60", Color.decode("#c23531"));
+        try {
+            ChartUtilities.saveChartAsPNG(new File("d:\\PieChart.png"), chart, 1500, 800);
+            System.err.println("成功");
+        } catch (Exception e) {
+            System.err.println("创建图形时出错");
+        }
     }
 }
 /*一个调用样例
