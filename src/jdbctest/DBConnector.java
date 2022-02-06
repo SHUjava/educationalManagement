@@ -5,6 +5,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
 
+import java.awt.Color;
+import java.io.File;
+import org.jfree.chart.ChartColor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.ui.RefineryUtilities;
+
 public class DBConnector {
     // MySQL 8.0 以上版本 - JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -1142,7 +1153,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
-                "' and 成绩 > 90 ;\n";
+                "' and 成绩 >= 90 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
         int gradeA = rs.getInt("优秀人数");
@@ -1188,7 +1199,106 @@ public class DBConnector {
         rs.close();
         System.out.println(tmp);//输出班级前10名的具体信息
     }
+    public void teacherGradeAnalysisPicture(int[] int_args, String[] str_args) throws CustomException, SQLException {
+        //教师课程成绩分析报告图片部分，包括输出班级成绩分布饼状图
+        String sql;
+        ResultSet rs;
+        if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
+            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+        }
+        sql = "select course_order from course where teacher_id = '" + int_args[0] +
+                "' and course_name = '" + str_args[0] +
+                "' and course_semester = '" + str_args[1] +
+                "' and course_time = '" + str_args[2] +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int course_order = rs.getInt("course_order");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 90 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeA = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 80 and 成绩 < 90 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeB = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 70 and 成绩 < 80 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeC = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 60 and 成绩 < 70 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeD = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 < 60 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeE = rs.getInt("人数");
+        rs.close();
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue(">90", gradeA);
+        dataset.setValue("80~90", gradeB);
+        dataset.setValue("70~80", gradeC);
+        dataset.setValue("60~70", gradeD);
+        dataset.setValue("<60", gradeE);
 
+        JFreeChart chart = ChartFactory.createPieChart("成绩分布", // chart
+                dataset, // data
+                true, // include legend
+                true, false);
+        setChart(chart);
+        PiePlot pieplot = (PiePlot) chart.getPlot();
+        pieplot.setSectionPaint(">90", Color.decode("#749f83"));
+        pieplot.setSectionPaint("80~90", Color.decode("#2f4554"));
+        pieplot.setSectionPaint("70~80", Color.decode("#61a0a8"));
+        pieplot.setSectionPaint("60~70", Color.decode("#91c7ae"));
+        pieplot.setSectionPaint("<60", Color.decode("#c23531"));
+        try {
+            ChartUtilities.saveChartAsPNG(new File("d:\\PieChart.png"), chart, 1500, 800);
+            System.err.println("成功");
+        } catch (Exception e) {
+            System.err.println("创建图形时出错");
+        }
+    }
+    public static void setChart(JFreeChart chart) {
+        //绘制饼状图时使用
+        chart.setTextAntiAlias(true);
+        PiePlot pieplot = (PiePlot) chart.getPlot();
+        // 设置图表背景颜色
+        pieplot.setBackgroundPaint(ChartColor.WHITE);
+        pieplot.setLabelBackgroundPaint(null);// 标签背景颜色
+        pieplot.setLabelOutlinePaint(null);// 标签边框颜色
+        pieplot.setLabelShadowPaint(null);// 标签阴影颜色
+        pieplot.setOutlinePaint(null); // 设置绘图面板外边的填充颜色
+        pieplot.setShadowPaint(null); // 设置绘图面板阴影的填充颜色
+        pieplot.setSectionOutlinesVisible(false);
+        pieplot.setNoDataMessage("没有可供使用的数据！");
+    }
 }
 
 
