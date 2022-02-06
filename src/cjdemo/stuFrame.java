@@ -28,6 +28,7 @@ public class stuFrame extends JFrame implements Exit {
     int[] int_args ;
     String[] str_args;
     String[] col_name;
+    Print print;
 
     /**
      * @param ID: 根据学生ID来创建学生页面
@@ -146,9 +147,7 @@ public class stuFrame extends JFrame implements Exit {
         JButton buttonExport = export.getButtonExport();
         panel_export.add(buttonExport);
         // 以下三行是一个简单的Print类调用的样例 for 张宝
-        Print print = new Print(cjtable, this);
-        JButton buttonPrint = print.getButtonPrint();
-        panel_export.add(buttonPrint);
+
 
         this.add(panel_show,"East");
         panel_show.setVisible(false);
@@ -173,17 +172,20 @@ public class stuFrame extends JFrame implements Exit {
          * 函数参数采用lambda表达式
          */
         buttonQuery.addActionListener((e) -> {
-            String[] str={"2019-2020秋季","2019-2020冬季","2019-2020春季","2020-2021秋季","",""};
+            String[] str={"2019-2020秋季","2019-2020冬季","2019-2020春季","2020-2021秋季","2020-2021冬季","2020-2021春季"};
             Object checkResult = JOptionPane.showInputDialog(null,"请选择学期","选择学期",1,null,str,str[0]);
             System.out.println(checkResult);
 
-            JTable cjtable = getJTable(checkResult);
+            cjtable = getJTable(checkResult);
             panel_show.add(new JScrollPane(cjtable));
 //        cjtable.setBounds(0,0,700,300);
             cjtable.setSize(550,300);
 //        cjtable.setPreferredSize(new Dimension(700,300));
             // 将表格设置为不可编辑
             cjtable.setEnabled(false);
+            print = new Print(cjtable, this,this.name);
+            JButton buttonPrint = print.getButtonPrint();
+            panel_export.add(buttonPrint);
             panel_show.setVisible(true);
         });
         //将【成绩查询】按钮组件添加到功能栏面板中
