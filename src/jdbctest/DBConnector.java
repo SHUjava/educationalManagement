@@ -96,7 +96,7 @@ public class DBConnector {
     }
 
     public Object[][] search(String mode, int[] int_args, String[] str_args, Vector<Object> additional) throws CustomException, SQLException {
-        Object[][] result = new Object[0][];
+        Object[][] result;
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
@@ -131,11 +131,11 @@ public class DBConnector {
                 break;
             case "课程成绩查询":
                 if (int_args.length != 2 || str_args.length != 0) {
-                    throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length + "123456");
+                    throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length);
                 }
                 sql = "select used_score.课程编号, used_score.课程名, used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.绩点\n" +
                         "from used_score, student\n" +
-                        "where used_score.工号 = '2001001' and used_score.课程编号 ='3001001' and used_score.学号=student.student_id\n" +
+                        "where used_score.工号 = '"+int_args[0]+"' and used_score.课程编号 ='"+int_args[1]+"' and used_score.学号=student.student_id\n" +
                         "order by used_score.成绩;";
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -251,7 +251,6 @@ public class DBConnector {
                     part5 = "";
                 }else{
                     part5 = and + "student_major like '%"+str_args[2]+"%'";
-                    and = " and ";
                 }
                 if (part5.contains(" or ") || part5.contains(";")){
                     throw new CustomException("院系输入有误"+int_args[0]);
@@ -302,7 +301,6 @@ public class DBConnector {
                     part3 = "";
                 }else{
                     part3 = and + "teacher_major like '%"+str_args[1]+"%'";
-                    and = " and ";
                 }
                 System.out.println(part3);
                 if (part3.contains(" or ") || part3.contains(";")){
@@ -651,9 +649,9 @@ public class DBConnector {
         }
         double creditSum = 0;
         double gpaSum = 0;
-        for (int j = 0; j < tmp.size(); j++) {
-            creditSum += tmp.get(j).get(0);
-            gpaSum += tmp.get(j).get(0) * tmp.get(j).get(1);
+        for (Vector<Double> doubles : tmp) {
+            creditSum += doubles.get(0);
+            gpaSum += doubles.get(0) * doubles.get(1);
         }
         double aver = 0.0;
         if (creditSum != 0) {
@@ -938,7 +936,7 @@ public class DBConnector {
                 Object[][] rs = this.search("管理员课程查询", int_args, str_args, ignore);
                 for (Object[] course:rs){
                     int[] tmp_id = {(int) course[0], id[0]};
-                    this.delete("班级", tmp_id);;
+                    this.delete("班级", tmp_id);
                 }
                 sql = "delete from teacher where teacher_id = "+id[0]+";";
                 System.out.println(sql);
