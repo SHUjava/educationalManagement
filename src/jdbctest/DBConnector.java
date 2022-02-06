@@ -10,8 +10,8 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    //static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
+    static final String PASS = "Zx010426";
+    //static final String PASS = "Zbb123150@";
 //    static final String PASS = "yang0417";
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
@@ -401,7 +401,7 @@ public class DBConnector {
                 if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
                     throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
                 }
-                sql = "select course_id from course where teacher_id = '" + int_args[0] +
+                sql = "select course_order from course where teacher_id = '" + int_args[0] +
                         "' and course_name = '" + str_args[0] +
                         "' and course_semester = '" + str_args[1] +
                         "' and course_time = '" + str_args[2] +
@@ -956,7 +956,7 @@ public class DBConnector {
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if(int_args.length != 1 || str_args.length != 4){
+        if(int_args.length != 1 || str_args.length != 3){
             //工号  课程名称，课程学期，上课时间
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
         }
@@ -1102,7 +1102,92 @@ public class DBConnector {
             }
         }
     }
-
+    public void teacherGradeAnalysisText(int[] int_args, String[] str_args) throws CustomException, SQLException {
+        //教师课程成绩分析报告文字部分，包括输出班级平均分、优秀率、挂科率、前十名表单
+        Vector<Vector<Object>> tmp = new Vector<>();
+        String sql;
+        ResultSet rs;
+        if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
+            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+        }
+        sql = "select course_order from course where teacher_id = '" + int_args[0] +
+                "' and course_name = '" + str_args[0] +
+                "' and course_semester = '" + str_args[1] +
+                "' and course_time = '" + str_args[2] +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int course_order = rs.getInt("course_order");
+        rs.close();
+        sql="select avg(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int avg = rs.getInt("成绩");
+        rs.close();
+        System.out.println("平均成绩："+avg);
+        sql="select count(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int numOfPeople = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 > 90 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeA = rs.getInt("优秀人数");
+        rs.close();
+        System.out.println("优秀率："+gradeA/numOfPeople*100+"%");
+        sql="select count(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 < 60 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeD = rs.getInt("挂科人数");
+        rs.close();
+        System.out.println("挂科率："+gradeD/numOfPeople*100+"%");
+        System.out.println("班级前十名表单：");
+        sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
+                "from used_score, student\n" +
+                "where used_score.工号 = '" + int_args[0] +
+                "' and used_score.课程编号 ='" + course_order +
+                "'\n" +
+                "order by used_score.成绩;";
+        rs = stmt.executeQuery(sql);
+        int id = 0;
+        while (rs.next()&&id<10) {
+            id++;
+            int student_id = rs.getInt("学号");
+            String student_name = rs.getString("student_name");
+            int daily_score = rs.getInt("平时成绩");
+            int exam_score = rs.getInt("考试成绩");
+            int score = rs.getInt("成绩");
+            double gpa = rs.getDouble("绩点");
+            Vector<Object> row = new Vector<>();
+            row.addElement(id);//排名
+            row.addElement(student_id);
+            row.addElement(student_name);
+            row.addElement(daily_score);
+            row.addElement(exam_score);
+            row.addElement(score);
+            row.addElement(gpa);
+            tmp.addElement(row);
+        }
+        rs.close();
+        System.out.println(tmp);//输出班级前10名的具体信息
+    }
 
 }
 
