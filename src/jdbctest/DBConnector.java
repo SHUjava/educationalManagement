@@ -789,7 +789,42 @@ public class DBConnector {
         System.out.println(Arrays.deepToString(result));
         return result;
     }
-    
+    /**
+     * @param ID,course,semester 工号，课程编号，学期
+     * @return Object[][] [["绩点"，人数],[]]
+     * @author YangJunhao
+     * @function 生成该老师某学期某门课的学生绩点分布，供生成绩点分布图调用
+     */
+    public Object[][] getClassGPADistribution(int ID,int course,String semester){
+        Object[][] distribution = new Object[11][2];
+        distribution[0][0]="0.0";
+        distribution[1][0]="1.0";
+        distribution[2][0]="1.5";
+        distribution[3][0]="1.7";
+        distribution[4][0]="2.0";
+        distribution[5][0]="2.3";
+        distribution[6][0]="2.7";
+        distribution[7][0]="3.0";
+        distribution[8][0]="3.3";
+        distribution[9][0]="3.7";
+        distribution[10][0]="4.0";
+        String sql;
+        for (int i = 0; i < 11; i++) {
+            sql = "SELECT DISTINCT COUNT(学号) FROM used_score WHERE 工号="+ ID +
+                    " AND 学期='"+semester+"' AND 课程编号="+course+" AND 绩点="+distribution[i][0];
+            try {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    distribution[i][1] = rs.getInt(1);
+                }
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(Arrays.deepToString(distribution));
+        return distribution;
+    }
     public void insert(String mode, int[] int_args, String[] str_args)
             throws CustomException, SQLException {
         String sql;
