@@ -611,6 +611,9 @@ public class DBConnector {
 //                break;
         }
         int row = tmp.size();
+        if (row == 0){
+            return new Object[0][0];
+        }
         int col = tmp.get(0).size();
         result = new Object[row][col];
         //读取数据库
