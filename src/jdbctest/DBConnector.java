@@ -102,12 +102,12 @@ public class DBConnector {
         ResultSet rs;
         switch (mode) {
             case "学生成绩查询":
-                if (int_args.length != 1 || str_args.length != 0) {
+                if (int_args.length != 1 || str_args.length != 1) {
                     throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
                 }
                 sql = "select 课程编号, 课程名, 学分, 成绩, 绩点\n" +
                         "from used_score\n" +
-                        "where 学号='" + int_args[0] + "';\n";
+                        "where 学号='" + int_args[0] +"' and 学期 = '"+str_args[0] + "';\n";
                 rs = stmt.executeQuery(sql);
                 int id = 0;
                 while (rs.next()) {

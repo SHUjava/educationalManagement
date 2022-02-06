@@ -22,6 +22,12 @@ public class stuFrame extends JFrame implements Exit {
     int id;
     String name;
     JPanel panel_show;
+    Object[][] tableData;
+    DBConnector conn;
+    JTable cjtable;
+    int[] int_args ;
+    String[] str_args;
+    String[] col_name;
 
     /**
      * @param ID: 根据学生ID来创建学生页面
@@ -78,21 +84,21 @@ public class stuFrame extends JFrame implements Exit {
         exitButton.setContentAreaFilled(false);
         stuPanel.add(exitButton);
 
-
-        int[] int_args = new int[1];
-        String[] str_args = new String[0];
-        int_args[0] = 1001001;
-        DBConnector conn = new DBConnector();
-        Object[][] tableData = new Object[0][];
-        try{
-            Vector<Object> additional = new Vector<>();
-            tableData = conn.search("学生成绩查询",int_args,str_args,additional);
-            System.out.println(tableData.toString());
-        } catch (CustomException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+//
+//        int_args = new int[1];
+//        str_args = new String[0];
+//        int_args[0] = this.id;
+//        conn = new DBConnector();
+//        tableData = new Object[0][];
+//        try{
+//            Vector<Object> additional = new Vector<>();
+//            tableData = conn.search("学生成绩查询",int_args,str_args,additional);
+//            System.out.println(tableData.toString());
+//        } catch (CustomException e) {
+//            e.printStackTrace();
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
 //        try {
 //            conn.delete("教师", int_args);
 //            //System.out.println(Arrays.deepToString(tableData));
@@ -106,17 +112,16 @@ public class stuFrame extends JFrame implements Exit {
 //            return;
 //        }
 //        System.out.println(tableData.length);
-        String[] col_name = {"序号", "课程编号", "课程名", "学分", "成绩", "绩点"};
 
         /**
          * @function： 创建成绩显示表格cjtable
          */
-        JTable cjtable = new JTable(tableData, col_name);
+//        JTable cjtable = getJTable();
 //        cjtable.setBounds(0,0,700,300);
-        cjtable.setSize(550,300);
-//        cjtable.setPreferredSize(new Dimension(700,300));
-        // 将表格设置为不可编辑
-        cjtable.setEnabled(false);
+//        cjtable.setSize(550,300);
+////        cjtable.setPreferredSize(new Dimension(700,300));
+//        // 将表格设置为不可编辑
+//        cjtable.setEnabled(false);
 
         /**
          *  @function: 创建成绩显示面板,显示学生成绩以及导出等按钮
@@ -146,7 +151,6 @@ public class stuFrame extends JFrame implements Exit {
         panel_export.add(buttonPrint);
 
         this.add(panel_show,"East");
-        panel_show.add(new JScrollPane(cjtable));
         panel_show.setVisible(false);
 
 
@@ -169,6 +173,17 @@ public class stuFrame extends JFrame implements Exit {
          * 函数参数采用lambda表达式
          */
         buttonQuery.addActionListener((e) -> {
+            String[] str={"2019-2020秋季","2019-2020冬季","2019-2020春季","2020-2021秋季","",""};
+            Object checkResult = JOptionPane.showInputDialog(null,"请选择学期","选择学期",1,null,str,str[0]);
+            System.out.println(checkResult);
+
+            JTable cjtable = getJTable(checkResult);
+            panel_show.add(new JScrollPane(cjtable));
+//        cjtable.setBounds(0,0,700,300);
+            cjtable.setSize(550,300);
+//        cjtable.setPreferredSize(new Dimension(700,300));
+            // 将表格设置为不可编辑
+            cjtable.setEnabled(false);
             panel_show.setVisible(true);
         });
         //将【成绩查询】按钮组件添加到功能栏面板中
@@ -176,6 +191,28 @@ public class stuFrame extends JFrame implements Exit {
 
     }
 
+    /**
+     *
+     */
+    public JTable getJTable(Object semester)
+    {
+        int_args = new int[1];
+        str_args = new String[1];
+        int_args[0] = this.id;
+        str_args[0] = semester.toString();
+        conn = new DBConnector();
+        try {
+            tableData = conn.search("学生成绩查询",int_args,str_args,null);
+        } catch (CustomException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String[] col_name = {"序号", "课程编号", "课程名", "学分", "成绩", "绩点"};
+        JTable cjtable = new JTable(tableData, col_name);
+        System.out.println(tableData.toString());
+        return cjtable;
+    }
     @Override
     /**
      * @function : 实现安全退出功能。
