@@ -5,14 +5,25 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
 
+import java.awt.Color;
+import java.io.File;
+import org.jfree.chart.ChartColor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.ui.RefineryUtilities;
+
 public class DBConnector {
     // MySQL 8.0 以上版本 - JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    //static final String PASS = "Zx010426";
-//    static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
+    static final String PASS = "Zx010426";
+    //static final String PASS = "Zbb123150@";
+//    static final String PASS = "yang0417";
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -401,7 +412,7 @@ public class DBConnector {
                 if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
                     throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
                 }
-                sql = "select course_id from course where teacher_id = '" + int_args[0] +
+                sql = "select course_order from course where teacher_id = '" + int_args[0] +
                         "' and course_name = '" + str_args[0] +
                         "' and course_semester = '" + str_args[1] +
                         "' and course_time = '" + str_args[2] +
@@ -778,42 +789,6 @@ public class DBConnector {
         System.out.println(Arrays.deepToString(result));
         return result;
     }
-    /**
-     * @param ID,course,semester 工号，课程编号，学期
-     * @return Object[][] [["绩点"，人数],[]]
-     * @author YangJunhao
-     * @function 生成该老师某学期某门课的学生绩点分布，供生成绩点分布图调用
-     */
-    public Object[][] getClassGPADistribution(int ID,int course,String semester){
-        Object[][] distribution = new Object[11][2];
-        distribution[0][0]="0.0";
-        distribution[1][0]="1.0";
-        distribution[2][0]="1.5";
-        distribution[3][0]="1.7";
-        distribution[4][0]="2.0";
-        distribution[5][0]="2.3";
-        distribution[6][0]="2.7";
-        distribution[7][0]="3.0";
-        distribution[8][0]="3.3";
-        distribution[9][0]="3.7";
-        distribution[10][0]="4.0";
-        String sql;
-        for (int i = 0; i < 11; i++) {
-            sql = "SELECT DISTINCT COUNT(学号) FROM used_score WHERE 工号="+ ID +
-                    " AND 学期='"+semester+"' AND 课程编号="+course+" AND 绩点="+distribution[i][0];
-            try {
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    distribution[i][1] = rs.getInt(1);
-                }
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println(Arrays.deepToString(distribution));
-        return distribution;
-    }
     
     public void insert(String mode, int[] int_args, String[] str_args)
             throws CustomException, SQLException {
@@ -992,7 +967,7 @@ public class DBConnector {
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if(int_args.length != 1 || str_args.length != 4){
+        if(int_args.length != 1 || str_args.length != 3){
             //工号  课程名称，课程学期，上课时间
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
         }
@@ -1138,8 +1113,192 @@ public class DBConnector {
             }
         }
     }
+    public void teacherGradeAnalysisText(int[] int_args, String[] str_args) throws CustomException, SQLException {
+        //教师课程成绩分析报告文字部分，包括输出班级平均分、优秀率、挂科率、前十名表单
+        Vector<Vector<Object>> tmp = new Vector<>();
+        String sql;
+        ResultSet rs;
+        if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
+            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+        }
+        sql = "select course_order from course where teacher_id = '" + int_args[0] +
+                "' and course_name = '" + str_args[0] +
+                "' and course_semester = '" + str_args[1] +
+                "' and course_time = '" + str_args[2] +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int course_order = rs.getInt("course_order");
+        rs.close();
+        sql="select avg(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int avg = rs.getInt("成绩");
+        rs.close();
+        System.out.println("平均成绩："+avg);
+        sql="select count(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int numOfPeople = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 90 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeA = rs.getInt("优秀人数");
+        rs.close();
+        System.out.println("优秀率："+gradeA/numOfPeople*100+"%");
+        sql="select count(成绩)\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 < 60 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeD = rs.getInt("挂科人数");
+        rs.close();
+        System.out.println("挂科率："+gradeD/numOfPeople*100+"%");
+        System.out.println("班级前十名表单：");
+        sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
+                "from used_score, student\n" +
+                "where used_score.工号 = '" + int_args[0] +
+                "' and used_score.课程编号 ='" + course_order +
+                "'\n" +
+                "order by used_score.成绩;";
+        rs = stmt.executeQuery(sql);
+        int id = 0;
+        while (rs.next()&&id<10) {
+            id++;
+            int student_id = rs.getInt("学号");
+            String student_name = rs.getString("student_name");
+            int daily_score = rs.getInt("平时成绩");
+            int exam_score = rs.getInt("考试成绩");
+            int score = rs.getInt("成绩");
+            double gpa = rs.getDouble("绩点");
+            Vector<Object> row = new Vector<>();
+            row.addElement(id);//排名
+            row.addElement(student_id);
+            row.addElement(student_name);
+            row.addElement(daily_score);
+            row.addElement(exam_score);
+            row.addElement(score);
+            row.addElement(gpa);
+            tmp.addElement(row);
+        }
+        rs.close();
+        System.out.println(tmp);//输出班级前10名的具体信息
+    }
+    public void teacherGradeAnalysisPicture(int[] int_args, String[] str_args) throws CustomException, SQLException {
+        //教师课程成绩分析报告图片部分，包括输出班级成绩分布饼状图
+        String sql;
+        ResultSet rs;
+        if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
+            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+        }
+        sql = "select course_order from course where teacher_id = '" + int_args[0] +
+                "' and course_name = '" + str_args[0] +
+                "' and course_semester = '" + str_args[1] +
+                "' and course_time = '" + str_args[2] +
+                "';\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int course_order = rs.getInt("course_order");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 90 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeA = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 80 and 成绩 < 90 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeB = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 70 and 成绩 < 80 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeC = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 >= 60 and 成绩 < 70 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeD = rs.getInt("人数");
+        rs.close();
+        sql="select count(成绩) as 人数\n" +
+                "from used_score\n" +
+                "where 工号 = '" + int_args[0] +
+                "' and 课程编号 ='" + course_order +
+                "' and 成绩 < 60 ;\n";
+        rs = stmt.executeQuery(sql);
+        rs.next();
+        int gradeE = rs.getInt("人数");
+        rs.close();
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue(">90", gradeA);
+        dataset.setValue("80~90", gradeB);
+        dataset.setValue("70~80", gradeC);
+        dataset.setValue("60~70", gradeD);
+        dataset.setValue("<60", gradeE);
 
-
+        JFreeChart chart = ChartFactory.createPieChart("成绩分布", // chart
+                dataset, // data
+                true, // include legend
+                true, false);
+        setChart(chart);
+        PiePlot pieplot = (PiePlot) chart.getPlot();
+        pieplot.setSectionPaint(">90", Color.decode("#749f83"));
+        pieplot.setSectionPaint("80~90", Color.decode("#2f4554"));
+        pieplot.setSectionPaint("70~80", Color.decode("#61a0a8"));
+        pieplot.setSectionPaint("60~70", Color.decode("#91c7ae"));
+        pieplot.setSectionPaint("<60", Color.decode("#c23531"));
+        try {
+            ChartUtilities.saveChartAsPNG(new File("d:\\PieChart.png"), chart, 1500, 800);
+            System.err.println("成功");
+        } catch (Exception e) {
+            System.err.println("创建图形时出错");
+        }
+    }
+    public static void setChart(JFreeChart chart) {
+        //绘制饼状图时使用
+        chart.setTextAntiAlias(true);
+        PiePlot pieplot = (PiePlot) chart.getPlot();
+        // 设置图表背景颜色
+        pieplot.setBackgroundPaint(ChartColor.WHITE);
+        pieplot.setLabelBackgroundPaint(null);// 标签背景颜色
+        pieplot.setLabelOutlinePaint(null);// 标签边框颜色
+        pieplot.setLabelShadowPaint(null);// 标签阴影颜色
+        pieplot.setOutlinePaint(null); // 设置绘图面板外边的填充颜色
+        pieplot.setShadowPaint(null); // 设置绘图面板阴影的填充颜色
+        pieplot.setSectionOutlinesVisible(false);
+        pieplot.setNoDataMessage("没有可供使用的数据！");
+    }
 }
 
 
