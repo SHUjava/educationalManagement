@@ -31,6 +31,9 @@ import java.util.Objects;
  * @updateDate: 2022/2/6
  * @updateContent: 1、功能内聚，将课程绩点分布图合并在内
  * 2、更名为Chart类
+ *
+ *  @updateDate: 2022/2/7
+ *  @updateContent: 将绩点走势图X轴文字简化使之能完全显示，如“2019-2020秋季”->“2019秋”
  */
 public class Chart {
     //构建容器面板，用于存放已经画好的图形报表
@@ -41,7 +44,8 @@ public class Chart {
         DBConnector test = new DBConnector();
         Object[][] history = test.getEverySemesterGPA(ID, semester);
         for (int i = 0; i < 12; i++) {
-            ds.addValue(Double.parseDouble(String.valueOf(history[i][1])), "", history[i][0].toString());
+            String tmp= history[i][0].toString().substring(0,4)+history[i][0].toString().charAt(9);
+            ds.addValue(Double.parseDouble(String.valueOf(history[i][1])), "", tmp);
             if (history[i + 1][0] == null) {
                 break;
             }
@@ -136,25 +140,3 @@ public class Chart {
         return frame;
     }
 }
-/*一个调用样例
-public class Test extends JFrame {
-
-    //在构造方法中初始化窗体
-    public Test(){
-        //----------------------设置窗体大小
-        this.setSize(800,600);
-        //---------------------------将报表面板添加到窗体中
-        //this.add(new Chart(1001002,"2021-2022春季","学生绩点走势",0).getChartPanel());
-        this.add(new Chart(2002001,"2019-2020冬季","课程绩点分布",3003001).getChartPanel());
-        //----------------------设置窗体大小不可变
-        this.setResizable(false);
-        //----------------------设置窗体相对于屏幕居中
-        this.setLocationRelativeTo(null);
-        //------------------------设置窗体可见
-        this.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new Test();
-    }
-}*/

@@ -22,8 +22,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
+//    static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -729,8 +729,8 @@ public class DBConnector {
      * @author YangJunhao
      * @function 生成该同学某学期的成绩排名
      */
-    public Object[] getRanking(int ID, String semester) {
-        Object[] result = new Object[4];
+    public Object[][] getRanking(int ID, String semester) {
+        Object[][] result = new Object[1][4];
         String sql;
         ResultSet rs;
         String college = "";
@@ -744,7 +744,7 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        result[0] = college;
+        result[0][0] = college;
         Vector<Vector<Double>> stu = new Vector<>();
         sql = "SELECT DISTINCT 学号 FROM used_score,student WHERE 学号=student_id AND student_grade IN\n" +
                 "(SELECT student_grade FROM student WHERE student_id=" + ID + ");\n";
@@ -761,7 +761,7 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        result[1] = stu.size();
+        result[0][1] = stu.size();
         for (int i = 0; i < stu.size(); i++) {
             stu.get(i).set(1, getAverageScore((int) stu.get(i).get(0).doubleValue(), semester));
         }
@@ -778,14 +778,14 @@ public class DBConnector {
         java.util.Collections.sort(stu, ct);
         for (int i = 0; i < stu.size(); i++) {
             if ((int) stu.get(i).get(0).doubleValue() == ID) {
-                result[2] = i + 1;
+                result[0][2] = i + 1;
                 break;
             }
         }
         java.text.NumberFormat numberFormat = java.text.NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(4);  // 设置精确到小数点后4位
-        String per = numberFormat.format((int) result[2] * 1.0 / (int) result[1] * 100);
-        result[3] = per + "%";
+        String per = numberFormat.format((int) result[0][2] * 1.0 / (int) result[0][1] * 100);
+        result[0][3] = per + "%";
         //System.out.println(stu);
         System.out.println(Arrays.deepToString(result));
         return result;

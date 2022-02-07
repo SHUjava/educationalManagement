@@ -2,6 +2,8 @@ package cjdemo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.security.spec.ECField;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.Vector;
 
 import jdbctest.DBConnector;
 import jdbctest.CustomException;
+import org.jfree.chart.ChartPanel;
 
 /**
  * @description : 显示学生界面，包含成绩查询功能
@@ -21,7 +24,7 @@ import jdbctest.CustomException;
 public class stuFrame extends JFrame implements Exit {
     int id;
     String name;
-    JPanel panel_show;
+    JPanel panel_show,showHistoryPanel;
     Object[][] tableData;
     DBConnector conn;
     JTable cjtable;
@@ -85,82 +88,19 @@ public class stuFrame extends JFrame implements Exit {
         exitButton.setContentAreaFilled(false);
         stuPanel.add(exitButton);
 
-//
-//        int_args = new int[1];
-//        str_args = new String[0];
-//        int_args[0] = this.id;
-//        conn = new DBConnector();
-//        tableData = new Object[0][];
-//        try{
-//            Vector<Object> additional = new Vector<>();
-//            tableData = conn.search("学生成绩查询",int_args,str_args,additional);
-//            System.out.println(tableData.toString());
-//        } catch (CustomException e) {
-//            e.printStackTrace();
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//        try {
-//            conn.delete("教师", int_args);
-//            //System.out.println(Arrays.deepToString(tableData));
-//        } catch (CustomException e) {
-//            e.printStackTrace();
-//        } catch (Exception ignored){
-//            return;
-//        }
-//        int a = 1;
-//        if (a==1){
-//            return;
-//        }
-//        System.out.println(tableData.length);
-
-        /**
-         * @function： 创建成绩显示表格cjtable
-         */
-//        JTable cjtable = getJTable();
-//        cjtable.setBounds(0,0,700,300);
-//        cjtable.setSize(550,300);
-////        cjtable.setPreferredSize(new Dimension(700,300));
-//        // 将表格设置为不可编辑
-//        cjtable.setEnabled(false);
-
-        /**
-         *  @function: 创建成绩显示面板,显示学生成绩以及导出等按钮
-         */
-//        scrollPane = new JScrollPane(cjtable);
-//        scrollPane.setPreferredSize(new Dimension(800,700));
-//        scrollPane.setVisible(true);
-//        this.add(scrollPane,"East");
         panel_show = new JPanel();
         panel_show.setLayout(new FlowLayout(FlowLayout.RIGHT,5,0));
         panel_show.setPreferredSize(new Dimension(550,500));
-
-        /**
-         *  @function: 在成绩显示面板上部增加导出按钮 by yjh
-         */
-        JPanel panel_export = new JPanel();
-        panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
-        panel_export.setPreferredSize(new Dimension(550,50));
-        panel_show.add(panel_export);
-        // 以下三行是一个简单的Export类调用的样例 for 张宝
-        Export export = new Export(cjtable);
-        JButton buttonExport = export.getButtonExport();
-        panel_export.add(buttonExport);
-        // 以下三行是一个简单的Print类调用的样例 for 张宝
-
-
         this.add(panel_show,"East");
         panel_show.setVisible(false);
-
 
         /**
          *  @function: 创建功能栏面板panel_function,包含成绩查询按钮button组件
          */
         JPanel panel_function = new JPanel();
-        panel_function.setLayout(new FlowLayout(FlowLayout.LEFT,5,5));
+        panel_function.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
         panel_function.setPreferredSize(new Dimension(100,500));
-        this.add(panel_function,"Center");
-
+        this.add(panel_function,"West");
 
         JButton buttonQuery = new JButton("成绩查询");
         buttonQuery.setContentAreaFilled(false);
@@ -175,23 +115,90 @@ public class stuFrame extends JFrame implements Exit {
             String[] str={"2019-2020秋季","2019-2020冬季","2019-2020春季","2020-2021秋季","2020-2021冬季","2020-2021春季"};
             Object checkResult = JOptionPane.showInputDialog(null,"请选择学期","选择学期",1,null,str,str[0]);
             System.out.println(checkResult);
-
             cjtable = getJTable(checkResult);
-            panel_show.add(new JScrollPane(cjtable));
-//        cjtable.setBounds(0,0,700,300);
-            cjtable.setSize(550,300);
-//        cjtable.setPreferredSize(new Dimension(700,300));
-            // 将表格设置为不可编辑
-            cjtable.setEnabled(false);
-            print = new Print(cjtable, this,this.name);
+            panel_show.removeAll();
+            JPanel panel_export = new JPanel();
+            panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+            panel_export.setPreferredSize(new Dimension(550,50));
+            Export export = new Export(cjtable);
+            JButton buttonExport = export.getButtonExport();
+            panel_export.add(buttonExport);
+            Print print = new Print(cjtable, this,this.name);
             JButton buttonPrint = print.getButtonPrint();
             panel_export.add(buttonPrint);
+            panel_show.add(panel_export);
+            JScrollPane jScrollPane = new JScrollPane(cjtable);
+            jScrollPane.setPreferredSize(new Dimension(500,300));
+            panel_show.add(jScrollPane);
+            cjtable.setPreferredSize(new Dimension(500,300));
+            cjtable.setEnabled(false);
+            cjtable.getTableHeader().setReorderingAllowed(false);
             panel_show.setVisible(true);
+            panel_show.validate();
+            panel_show.repaint();
         });
         //将【成绩查询】按钮组件添加到功能栏面板中
         panel_function.add(buttonQuery);
 
+        /*
+          @function: 绩点走势
+         * @author: YangJunhao
+         */
+        JButton buttonHistory = new JButton("绩点走势");
+        buttonHistory.setContentAreaFilled(false);
+        buttonHistory.setFont(font);
+        buttonHistory.setPreferredSize(new Dimension(90,30));
+        buttonHistory.addActionListener((e) -> {
+                showHistoryPanel=new Chart(id,"2020-2021春季","学生绩点走势",0).getChartPanel();
+                showHistoryPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,5,0));
+                showHistoryPanel.setPreferredSize(new Dimension(550,400));
+                showHistoryPanel.setVisible(true);
+                panel_show.removeAll();
+                panel_show.add(showHistoryPanel);
+                panel_show.validate();
+                panel_show.repaint();
+                panel_show.setVisible(true);
+        });
+        panel_function.add(buttonHistory);
+
+        /*
+         * @function: 成绩排名
+         * @author: YangJunhao
+         */
+        JButton buttonRanking = new JButton("成绩排名");
+        buttonRanking.setContentAreaFilled(false);
+        buttonRanking.setFont(font);
+        buttonRanking.setPreferredSize(new Dimension(90,30));
+        buttonRanking.addActionListener((e) ->{
+                String[] str={"2019-2020秋季","2019-2020冬季","2019-2020春季","2020-2021秋季","2020-2021冬季","2020-2021春季"};
+                Object checkResult = JOptionPane.showInputDialog(null,"请选择学期","选择学期",1,null,str,str[0]);
+                System.out.println(checkResult);
+                cjtable = getJTable2(checkResult);
+                panel_show.removeAll();
+                JPanel panel_export = new JPanel();
+                panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+                panel_export.setPreferredSize(new Dimension(550,50));
+                Export export = new Export(cjtable);
+                JButton buttonExport = export.getButtonExport();
+                panel_export.add(buttonExport);
+                Print print = new Print(cjtable, this,this.name);
+                JButton buttonPrint = print.getButtonPrint();
+                panel_export.add(buttonPrint);
+                panel_show.add(panel_export);
+                JScrollPane jScrollPane = new JScrollPane(cjtable);
+                jScrollPane.setPreferredSize(new Dimension(500,300));
+                panel_show.add(jScrollPane);
+                cjtable.setPreferredSize(new Dimension(500,300));
+                cjtable.setEnabled(false);
+                cjtable.getTableHeader().setReorderingAllowed(false);
+                panel_show.setVisible(true);
+                panel_show.validate();
+                panel_show.repaint();
+        });
+        panel_function.add(buttonRanking);
     }
+
+
 
     /**
      *
@@ -215,6 +222,16 @@ public class stuFrame extends JFrame implements Exit {
         System.out.println(tableData.toString());
         return cjtable;
     }
+
+    public JTable getJTable2(Object semester)
+    {
+        conn = new DBConnector();
+        tableData = conn.getRanking(id,semester.toString());
+        String[] col_name = {"院系", "年级总人数", "排名", "百分比"};
+        JTable cjtable = new JTable(tableData, col_name);
+        System.out.println(tableData.toString());
+        return cjtable;
+    }
     @Override
     /**
      * @function : 实现安全退出功能。
@@ -232,8 +249,6 @@ public class stuFrame extends JFrame implements Exit {
             dispose();
             //返回登陆页面
             JFrame frame = new CjFrame("成绩管理系统登录界面");
-
         }
-
     }
 }
