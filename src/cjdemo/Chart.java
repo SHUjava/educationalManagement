@@ -39,10 +39,10 @@ public class Chart {
     //构建容器面板，用于存放已经画好的图形报表
     private final ChartPanel frame;
     //用于获取学生绩点走势
-    public static CategoryDataset getDataset1(int ID, String semester) {
+    public static CategoryDataset getDataset1(int ID) {
         DefaultCategoryDataset ds = new DefaultCategoryDataset();
         DBConnector test = new DBConnector();
-        Object[][] history = test.getEverySemesterGPA(ID, semester);
+        Object[][] history = test.getEverySemesterGPA(ID);
         for (int i = 0; i < 12; i++) {
             String tmp= history[i][0].toString().substring(0,4)+history[i][0].toString().charAt(9);
             ds.addValue(Double.parseDouble(String.valueOf(history[i][1])), "", tmp);
@@ -67,7 +67,7 @@ public class Chart {
         //获取数据
         JFreeChart chart = null;
         if(Objects.equals(mode, "学生绩点走势")){
-            CategoryDataset dataset = getDataset1(ID, semester);
+            CategoryDataset dataset = getDataset1(ID);
             //创建图形实体对象
             chart=ChartFactory.createBarChart3D(//工厂模式
                     "绩点走势图", //图形的标题

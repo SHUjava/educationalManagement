@@ -27,7 +27,7 @@ public class DBConnector {
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
-
+    String seme = "2020-2021春季"; //当前学期
     public DBConnector() {
         try {
             // 注册 JDBC 驱动
@@ -685,21 +685,20 @@ public class DBConnector {
         System.out.println(grade);
         return grade;
     }
-
     /**
-     * @param ID,semester 学号，学期
-     * @return Object[][] [["学期"，均绩],[]]
+     * @param ID 学号
+     * @return String[] ["学期"]
      * @author YangJunhao
-     * @function 生成该同学某学期及过往每个学期的均绩，供生成绩点走势图调用
+     * @function 生成某同学从入学学期到当前学期的学期列表
      */
-    public Object[][] getEverySemesterGPA(int ID, String semester) {
+    public String[] getSemeList(int ID){
         int grade = this.getStuGrade(ID);
         String tmp = grade + "-" + (grade + 1) + "秋季";
-        Object[][] history = new Object[12][2];
+        String[] result = new String[12];
         // 不考虑夏季学期
         for (int i = 0; i < 12; i++) {
-            history[i][0] = tmp;
-            if (!tmp.equals(semester)) {
+            result[i] = tmp;
+            if (!tmp.equals(this.seme)) {
                 if (tmp.charAt(9) == '春') {
                     int year1 = java.lang.Integer.parseInt(tmp.substring(0, 4));
                     int year2 = java.lang.Integer.parseInt(tmp.substring(5, 9));
@@ -713,13 +712,27 @@ public class DBConnector {
                 break;
             }
         }
+        System.out.println(Arrays.toString(result));
+        return result;
+    }
+    /**
+     * @param ID,semester 学号，学期
+     * @return Object[][] [["学期"，均绩],[]]
+     * @author YangJunhao
+     * @function 生成该同学某学期及过往每个学期的均绩，供生成绩点走势图调用
+     */
+    public Object[][] getEverySemesterGPA(int ID) {
+        int grade = this.getStuGrade(ID);
+        String[] tmp = getSemeList(ID);
+        Object[][] history = new Object[12][2];
         for (int i = 0; i < 12; i++) {
+            history[i][0] = tmp[i];
             history[i][1] = getAverageScore(ID, history[i][0].toString());
-            if (history[i + 1][0] == null) {
+            if (tmp[i+1] == null) {
                 break;
             }
         }
-        // System.out.println(Arrays.deepToString(history));
+        System.out.println(Arrays.deepToString(history));
         return history;
     }
 
@@ -1334,6 +1347,13 @@ public class DBConnector {
         pieplot.setShadowPaint(null); // 设置绘图面板阴影的填充颜色
         pieplot.setSectionOutlinesVisible(false);
         pieplot.setNoDataMessage("没有可供使用的数据！");
+    }
+
+    public void setSeme(String seme){
+        this.seme=seme;
+    }
+    public String getSeme(){
+        return seme;
     }
 }
 
