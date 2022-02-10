@@ -24,7 +24,7 @@ import org.jfree.chart.ChartPanel;
 public class stuFrame extends JFrame implements Exit {
     int id;
     String name;
-    JPanel panel_show, showHistoryPanel;
+    JPanel panel_show;
     Object[][] tableData;
     DBConnector conn;
     JTable cjtable;
@@ -76,7 +76,7 @@ public class stuFrame extends JFrame implements Exit {
 
         JButton changePW = new JButton("修改密码");
         changePW.addActionListener(e -> {
-            JFrame frame = new changePWFrame(1,this.id,this);
+            JFrame frame = new changePWFrame(1, this.id, this);
 //            dispose();
         });
         changePW.setPreferredSize(new Dimension(100, 30));
@@ -120,7 +120,7 @@ public class stuFrame extends JFrame implements Exit {
             Object checkResult = JOptionPane.showInputDialog(null, "请选择学期", "选择学期", 1, null, semeList, semeList[0]);
             System.out.println(checkResult);
             cjtable = getJTable(checkResult);
-            DefaultTableCellRenderer r   = new DefaultTableCellRenderer();
+            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
             panel_show.removeAll();
@@ -130,7 +130,7 @@ public class stuFrame extends JFrame implements Exit {
             Export export = new Export(cjtable);
             JButton buttonExport = export.getButtonExport();
             panel_export.add(buttonExport);
-            Print print = new Print(cjtable, this, this.name);
+            Print print = new Print(cjtable, this, this.id+this.name+" "+checkResult.toString()+"成绩信息");
             JButton buttonPrint = print.getButtonPrint();
             panel_export.add(buttonPrint);
             panel_show.add(panel_export);
@@ -147,9 +147,44 @@ public class stuFrame extends JFrame implements Exit {
         });
         //将【成绩查询】按钮组件添加到功能栏面板中
         panel_function.add(buttonQuery);
-
         /*
-          @function: 绩点走势
+         * @function: 成绩大表
+         * @author: YangJunhao
+         */
+        JButton buttonQueryAll = new JButton("成绩大表");
+        buttonQueryAll.setContentAreaFilled(false);
+        buttonQueryAll.setFont(font);
+        buttonQueryAll.setPreferredSize(new Dimension(90, 30));
+        buttonQueryAll.addActionListener((e) -> {
+            cjtable = getJTable1();
+            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+            r.setHorizontalAlignment(JLabel.CENTER);
+            cjtable.setDefaultRenderer(Object.class, r);
+            panel_show.removeAll();
+            JPanel panel_export = new JPanel();
+            panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+            panel_export.setPreferredSize(new Dimension(550, 50));
+            Export export = new Export(cjtable);
+            JButton buttonExport = export.getButtonExport();
+            panel_export.add(buttonExport);
+            Print print = new Print(cjtable, this, this.id+this.name+" 成绩大表");
+            JButton buttonPrint = print.getButtonPrint();
+            panel_export.add(buttonPrint);
+            panel_show.add(panel_export);
+            JScrollPane jScrollPane = new JScrollPane(cjtable);
+            jScrollPane.setPreferredSize(new Dimension(500, 300));
+            panel_show.add(jScrollPane);
+            cjtable.setPreferredSize(new Dimension(500, 300));
+            cjtable.setEnabled(false);  //不可编辑
+            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+            panel_show.setVisible(true);
+            panel_show.validate();
+            panel_show.repaint();
+        });
+        panel_function.add(buttonQueryAll);
+        /*
+         * @function: 绩点走势
          * @author: YangJunhao
          */
         JButton buttonHistory = new JButton("绩点走势");
@@ -157,7 +192,7 @@ public class stuFrame extends JFrame implements Exit {
         buttonHistory.setFont(font);
         buttonHistory.setPreferredSize(new Dimension(90, 30));
         buttonHistory.addActionListener((e) -> {
-            showHistoryPanel = new Chart(id, "2020-2021春季", "学生绩点走势", 0).getChartPanel();
+            JPanel showHistoryPanel = new Chart(id, t.getSeme(), "学生绩点走势", 0).getChartPanel();
             showHistoryPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
             showHistoryPanel.setPreferredSize(new Dimension(550, 400));
             showHistoryPanel.setVisible(true);
@@ -178,10 +213,15 @@ public class stuFrame extends JFrame implements Exit {
         buttonRanking.setFont(font);
         buttonRanking.setPreferredSize(new Dimension(90, 30));
         buttonRanking.addActionListener((e) -> {
-            Object checkResult = JOptionPane.showInputDialog(null, "请选择学期", "选择学期", 1, null, semeList, semeList[0]);
+            String[] sl = new String[semeList.length+1];
+            sl[0]="总体";
+            for(int i=1;i<=semeList.length;i++){
+                sl[i]=semeList[i-1];
+            }
+            Object checkResult = JOptionPane.showInputDialog(null, "请选择学期", "选择学期", 1, null, sl, sl[0]);
             System.out.println(checkResult);
             cjtable = getJTable2(checkResult);
-            DefaultTableCellRenderer r   = new DefaultTableCellRenderer();
+            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
             panel_show.removeAll();
@@ -191,7 +231,7 @@ public class stuFrame extends JFrame implements Exit {
             Export export = new Export(cjtable);
             JButton buttonExport = export.getButtonExport();
             panel_export.add(buttonExport);
-            Print print = new Print(cjtable, this, this.name);
+            Print print = new Print(cjtable, this, this.id+this.name+" "+checkResult.toString()+"成绩排名");
             JButton buttonPrint = print.getButtonPrint();
             panel_export.add(buttonPrint);
             panel_show.add(panel_export);
@@ -231,6 +271,28 @@ public class stuFrame extends JFrame implements Exit {
         System.out.println(tableData.toString());
         return cjtable;
     }
+
+    /**
+     * @function : 构造成绩大表表格。
+     */
+    public JTable getJTable1() {
+        int_args = new int[1];
+        str_args = new String[0];
+        int_args[0] = this.id;
+        conn = new DBConnector();
+        try {
+            tableData = conn.search("学生成绩大表", int_args, str_args, null);
+        } catch (CustomException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String[] col_name = {"课程号", "课程名", "学分", "成绩", "绩点", "学期"};
+        JTable cjtable = new JTable(tableData, col_name);
+        System.out.println(tableData.toString());
+        return cjtable;
+    }
+
     /**
      * @function : 构造成绩排名表格。
      */

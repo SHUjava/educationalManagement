@@ -32,7 +32,7 @@ public class Print {
         buttonPrint.setPreferredSize(new Dimension(70, 30));
         buttonPrint.addActionListener(e -> {
             MessageFormat footer = new MessageFormat("Page - {0}");
-            MessageFormat header = new MessageFormat("学生"+this.name+"的成绩表");
+            MessageFormat header = new MessageFormat(this.name);
             try {
                 table.print(JTable.PrintMode.FIT_WIDTH,header,footer,true,null,false,null);
             } catch (PrinterException event) {

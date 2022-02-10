@@ -22,8 +22,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
+//    static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -124,6 +124,33 @@ public class DBConnector {
                     row.addElement(credit);
                     row.addElement(score);
                     row.addElement(gpa);
+                    tmp.addElement(row);
+                }
+                rs.close();
+                System.out.println(tmp);
+                break;
+            case "学生成绩大表":
+                if (int_args.length != 1 || str_args.length != 0) {
+                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                }
+                sql = "select 课程编号, 课程名, 学分, 成绩, 绩点, 学期\n" +
+                        "from used_score\n" +
+                        "where 学号='" + int_args[0] + "';\n";
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    int course_order = rs.getInt("课程编号");
+                    String course_name = rs.getString("课程名");
+                    int credit = rs.getInt("学分");
+                    int score = (int) Double.parseDouble(rs.getString("成绩"));
+                    double gpa = rs.getDouble("绩点");
+                    String semester = rs.getString("学期");
+                    Vector<Object> row = new Vector<>();
+                    row.addElement(course_order);
+                    row.addElement(course_name);
+                    row.addElement(credit);
+                    row.addElement(score);
+                    row.addElement(gpa);
+                    row.addElement(semester.substring(0,10));
                     tmp.addElement(row);
                 }
                 rs.close();
@@ -633,6 +660,9 @@ public class DBConnector {
      */
     public double getAverageScore(int ID, String semester) {
         String sql = "select 学分,绩点 from used_score where 学号='" + ID + "'and 学期='" + semester + "';";
+        if(Objects.equals(semester, "总体")){
+            sql = "select 学分,绩点 from used_score where 学号='" + ID + "';";
+        }
         Vector<Vector<Double>> tmp = new Vector<>();
         try {
             ResultSet rs = stmt.executeQuery(sql);
@@ -760,7 +790,8 @@ public class DBConnector {
         }
         result[0][0] = college;
         Vector<Vector<Double>> stu = new Vector<>();
-        sql = "SELECT DISTINCT 学号 FROM used_score,student WHERE 学号=student_id AND student_grade IN\n" +
+        sql = "SELECT DISTINCT 学号 FROM used_score,student WHERE 学号=student_id AND student_major='" + college
+                +"' AND student_grade IN\n" +
                 "(SELECT student_grade FROM student WHERE student_id=" + ID + ");\n";
         try {
             rs = stmt.executeQuery(sql);
