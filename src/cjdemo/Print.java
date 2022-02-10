@@ -19,18 +19,20 @@ public class Print {
     PrintJob p = null;
     Graphics g = null;
     JButton buttonPrint;
+    String name;
 
     /**
      * @param table,frame 要打印的JTable及其所在JFrame
      */
-    public Print(JTable table, JFrame frame) {
+    public Print(JTable table, JFrame frame,String name) {
+        this.name = name;
         buttonPrint = new JButton("打印");
         buttonPrint.setContentAreaFilled(false);
         buttonPrint.setFont(new java.awt.Font("Dialog", 1, 12));
         buttonPrint.setPreferredSize(new Dimension(70, 30));
         buttonPrint.addActionListener(e -> {
             MessageFormat footer = new MessageFormat("Page - {0}");
-            MessageFormat header = new MessageFormat("学生成绩");
+            MessageFormat header = new MessageFormat("学生"+this.name+"的成绩表");
             try {
                 table.print(JTable.PrintMode.FIT_WIDTH,header,footer,true,null,false,null);
             } catch (PrinterException event) {

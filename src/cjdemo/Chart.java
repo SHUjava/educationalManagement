@@ -46,17 +46,21 @@ import java.util.Vector;
  * @updateDate: 2022/2/6
  * @updateContent: 1、功能内聚，将课程绩点分布图合并在内
  * 2、更名为Chart类
+ *
+ *  @updateDate: 2022/2/7
+ *  @updateContent: 将绩点走势图X轴文字简化使之能完全显示，如“2019-2020秋季”->“2019秋”
  */
 public class Chart {
     //构建容器面板，用于存放已经画好的图形报表
     private final ChartPanel frame;
     //用于获取学生绩点走势
-    public static CategoryDataset getDataset1(int ID, String semester) {
+    public static CategoryDataset getDataset1(int ID) {
         DefaultCategoryDataset ds = new DefaultCategoryDataset();
         DBConnector test = new DBConnector();
-        Object[][] history = test.getEverySemesterGPA(ID, semester);
+        Object[][] history = test.getEverySemesterGPA(ID);
         for (int i = 0; i < 12; i++) {
-            ds.addValue(Double.parseDouble(String.valueOf(history[i][1])), "", history[i][0].toString());
+            String tmp= history[i][0].toString().substring(0,4)+history[i][0].toString().charAt(9);
+            ds.addValue(Double.parseDouble(String.valueOf(history[i][1])), "", tmp);
             if (history[i + 1][0] == null) {
                 break;
             }
@@ -78,7 +82,7 @@ public class Chart {
         //获取数据
         JFreeChart chart = null;
         if(Objects.equals(mode, "学生绩点走势")){
-            CategoryDataset dataset = getDataset1(ID, semester);
+            CategoryDataset dataset = getDataset1(ID);
             //创建图形实体对象
             chart=ChartFactory.createBarChart3D(//工厂模式
                     "绩点走势图", //图形的标题

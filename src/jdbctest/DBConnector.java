@@ -5,18 +5,29 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
 
+import java.awt.Color;
+import java.io.File;
+import org.jfree.chart.ChartColor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.ui.RefineryUtilities;
+
 public class DBConnector {
     // MySQL 8.0 以上版本 - JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
+//    static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
-
+    String seme = "2020-2021春季"; //当前学期
     public DBConnector() {
         try {
             // 注册 JDBC 驱动
@@ -85,18 +96,18 @@ public class DBConnector {
     }
 
     public Object[][] search(String mode, int[] int_args, String[] str_args, Vector<Object> additional) throws CustomException, SQLException {
-        Object[][] result = new Object[0][];
+        Object[][] result;
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
         switch (mode) {
             case "学生成绩查询":
-                if (int_args.length != 1 || str_args.length != 0) {
+                if (int_args.length != 1 || str_args.length != 1) {
                     throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
                 }
                 sql = "select 课程编号, 课程名, 学分, 成绩, 绩点\n" +
                         "from used_score\n" +
-                        "where 学号='" + int_args[0] + "';\n";
+                        "where 学号='" + int_args[0] +"' and 学期 = '"+str_args[0] + "';\n";
                 rs = stmt.executeQuery(sql);
                 int id = 0;
                 while (rs.next()) {
@@ -120,11 +131,11 @@ public class DBConnector {
                 break;
             case "课程成绩查询":
                 if (int_args.length != 2 || str_args.length != 0) {
-                    throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length + "123456");
+                    throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length);
                 }
                 sql = "select used_score.课程编号, used_score.课程名, used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.绩点\n" +
                         "from used_score, student\n" +
-                        "where used_score.工号 = '2001001' and used_score.课程编号 ='3001001' and used_score.学号=student.student_id\n" +
+                        "where used_score.工号 = '"+int_args[0]+"' and used_score.课程编号 ='"+int_args[1]+"' and used_score.学号=student.student_id\n" +
                         "order by used_score.成绩;";
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -240,7 +251,6 @@ public class DBConnector {
                     part5 = "";
                 }else{
                     part5 = and + "student_major like '%"+str_args[2]+"%'";
-                    and = " and ";
                 }
                 if (part5.contains(" or ") || part5.contains(";")){
                     throw new CustomException("院系输入有误"+int_args[0]);
@@ -291,7 +301,6 @@ public class DBConnector {
                     part3 = "";
                 }else{
                     part3 = and + "teacher_major like '%"+str_args[1]+"%'";
-                    and = " and ";
                 }
                 System.out.println(part3);
                 if (part3.contains(" or ") || part3.contains(";")){
@@ -600,6 +609,9 @@ public class DBConnector {
 //                break;
         }
         int row = tmp.size();
+        if (row == 0){
+            return new Object[0][0];
+        }
         int col = tmp.get(0).size();
         result = new Object[row][col];
         //读取数据库
@@ -637,9 +649,9 @@ public class DBConnector {
         }
         double creditSum = 0;
         double gpaSum = 0;
-        for (int j = 0; j < tmp.size(); j++) {
-            creditSum += tmp.get(j).get(0);
-            gpaSum += tmp.get(j).get(0) * tmp.get(j).get(1);
+        for (Vector<Double> doubles : tmp) {
+            creditSum += doubles.get(0);
+            gpaSum += doubles.get(0) * doubles.get(1);
         }
         double aver = 0.0;
         if (creditSum != 0) {
@@ -673,21 +685,20 @@ public class DBConnector {
         System.out.println(grade);
         return grade;
     }
-
     /**
-     * @param ID,semester 学号，学期
-     * @return Object[][] [["学期"，均绩],[]]
+     * @param ID 学号
+     * @return String[] ["学期"]
      * @author YangJunhao
-     * @function 生成该同学某学期及过往每个学期的均绩，供生成绩点走势图调用
+     * @function 生成某同学从入学学期到当前学期的学期列表
      */
-    public Object[][] getEverySemesterGPA(int ID, String semester) {
+    public String[] getSemeList(int ID){
         int grade = this.getStuGrade(ID);
         String tmp = grade + "-" + (grade + 1) + "秋季";
-        Object[][] history = new Object[12][2];
+        String[] result = new String[12];
         // 不考虑夏季学期
         for (int i = 0; i < 12; i++) {
-            history[i][0] = tmp;
-            if (!tmp.equals(semester)) {
+            result[i] = tmp;
+            if (!tmp.equals(this.seme)) {
                 if (tmp.charAt(9) == '春') {
                     int year1 = java.lang.Integer.parseInt(tmp.substring(0, 4));
                     int year2 = java.lang.Integer.parseInt(tmp.substring(5, 9));
@@ -701,13 +712,27 @@ public class DBConnector {
                 break;
             }
         }
+        System.out.println(Arrays.toString(result));
+        return result;
+    }
+    /**
+     * @param ID,semester 学号，学期
+     * @return Object[][] [["学期"，均绩],[]]
+     * @author YangJunhao
+     * @function 生成该同学某学期及过往每个学期的均绩，供生成绩点走势图调用
+     */
+    public Object[][] getEverySemesterGPA(int ID) {
+        int grade = this.getStuGrade(ID);
+        String[] tmp = getSemeList(ID);
+        Object[][] history = new Object[12][2];
         for (int i = 0; i < 12; i++) {
+            history[i][0] = tmp[i];
             history[i][1] = getAverageScore(ID, history[i][0].toString());
-            if (history[i + 1][0] == null) {
+            if (tmp[i+1] == null) {
                 break;
             }
         }
-        // System.out.println(Arrays.deepToString(history));
+        System.out.println(Arrays.deepToString(history));
         return history;
     }
 
@@ -717,8 +742,8 @@ public class DBConnector {
      * @author YangJunhao
      * @function 生成该同学某学期的成绩排名
      */
-    public Object[] getRanking(int ID, String semester) {
-        Object[] result = new Object[4];
+    public Object[][] getRanking(int ID, String semester) {
+        Object[][] result = new Object[1][4];
         String sql;
         ResultSet rs;
         String college = "";
@@ -732,7 +757,7 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        result[0] = college;
+        result[0][0] = college;
         Vector<Vector<Double>> stu = new Vector<>();
         sql = "SELECT DISTINCT 学号 FROM used_score,student WHERE 学号=student_id AND student_grade IN\n" +
                 "(SELECT student_grade FROM student WHERE student_id=" + ID + ");\n";
@@ -749,7 +774,7 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        result[1] = stu.size();
+        result[0][1] = stu.size();
         for (int i = 0; i < stu.size(); i++) {
             stu.get(i).set(1, getAverageScore((int) stu.get(i).get(0).doubleValue(), semester));
         }
@@ -766,14 +791,14 @@ public class DBConnector {
         java.util.Collections.sort(stu, ct);
         for (int i = 0; i < stu.size(); i++) {
             if ((int) stu.get(i).get(0).doubleValue() == ID) {
-                result[2] = i + 1;
+                result[0][2] = i + 1;
                 break;
             }
         }
         java.text.NumberFormat numberFormat = java.text.NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(4);  // 设置精确到小数点后4位
-        String per = numberFormat.format((int) result[2] * 1.0 / (int) result[1] * 100);
-        result[3] = per + "%";
+        String per = numberFormat.format((int) result[0][2] * 1.0 / (int) result[0][1] * 100);
+        result[0][3] = per + "%";
         //System.out.println(stu);
         System.out.println(Arrays.deepToString(result));
         return result;
@@ -924,7 +949,7 @@ public class DBConnector {
                 Object[][] rs = this.search("管理员课程查询", int_args, str_args, ignore);
                 for (Object[] course:rs){
                     int[] tmp_id = {(int) course[0], id[0]};
-                    this.delete("班级", tmp_id);;
+                    this.delete("班级", tmp_id);
                 }
                 sql = "delete from teacher where teacher_id = "+id[0]+";";
                 System.out.println(sql);
@@ -1293,6 +1318,12 @@ public class DBConnector {
         return row;
     }
 
+    public void setSeme(String seme){
+        this.seme=seme;
+    }
+    public String getSeme(){
+        return seme;
+    }
 }
 
 
