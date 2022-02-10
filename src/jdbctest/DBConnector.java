@@ -934,12 +934,19 @@ public class DBConnector {
         String sql;
         switch (mode) {
             case "学生"://学号
+                int[] stu_id = {id[0]};
+                this.delete("选课", stu_id);
                 sql = "delete from student where student_id = "+id[0]+";";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
             case "选课"://学号、课号
-                sql = "delete from score where student_id = '"+id[0]+"' and course_id = '"+id[1]+"';";
+                if (id.length == 2) {
+                    sql = "delete from score where student_id = '" + id[0] + "' and course_id = '" + id[1] + "';";
+                }
+                else{
+                    sql = "delete from score where student_id = '"+id[0]+"';";
+                }
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
