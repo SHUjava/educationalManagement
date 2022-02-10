@@ -117,30 +117,50 @@ public class stuFrame extends JFrame implements Exit {
          * 函数参数采用lambda表达式
          */
         buttonQuery.addActionListener((e) -> {
-            Object checkResult = JOptionPane.showInputDialog(null, "请选择学期", "选择学期", 1, null, semeList, semeList[0]);
-            System.out.println(checkResult);
-            cjtable = getJTable(checkResult);
-            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-            r.setHorizontalAlignment(JLabel.CENTER);
-            cjtable.setDefaultRenderer(Object.class, r);
             panel_show.removeAll();
-            JPanel panel_export = new JPanel();
-            panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-            panel_export.setPreferredSize(new Dimension(550, 50));
-            Export export = new Export(cjtable);
-            JButton buttonExport = export.getButtonExport();
-            panel_export.add(buttonExport);
-            Print print = new Print(cjtable, this, this.id+this.name+" "+checkResult.toString()+"成绩信息");
-            JButton buttonPrint = print.getButtonPrint();
-            panel_export.add(buttonPrint);
-            panel_show.add(panel_export);
-            JScrollPane jScrollPane = new JScrollPane(cjtable);
-            jScrollPane.setPreferredSize(new Dimension(500, 300));
-            panel_show.add(jScrollPane);
-            cjtable.setPreferredSize(new Dimension(500, 300));
-            cjtable.setEnabled(false);  //不可编辑
-            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+            JComboBox jComboBox = new JComboBox(semeList);
+            JPanel panel_choose = new JPanel();
+            panel_choose.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            panel_choose.setPreferredSize(new Dimension(500, 50));
+            panel_choose.add(jComboBox);
+            JButton buttonOK = new JButton("确认");
+            buttonOK.setContentAreaFilled(false);
+            buttonOK.setFont(font);
+            buttonOK.setPreferredSize(new Dimension(90, 30));
+            buttonOK.addActionListener((f)->{
+                panel_show.removeAll();
+                panel_show.add(panel_choose);
+                panel_show.setVisible(true);
+                panel_show.validate();
+                panel_show.repaint();
+                Object checkResult = jComboBox.getSelectedItem();
+                cjtable = getJTable(checkResult);
+                DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                r.setHorizontalAlignment(JLabel.CENTER);
+                cjtable.setDefaultRenderer(Object.class, r);
+                JPanel panel_export = new JPanel();
+                panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+                panel_export.setPreferredSize(new Dimension(550, 50));
+                Export export = new Export(cjtable);
+                JButton buttonExport = export.getButtonExport();
+                panel_export.add(buttonExport);
+                Print print = new Print(cjtable, this, this.id+this.name+" "+checkResult.toString()+"成绩信息");
+                JButton buttonPrint = print.getButtonPrint();
+                panel_export.add(buttonPrint);
+                panel_show.add(panel_export);
+                JScrollPane jScrollPane = new JScrollPane(cjtable);
+                jScrollPane.setPreferredSize(new Dimension(500, 300));
+                panel_show.add(jScrollPane);
+                cjtable.setPreferredSize(new Dimension(500, 300));
+                cjtable.setEnabled(false);  //不可编辑
+                cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                panel_show.setVisible(true);
+                panel_show.validate();
+                panel_show.repaint();
+            });
+            panel_choose.add(buttonOK);
+            panel_show.add(panel_choose);
             panel_show.setVisible(true);
             panel_show.validate();
             panel_show.repaint();
@@ -213,42 +233,61 @@ public class stuFrame extends JFrame implements Exit {
         buttonRanking.setFont(font);
         buttonRanking.setPreferredSize(new Dimension(90, 30));
         buttonRanking.addActionListener((e) -> {
+            panel_show.removeAll();
             String[] sl = new String[semeList.length+1];
             sl[0]="总体";
             for(int i=1;i<=semeList.length;i++){
                 sl[i]=semeList[i-1];
             }
-            Object checkResult = JOptionPane.showInputDialog(null, "请选择学期", "选择学期", 1, null, sl, sl[0]);
-            System.out.println(checkResult);
-            cjtable = getJTable2(checkResult);
-            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-            r.setHorizontalAlignment(JLabel.CENTER);
-            cjtable.setDefaultRenderer(Object.class, r);
-            panel_show.removeAll();
-            JPanel panel_export = new JPanel();
-            panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-            panel_export.setPreferredSize(new Dimension(550, 50));
-            Export export = new Export(cjtable);
-            JButton buttonExport = export.getButtonExport();
-            panel_export.add(buttonExport);
-            Print print = new Print(cjtable, this, this.id+this.name+" "+checkResult.toString()+"成绩排名");
-            JButton buttonPrint = print.getButtonPrint();
-            panel_export.add(buttonPrint);
-            panel_show.add(panel_export);
-            JScrollPane jScrollPane = new JScrollPane(cjtable);
-            jScrollPane.setPreferredSize(new Dimension(500, 300));
-            panel_show.add(jScrollPane);
-            cjtable.setPreferredSize(new Dimension(500, 300));
-            cjtable.setEnabled(false);  //不可编辑
-            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+            JComboBox jComboBox = new JComboBox(sl);
+            JPanel panel_choose = new JPanel();
+            panel_choose.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            panel_choose.setPreferredSize(new Dimension(500, 50));
+            panel_choose.add(jComboBox);
+            JButton buttonOK = new JButton("确认");
+            buttonOK.setContentAreaFilled(false);
+            buttonOK.setFont(font);
+            buttonOK.setPreferredSize(new Dimension(90, 30));
+            buttonOK.addActionListener((f)->{
+                panel_show.removeAll();
+                panel_show.add(panel_choose);
+                panel_show.setVisible(true);
+                panel_show.validate();
+                panel_show.repaint();
+                Object checkResult = jComboBox.getSelectedItem();
+                cjtable = getJTable2(checkResult);
+                DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                r.setHorizontalAlignment(JLabel.CENTER);
+                cjtable.setDefaultRenderer(Object.class, r);
+                JPanel panel_export = new JPanel();
+                panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+                panel_export.setPreferredSize(new Dimension(550, 50));
+                Export export = new Export(cjtable);
+                JButton buttonExport = export.getButtonExport();
+                panel_export.add(buttonExport);
+                Print print = new Print(cjtable, this, this.id+this.name+" "+checkResult.toString()+"成绩排名");
+                JButton buttonPrint = print.getButtonPrint();
+                panel_export.add(buttonPrint);
+                panel_show.add(panel_export);
+                JScrollPane jScrollPane = new JScrollPane(cjtable);
+                jScrollPane.setPreferredSize(new Dimension(500, 300));
+                panel_show.add(jScrollPane);
+                cjtable.setPreferredSize(new Dimension(500, 300));
+                cjtable.setEnabled(false);  //不可编辑
+                cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                panel_show.setVisible(true);
+                panel_show.validate();
+                panel_show.repaint();
+            });
+            panel_choose.add(buttonOK);
+            panel_show.add(panel_choose);
             panel_show.setVisible(true);
             panel_show.validate();
             panel_show.repaint();
         });
         panel_function.add(buttonRanking);
     }
-
 
     /**
      * @function : 构造成绩查询表格。
