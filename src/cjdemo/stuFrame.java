@@ -75,6 +75,10 @@ public class stuFrame extends JFrame implements Exit {
         stuPanel.add(stuInfo);
 
         JButton changePW = new JButton("修改密码");
+        changePW.addActionListener(e -> {
+            JFrame frame = new changePWFrame(1,this.id,this);
+//            dispose();
+        });
         changePW.setPreferredSize(new Dimension(100, 30));
         changePW.setFont(font);
         changePW.setContentAreaFilled(false);

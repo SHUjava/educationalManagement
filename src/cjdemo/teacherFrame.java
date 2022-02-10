@@ -68,6 +68,9 @@ public class teacherFrame extends JFrame implements Exit {
         changePWButton.setFont(font);
         changePWButton.setContentAreaFilled(false);
         teacherPanel.add(changePWButton);
+        changePWButton.addActionListener(e->{
+            JFrame frame = new changePWFrame(1,this.id,this);
+        });
 
         /**
          * @function: 创建安全退出的按钮exitButton.

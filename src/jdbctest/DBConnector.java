@@ -22,8 +22,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-//    static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
+    static final String PASS = "Zbb123150@";
+//    static final String PASS = "yang0417";
     //    static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -621,6 +621,7 @@ public class DBConnector {
                 result[i][j] = ((Vector<?>) tmp.get(i)).get(j);
             }
         }
+        System.out.println(result);
         return result;
     }
 
@@ -860,6 +861,7 @@ public class DBConnector {
                 sql = "INSERT INTO `educationalmanagementdb`.`student` " +
                         "(`student_id`, `student_name`, `student_password`, `student_sex`, `student_major`, `student_grade`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"', '"+str_args[2]+"', '"+int_args[1]+"');";
+                System.out.println(sql);
                 stmt.execute(sql);
                 break;
             case "教师":
@@ -1128,39 +1130,43 @@ public class DBConnector {
         sql = "update course set score_entered = 'y' where course_id = '" + course_id +"';\n";
         stmt.executeUpdate(sql);
     }
-    public void changePassword(int[] int_args, String[] str_args) throws CustomException, SQLException {
+    public boolean changePassword(int status,int ID, String PW) throws CustomException, SQLException {
         //修改密码
         String sql;
-        if(int_args.length != 2 || str_args.length != 2){
-            //身份标志位（0：教师，1：学生），id  第一遍输入密码，第二遍输入密码
-            throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
-        }
-        if(str_args[0]!=str_args[1]){
-            System.out.println("两次输入密码不一致");
-            return;
-        }
-        if(str_args[0].length()<6){
-            System.out.println("密码过短（短于6个字符）");
-            return;
-        }
-        if(str_args[0].length()>20){
-            System.out.println("密码过长（长于20个字符）");
-            return;
-        }
-        if(int_args[0]==0){
-            sql = "update teacher set teacher_password = '"+str_args[0]+"' where teacher_id = '"+int_args[1]+"';";
+//        if(str_args.length != 2){
+//            //身份标志位（0：教师，1：学生），id  第一遍输入密码，第二遍输入密码
+//            throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+//        }
+//        if(PW1!=PW2){
+//            System.out.println("两次输入密码不一致");
+//            return false;
+//        }
+//        if(PW1.length()<6){
+//            System.out.println("密码过短（短于6个字符）");
+//            return;
+//        }
+//        if(str_args[0].length()>20){
+//            System.out.println("密码过长（长于20个字符）");
+//            return;
+//        }
+        System.out.println(status+ID+PW);
+        if(status==0){
+            sql = "update teacher set teacher_password = '"+PW+"' where teacher_id = '"+ID+"';";
             int row_count = stmt.executeUpdate(sql);
             if(row_count==1){
                 System.out.println("修改密码成功");
+                return true;
             }
         }
-        else if(int_args[0]==1){
-            sql = "update student set student_password = '"+str_args[0]+"' where student_id = '"+int_args[1]+"';";
+        else if(status==1){
+            sql = "update student set student_password = '"+PW+"' where student_id = '"+ID+"';";
             int row_count = stmt.executeUpdate(sql);
             if(row_count==1){
                 System.out.println("修改密码成功");
+                return true;
             }
         }
+        return false;
     }
     public void teacherGradeAnalysisText(int[] int_args, String[] str_args) throws CustomException, SQLException {
         //教师课程成绩分析报告文字部分，包括输出班级平均分、优秀率、挂科率、前十名表单
