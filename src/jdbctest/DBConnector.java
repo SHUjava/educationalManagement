@@ -692,7 +692,36 @@ public class DBConnector {
         aver = b.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();
         return aver;
     }
-
+    /**
+     * @param ID,semester 学号，学期
+     * @return int 学分
+     * @author YangJunhao
+     * @function 生成该同学某学期的学分
+     */
+    public int getCredit(int ID, String semester) {
+        String sql = "select 学分 from used_score where 学号='" + ID + "'and 学期='" + semester + "';";
+        if(Objects.equals(semester, "总体")){
+            sql = "select 学分 from used_score where 学号='" + ID + "';";
+        }
+        Vector<Vector<Double>> tmp = new Vector<>();
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                double credit = rs.getDouble("学分");
+                Vector<Double> row = new Vector<>();
+                row.addElement(credit);
+                tmp.addElement(row);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        int creditSum = 0;
+        for (Vector<Double> doubles : tmp) {
+            creditSum += doubles.get(0);
+        }
+        return creditSum;
+    }
     /**
      * @param ID 学号
      * @return int 年级

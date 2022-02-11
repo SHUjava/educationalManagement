@@ -16,8 +16,6 @@ import static java.awt.Toolkit.getDefaultToolkit;
  * 2.缺少左上两条边框，怀疑是该JTable本身就没有显示这两条边框
  */
 public class Print {
-    PrintJob p = null;
-    Graphics g = null;
     JButton buttonPrint;
     String name;
 

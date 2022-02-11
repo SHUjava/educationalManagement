@@ -99,6 +99,12 @@ public class stuFrame extends JFrame implements Exit {
         this.add(panel_show, "East");
         panel_show.setVisible(false);
 
+        // 一个空白模板
+        JLabel blank = new JLabel();
+        blank.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        blank.setPreferredSize(new Dimension(10, 30));
+        blank.setText("  ");
+        blank.setFont(labelFont);
         /**
          *  @function: 创建功能栏面板panel_function, 包含成绩查询按钮button组件
          */
@@ -118,15 +124,22 @@ public class stuFrame extends JFrame implements Exit {
          */
         buttonQuery.addActionListener((e) -> {
             panel_show.removeAll();
-            JComboBox jComboBox = new JComboBox(semeList);
             JPanel panel_choose = new JPanel();
             panel_choose.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
             panel_choose.setPreferredSize(new Dimension(500, 50));
+            JLabel seme = new JLabel();
+            seme.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+            seme.setPreferredSize(new Dimension(40, 30));
+            seme.setText("学期：");
+            seme.setFont(labelFont);
+            panel_choose.add(seme);
+            JComboBox jComboBox = new JComboBox(semeList);
             panel_choose.add(jComboBox);
-            JButton buttonOK = new JButton("确认");
+            panel_choose.add(blank);
+            JButton buttonOK = new JButton("查询");
             buttonOK.setContentAreaFilled(false);
             buttonOK.setFont(font);
-            buttonOK.setPreferredSize(new Dimension(90, 30));
+            buttonOK.setPreferredSize(new Dimension(60, 25));
             buttonOK.addActionListener((f)->{
                 panel_show.removeAll();
                 panel_show.add(panel_choose);
@@ -155,6 +168,13 @@ public class stuFrame extends JFrame implements Exit {
                 cjtable.setEnabled(false);  //不可编辑
                 cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                 cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                JLabel info = new JLabel();
+                info.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+                info.setPreferredSize(new Dimension(500, 30));
+                info.setText("总计学分：" + t.getCredit(this.id,checkResult.toString())+
+                        "    平均绩点：" + t.getAverageScore(this.id,checkResult.toString()));
+                info.setFont(labelFont);
+                panel_show.add(info);
                 panel_show.setVisible(true);
                 panel_show.validate();
                 panel_show.repaint();
@@ -198,6 +218,13 @@ public class stuFrame extends JFrame implements Exit {
             cjtable.setEnabled(false);  //不可编辑
             cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
             cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+            JLabel info = new JLabel();
+            info.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+            info.setPreferredSize(new Dimension(500, 30));
+            info.setText("总计学分：" + t.getCredit(this.id,"总体")+
+                    "    平均绩点：" + t.getAverageScore(this.id,"总体"));
+            info.setFont(labelFont);
+            panel_show.add(info);
             panel_show.setVisible(true);
             panel_show.validate();
             panel_show.repaint();
@@ -239,15 +266,22 @@ public class stuFrame extends JFrame implements Exit {
             for(int i=1;i<=semeList.length;i++){
                 sl[i]=semeList[i-1];
             }
-            JComboBox jComboBox = new JComboBox(sl);
             JPanel panel_choose = new JPanel();
             panel_choose.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
             panel_choose.setPreferredSize(new Dimension(500, 50));
+            JLabel seme = new JLabel();
+            seme.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+            seme.setPreferredSize(new Dimension(40, 30));
+            seme.setText("学期：");
+            seme.setFont(labelFont);
+            panel_choose.add(seme);
+            JComboBox jComboBox = new JComboBox(sl);
             panel_choose.add(jComboBox);
-            JButton buttonOK = new JButton("确认");
+            panel_choose.add(blank);
+            JButton buttonOK = new JButton("查询");
             buttonOK.setContentAreaFilled(false);
             buttonOK.setFont(font);
-            buttonOK.setPreferredSize(new Dimension(90, 30));
+            buttonOK.setPreferredSize(new Dimension(60, 25));
             buttonOK.addActionListener((f)->{
                 panel_show.removeAll();
                 panel_show.add(panel_choose);
@@ -276,6 +310,13 @@ public class stuFrame extends JFrame implements Exit {
                 cjtable.setEnabled(false);  //不可编辑
                 cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                 cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                JLabel info = new JLabel();
+                info.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+                info.setPreferredSize(new Dimension(500, 30));
+                info.setText("总计学分：" + t.getCredit(this.id,checkResult.toString())+
+                        "    平均绩点：" + t.getAverageScore(this.id,checkResult.toString()));
+                info.setFont(labelFont);
+                panel_show.add(info);
                 panel_show.setVisible(true);
                 panel_show.validate();
                 panel_show.repaint();
