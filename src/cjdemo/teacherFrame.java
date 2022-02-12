@@ -69,7 +69,8 @@ public class teacherFrame extends JFrame implements Exit {
         changePWButton.setContentAreaFilled(false);
         teacherPanel.add(changePWButton);
         changePWButton.addActionListener(e->{
-            JFrame frame = new changePWFrame(1,this.id,this);
+            JFrame frame = new changePWFrame(0,this.id,this);
+//            dispose();
         });
 
         /**
