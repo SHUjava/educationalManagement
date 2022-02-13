@@ -276,6 +276,9 @@ public class DBConnector {
                 if (part5.contains(" or ") || part5.contains(";")){
                     throw new CustomException("院系输入有误"+int_args[0]);
                 }
+                if (part1.equals("") && part2.equals("") && part3.equals("") && part4.equals("") && part5.equals("")){
+                    part1 = "1=1";
+                }
                 sql = "select student_id, student_name, student_sex, student_major, student_grade from student where "
                         +part1+part2+part3+part4+part5+";";
                 System.out.println(sql);
@@ -324,6 +327,9 @@ public class DBConnector {
                 System.out.println(part3);
                 if (part3.contains(" or ") || part3.contains(";")){
                     throw new CustomException("院系输入有误"+int_args[0]);
+                }
+                if (part1.equals("") && part2.equals("") && part3.equals("")){
+                    part1 = "1=1";
                 }
                 sql = "select teacher_id, teacher_name, teacher_major from teacher where "
                         +part1+part2+part3+";";
@@ -389,6 +395,10 @@ public class DBConnector {
                 }
                 if (part6.contains("or") || part6.contains(";")){
                     throw new CustomException("上课时间输入有误"+int_args[1]);
+                }
+
+                if (part1.equals("") && part2.equals("") && part3.equals("") && part4.equals("") && part5.equals("") && part6.equals("")){
+                    part1 = "1=1";
                 }
                 sql = "select course_id, course_order, course_name, course_credit, teacher_id, course_semester, course_time " +
                         "from course where "

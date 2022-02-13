@@ -265,10 +265,10 @@ public class adminFrame extends JFrame implements Exit {
         showStudentQueryPanel.add(studentGenderLabel);
 
         studentGenderComboBox = new JComboBox();
-        studentGenderComboBox.setSelectedItem("男");
+        studentGenderComboBox.setSelectedItem("任意");
+        studentGenderComboBox.addItem("任意");
         studentGenderComboBox.addItem("男");
         studentGenderComboBox.addItem("女");
-        studentGenderComboBox.addItem("任意");
         studentGenderComboBox.setFont(font);
         studentGenderComboBox.setPreferredSize(new Dimension(60, 30));
         showStudentQueryPanel.add(studentGenderComboBox);
@@ -279,10 +279,10 @@ public class adminFrame extends JFrame implements Exit {
         showStudentQueryPanel.add(studentFacultyLabel);
 
         studentFacultyComboBox = new JComboBox();
-        studentFacultyComboBox.setSelectedItem("计算机系");
+        studentFacultyComboBox.setSelectedItem("任意");
+        studentFacultyComboBox.addItem("任意");
         studentFacultyComboBox.addItem("计算机系");
         studentFacultyComboBox.addItem("物理系");
-        studentFacultyComboBox.addItem("任意");
         studentFacultyComboBox.setFont(font);
         studentFacultyComboBox.setPreferredSize(new Dimension(80, 30));
         showStudentQueryPanel.add(studentFacultyComboBox);
@@ -389,7 +389,8 @@ public class adminFrame extends JFrame implements Exit {
         showTeacherQueryPanel.add(teacherFacultyLabel);
 
         teacherFacultyComboBox = new JComboBox();
-        teacherFacultyComboBox.setSelectedItem("计算机系");
+        teacherFacultyComboBox.setSelectedItem("任意");
+        teacherFacultyComboBox.addItem("任意");
         teacherFacultyComboBox.addItem("计算机系");
         teacherFacultyComboBox.addItem("物理系");
         teacherFacultyComboBox.setFont(font);
@@ -403,7 +404,11 @@ public class adminFrame extends JFrame implements Exit {
         checkTeacherQueryInfoButton.addActionListener(e -> {
             System.out.println("用户输入的教师工号为：" + teacherIDText2.getText() + " 用户输入的教师姓名为：" + teacherNameText.getText() + " 用户输入的教师院系为：" + teacherFacultyComboBox.getSelectedItem().toString());
 
-            cjtable = getTeacherQueryInfo(teacherIDText2.getText(), teacherNameText.getText(), teacherFacultyComboBox.getSelectedItem().toString());
+            String teaFaculty = "";
+            if (!Objects.equals(teacherFacultyComboBox.getSelectedItem().toString(), "任意")){
+                teaFaculty = teacherFacultyComboBox.getSelectedItem().toString();
+            }
+            cjtable = getTeacherQueryInfo(teacherIDText2.getText(), teacherNameText.getText(), teaFaculty);
             DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
@@ -509,7 +514,8 @@ public class adminFrame extends JFrame implements Exit {
         showCourseQueryPanel.add(courseSemesterLabel);
 
         courseSemesterComboBox = new JComboBox();
-        courseSemesterComboBox.setSelectedItem("2019-2020秋季");
+        courseSemesterComboBox.setSelectedItem("任意");
+        courseSemesterComboBox.addItem("任意");
         courseSemesterComboBox.addItem("2019-2020秋季");
         courseSemesterComboBox.addItem("2019-2020冬季");
         courseSemesterComboBox.addItem("2019-2020春季");
@@ -535,10 +541,14 @@ public class adminFrame extends JFrame implements Exit {
         checkCourseQueryInfoButton.setPreferredSize(new Dimension(60, 30));
         checkCourseQueryInfoButton.setContentAreaFilled(false);
         checkCourseQueryInfoButton.addActionListener(e -> {
+            String courseSeme = "";
+            if (!Objects.equals(courseSemesterComboBox.getSelectedItem().toString(), "任意")){
+                courseSeme = courseSemesterComboBox.getSelectedItem().toString();
+            }
             System.out.println("用户输入的课号为：" + courseIDText2.getText() + " 用户输入的学分为：" + courseCreditText.getText() + " 用户输入的教师工号为：" + teacherIDText3.getText() + " 用户输入的课名为：" +
                     courseNameText2.getText() + " 用户输入的学期为：" + courseSemesterComboBox.getSelectedItem().toString() + " 用户输入的上课时间为：" + courseTimeText.getText());
 
-            cjtable = getCourseQueryInfo(courseIDText2.getText(), courseCreditText.getText(), teacherIDText3.getText(), courseNameText2.getText(), courseSemesterComboBox.getSelectedItem().toString(), courseTimeText.getText());
+            cjtable = getCourseQueryInfo(courseIDText2.getText(), courseCreditText.getText(), teacherIDText3.getText(), courseNameText2.getText(), courseSeme, courseTimeText.getText());
             DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
@@ -672,7 +682,6 @@ public class adminFrame extends JFrame implements Exit {
             sexComboBox.setSelectedItem("男");
             sexComboBox.addItem("男");
             sexComboBox.addItem("女");
-            sexComboBox.addItem("任意");
             sexComboBox.setFont(font);
             sexComboBox.setPreferredSize(new Dimension(50,30));
             panel.add(sexComboBox);
@@ -686,7 +695,6 @@ public class adminFrame extends JFrame implements Exit {
             facultyComboBox.setSelectedItem("计算机系");
             facultyComboBox.addItem("计算机系");
             facultyComboBox.addItem("物理系");
-            facultyComboBox.addItem("任意");
             facultyComboBox.setFont(font);
             facultyComboBox.setPreferredSize(new Dimension(80,30));
             panel.add(facultyComboBox);
@@ -700,19 +708,6 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[0] = studentIDText4.getText();
                 int_args[1] = dateText4.getText();
                 str_args[0] = nameText.getText();
-                if (!Objects.equals(sexComboBox.getSelectedItem().toString(), "任意")) {
-                    str_args[1] = sexComboBox.getSelectedItem().toString();
-                }
-                else{
-                    str_args[1] = "";
-                }
-
-                if (!Objects.equals(facultyComboBox.getSelectedItem().toString(), "任意")) {
-                    str_args[2] = facultyComboBox.getSelectedItem().toString();
-                }
-                else{
-                    str_args[2] = "";
-                }
 
                 try {
                     conn.insert("学生",int_args,str_args);
@@ -758,7 +753,6 @@ public class adminFrame extends JFrame implements Exit {
             facultyComboBox.setSelectedItem("计算机系");
             facultyComboBox.addItem("计算机系");
             facultyComboBox.addItem("物理系");
-            facultyComboBox.addItem("任意");
             facultyComboBox.setFont(font);
             facultyComboBox.setPreferredSize(new Dimension(80,30));
             panel.add(facultyComboBox);
@@ -770,12 +764,6 @@ public class adminFrame extends JFrame implements Exit {
                 str_args = new String[2];
                 int_args[0] = teacherIDText4.getText();
                 str_args[0] = teacherNameText4.getText();
-                if (!Objects.equals(facultyComboBox.getSelectedItem().toString(), "任意")) {
-                    str_args[1] = facultyComboBox.getSelectedItem().toString();
-                }
-                else{
-                    str_args[1] = "";
-                }
                 try {
                     conn.insert("教师",int_args,str_args);
                 } catch (CustomException ex) {
