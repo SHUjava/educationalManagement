@@ -231,7 +231,7 @@ public class DBConnector {
                     throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
                 if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女") && !Objects.equals(str_args[1], "")){
-                    throw new CustomException("性别输入有误"+int_args[0]);
+                    throw new CustomException("性别输入有误"+str_args[1]);
                 }
                 String part1;
                 String part2;
@@ -925,9 +925,22 @@ public class DBConnector {
                 if(int_args.length != 4 || str_args.length != 0){//学号、课程id、平时成绩、考试成绩
                     throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
+                if (Objects.equals(int_args[2], "")){
+                    int_args[2] = "NULL";
+                }
+                else{
+                    int_args[2] = "'"+int_args[2]+"'";
+                }
+                if (Objects.equals(int_args[3], "")){
+                    int_args[3] = "NULL";
+                }
+                else{
+                    int_args[3] = "'"+int_args[3]+"'";
+                }
+
                 sql = "INSERT INTO `educationalmanagementdb`.`score` " +
                         "(`student_id`, `course_id`, `usual_score`, `test_score`) " +
-                        "VALUES ('"+int_args[0]+"', '"+int_args[1]+"', '"+int_args[2]+"', '"+int_args[3]+"');";
+                        "VALUES ('"+int_args[0]+"', '"+int_args[1]+"', "+int_args[2]+", "+int_args[3]+");";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
