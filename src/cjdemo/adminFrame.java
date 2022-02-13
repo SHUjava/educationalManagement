@@ -23,7 +23,7 @@ public class adminFrame extends JFrame implements Exit {
     JTable cjtable;
     Font font;
     JTextArea showTextArea;
-    int[] int_args;
+    String[] int_args;
     String[] str_args;
     DBConnector conn;
     Object[][] tableData, data;
@@ -155,7 +155,7 @@ public class adminFrame extends JFrame implements Exit {
         checkCouseGradeQueryInfoButton.setContentAreaFilled(false);
         checkCouseGradeQueryInfoButton.addActionListener(e -> {
                     System.out.println("用户输入的教师工号为：" + teacherIDText1.getText() + " 用户输入的课程编号为：" + courseIDText.getText());
-                    cjtable = getJTable(Integer.parseInt(teacherIDText1.getText()), Integer.parseInt(courseIDText.getText()));
+                    cjtable = getJTable(teacherIDText1.getText(), courseIDText.getText());
                     DefaultTableCellRenderer r = new DefaultTableCellRenderer();
                     r.setHorizontalAlignment(JLabel.CENTER);
                     cjtable.setDefaultRenderer(Object.class, r);
@@ -291,7 +291,7 @@ public class adminFrame extends JFrame implements Exit {
                     System.out.println("用户输入的学号为：" + studentIDText1.getText() + " 用户输入的入学日期为：" + studentAdmissionDateText.getText() + " 用户输入的姓名为：" + studentNameText1.getText() + " 用户输入的性别为：" +
                             studentGenderComboBox.getSelectedItem().toString() + " 用户输入的院系为：" + studentFacultyComboBox.getSelectedItem().toString());
 
-                    cjtable = getStudentQueryInfo(Integer.parseInt(studentIDText1.getText()), Integer.parseInt(studentAdmissionDateText.getText()), studentNameText1.getText(), studentGenderComboBox.getSelectedItem().toString(), studentFacultyComboBox.getSelectedItem().toString());
+                    cjtable = getStudentQueryInfo(studentIDText1.getText(), studentAdmissionDateText.getText(), studentNameText1.getText(), studentGenderComboBox.getSelectedItem().toString(), studentFacultyComboBox.getSelectedItem().toString());
                     DefaultTableCellRenderer r = new DefaultTableCellRenderer();
                     r.setHorizontalAlignment(JLabel.CENTER);
                     cjtable.setDefaultRenderer(Object.class, r);
@@ -391,7 +391,7 @@ public class adminFrame extends JFrame implements Exit {
         checkTeacherQueryInfoButton.addActionListener(e -> {
             System.out.println("用户输入的教师工号为：" + teacherIDText2.getText() + " 用户输入的教师姓名为：" + teacherNameText.getText() + " 用户输入的教师院系为：" + teacherFacultyComboBox.getSelectedItem().toString());
 
-            cjtable = getTeacherQueryInfo(Integer.parseInt(teacherIDText2.getText()), teacherNameText.getText(), teacherFacultyComboBox.getSelectedItem().toString());
+            cjtable = getTeacherQueryInfo(teacherIDText2.getText(), teacherNameText.getText(), teacherFacultyComboBox.getSelectedItem().toString());
             DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
@@ -526,7 +526,7 @@ public class adminFrame extends JFrame implements Exit {
             System.out.println("用户输入的课号为：" + courseIDText2.getText() + " 用户输入的学分为：" + courseCreditText.getText() + " 用户输入的教师工号为：" + teacherIDText3.getText() + " 用户输入的课名为：" +
                     courseNameText2.getText() + " 用户输入的学期为：" + courseSemesterComboBox.getSelectedItem().toString() + " 用户输入的上课时间为：" + courseTimeText.getText());
 
-            cjtable = getCourseQueryInfo(Integer.parseInt(courseIDText2.getText()), Integer.parseInt(courseCreditText.getText()), Integer.parseInt(teacherIDText3.getText()), courseNameText2.getText(), courseSemesterComboBox.getSelectedItem().toString(), courseTimeText.getText());
+            cjtable = getCourseQueryInfo(courseIDText2.getText(), courseCreditText.getText(), teacherIDText3.getText(), courseNameText2.getText(), courseSemesterComboBox.getSelectedItem().toString(), courseTimeText.getText());
             DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
@@ -681,10 +681,10 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
                 System.out.println(studentIDText4.getText());
-                int_args = new int[2];
+                int_args = new String[2];
                 str_args = new String[3];
-                int_args[0] = Integer.parseInt(studentIDText4.getText());
-                int_args[1] = Integer.parseInt(dateText4.getText());
+                int_args[0] = studentIDText4.getText();
+                int_args[1] = dateText4.getText();
                 str_args[0] = nameText.getText();
                 str_args[1] = sexComboBox.getSelectedItem().toString();
                 str_args[2] = facultyComboBox.getSelectedItem().toString();
@@ -739,9 +739,9 @@ public class adminFrame extends JFrame implements Exit {
             JButton checkButton = new JButton("确认");
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
-                int_args = new int[1];
+                int_args = new String[1];
                 str_args = new String[2];
-                int_args[0] = Integer.parseInt(teacherIDText4.getText());
+                int_args[0] = teacherIDText4.getText();
                 str_args[0] = teacherNameText4.getText();
                 str_args[1] = facultyComboBox.getSelectedItem().toString();
                 try {
@@ -840,11 +840,11 @@ public class adminFrame extends JFrame implements Exit {
             JButton checkButton = new JButton("确认");
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
-                int_args = new int[4];
-                int_args[0] = Integer.parseInt(IDText.getText());
-                int_args[1] = Integer.parseInt(creditText.getText());
-                int_args[2] = Integer.parseInt(tIDText.getText());
-                int_args[3] = Integer.parseInt(percentText.getText());
+                int_args = new String[4];
+                int_args[0] = IDText.getText();
+                int_args[1] = creditText.getText();
+                int_args[2] = tIDText.getText();
+                int_args[3] = percentText.getText();
                 str_args = new String[3];
                 str_args[0] = cNameText.getText();
                 str_args[1] = semesterText.getSelectedItem().toString();
@@ -916,8 +916,8 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
                 System.out.println(studentIDText5.getText());
-                int_args = new int[1];
-                int_args[0] = Integer.parseInt(studentIDText5.getText());
+                int_args = new String[1];
+                int_args[0] = studentIDText5.getText();
                 try {
                     conn.delete("学生",int_args);
                 } catch (CustomException ex) {
@@ -947,8 +947,8 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
                 System.out.println(teacherIDText5.getText());
-                int_args = new int[1];
-                int_args[0] = Integer.parseInt(teacherIDText5.getText());
+                int_args = new String[1];
+                int_args[0] = teacherIDText5.getText();
                 try {
                     conn.delete("教师",int_args);
                 } catch (CustomException ex) {
@@ -991,9 +991,9 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
                 System.out.println(courseText.getText()+teacherIDText6.getText());
-                int_args = new int[2];
-                int_args[0] = Integer.parseInt(courseText.getText());
-                int_args[1] = Integer.parseInt(teacherIDText6.getText());
+                int_args = new String[2];
+                int_args[0] = courseText.getText();
+                int_args[1] = teacherIDText6.getText();
                 try {
                     conn.delete("班级",int_args);
                 } catch (CustomException ex) {
@@ -1036,9 +1036,9 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
                 System.out.println(courseText.getText()+stuIDText6.getText());
-                int_args = new int[2];
-                int_args[0] = Integer.parseInt(courseText.getText());
-                int_args[1] = Integer.parseInt(stuIDText6.getText());
+                int_args = new String[2];
+                int_args[0] = courseText.getText();
+                int_args[1] = stuIDText6.getText();
                 try {
                     conn.delete("选课",int_args);
                 } catch (CustomException ex) {
@@ -1061,12 +1061,12 @@ public class adminFrame extends JFrame implements Exit {
     /**
      * @function : 构造课程查询表格。
      */
-    private JTable getCourseQueryInfo(int parseInt, int parseInt1, int parseInt2, String text, String toString, String text1) {
-        int_args = new int[3];
+    private JTable getCourseQueryInfo(String parseInt, String parseInt1, String parseInt2, String text, String toString, String text1) {
+        int_args = new String[3];
         str_args = new String[3];
-        int_args[0] = parseInt;
-        int_args[1] = parseInt1;
-        int_args[2] = parseInt2;
+        int_args[0] = ""+parseInt;
+        int_args[1] = ""+parseInt1;
+        int_args[2] = ""+parseInt2;
         str_args[0] = text;
         str_args[1] = toString;
         str_args[2] = text1;
@@ -1089,11 +1089,11 @@ public class adminFrame extends JFrame implements Exit {
     /**
      * @function : 构造学生查询表格。
      */
-    public JTable getStudentQueryInfo(int studentID, int studentAdmissionDate, String studentName, String studentGender, String studentFaculty) {
-        int_args = new int[2];
+    public JTable getStudentQueryInfo(String studentID, String studentAdmissionDate, String studentName, String studentGender, String studentFaculty) {
+        int_args = new String[2];
         str_args = new String[3];
-        int_args[0] = studentID;
-        int_args[1] = studentAdmissionDate;
+        int_args[0] = ""+studentID;
+        int_args[1] = ""+studentAdmissionDate;
         str_args[0] = studentName;
         str_args[1] = studentGender;
         str_args[2] = studentFaculty;
@@ -1115,10 +1115,10 @@ public class adminFrame extends JFrame implements Exit {
     /**
      * @function : 构造教师查询表格。
      */
-    public JTable getTeacherQueryInfo(int teacherID, String teacherName, String teacherFaculty) {
-        int_args = new int[1];
+    public JTable getTeacherQueryInfo(String teacherID, String teacherName, String teacherFaculty) {
+        int_args = new String[1];
         str_args = new String[2];
-        int_args[0] = teacherID;
+        int_args[0] = ""+teacherID;
         str_args[0] = teacherName;
         str_args[1] = teacherFaculty;
         conn = new DBConnector();
@@ -1139,11 +1139,11 @@ public class adminFrame extends JFrame implements Exit {
     /**
      * @function : 构造成绩查询表格。
      */
-    public JTable getJTable(int teacherID, int courseID) {
-        int_args = new int[2];
+    public JTable getJTable(String teacherID, String courseID) {
+        int_args = new String[2];
         str_args = new String[0];
-        int_args[0] = teacherID;
-        int_args[1] = courseID;
+        int_args[0] = ""+teacherID;
+        int_args[1] = ""+courseID;
         conn = new DBConnector();
         Vector<Object> addtional = new Vector();
         try {

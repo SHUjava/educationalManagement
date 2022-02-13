@@ -28,7 +28,7 @@ public class stuFrame extends JFrame implements Exit {
     Object[][] tableData;
     DBConnector conn;
     JTable cjtable;
-    int[] int_args;
+    String[] int_args;
     String[] str_args;
     String[] semeList;
 
@@ -334,9 +334,9 @@ public class stuFrame extends JFrame implements Exit {
      * @function : 构造成绩查询表格。
      */
     public JTable getJTable(Object semester) {
-        int_args = new int[1];
+        int_args = new String[1];
         str_args = new String[1];
-        int_args[0] = this.id;
+        int_args[0] = ""+this.id;
         str_args[0] = semester.toString();
         conn = new DBConnector();
         try {
@@ -356,9 +356,9 @@ public class stuFrame extends JFrame implements Exit {
      * @function : 构造成绩大表表格。
      */
     public JTable getJTable1() {
-        int_args = new int[1];
+        int_args = new String[1];
         str_args = new String[0];
-        int_args[0] = this.id;
+        int_args[0] = ""+this.id;
         conn = new DBConnector();
         try {
             tableData = conn.search("学生成绩大表", int_args, str_args, null);
