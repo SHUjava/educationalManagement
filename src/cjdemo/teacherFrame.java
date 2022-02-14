@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Vector;
 
 import jdbctest.CustomException;
@@ -244,12 +245,14 @@ public class teacherFrame extends JFrame implements Exit {
 
         semesterText1 = new JComboBox();
         semesterText1.setSelectedItem("2019-2020秋季");
-        semesterText1.addItem("2019-2020秋季");
-        semesterText1.addItem("2019-2020冬季");
-        semesterText1.addItem("2019-2020春季");
-        semesterText1.addItem("2020-2021秋季");
-        semesterText1.addItem("2020-2021冬季");
-        semesterText1.addItem("2020-2021春季");
+        DBConnector t = new DBConnector();
+        String[] sl = t.getSemeList();
+        for(int i=0;i< sl.length;i++){
+            semesterText1.addItem(sl[i]);
+            if(Objects.equals(sl[i + 1], null)){
+                break;
+            }
+        }
         semesterText1.setFont(font);
         semesterText1.setPreferredSize(new Dimension(110, 30));
         showQueryGradePanel.add(semesterText1);
@@ -367,12 +370,12 @@ public class teacherFrame extends JFrame implements Exit {
 
         semesterText = new JComboBox();
         semesterText.setSelectedItem("2019-2020秋季");
-        semesterText.addItem("2019-2020秋季");
-        semesterText.addItem("2019-2020冬季");
-        semesterText.addItem("2019-2020春季");
-        semesterText.addItem("2020-2021秋季");
-        semesterText.addItem("2020-2021冬季");
-        semesterText.addItem("2020-2021春季");
+        for(int i=0;i< sl.length;i++){
+            semesterText.addItem(sl[i]);
+            if(Objects.equals(sl[i + 1], null)){
+                break;
+            }
+        }
         semesterText.setFont(font);
         semesterText.setPreferredSize(new Dimension(110, 30));
         showChangeGradePanel.add(semesterText);
@@ -484,12 +487,12 @@ public class teacherFrame extends JFrame implements Exit {
 
         semesterText2 = new JComboBox();
         semesterText2.setSelectedItem("2019-2020秋季");
-        semesterText2.addItem("2019-2020秋季");
-        semesterText2.addItem("2019-2020冬季");
-        semesterText2.addItem("2019-2020春季");
-        semesterText2.addItem("2020-2021秋季");
-        semesterText2.addItem("2020-2021冬季");
-        semesterText2.addItem("2020-2021春季");
+        for(int i=0;i< sl.length;i++){
+            semesterText2.addItem(sl[i]);
+            if(Objects.equals(sl[i + 1], null)){
+                break;
+            }
+        }
         semesterText2.setFont(font);
         semesterText2.setPreferredSize(new Dimension(110, 30));
         showGradeAnalyzePanel.add(semesterText2);
