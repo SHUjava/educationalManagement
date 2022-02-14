@@ -18,7 +18,16 @@ public class DBConnector {
     //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
-    static String seme = ""; //当前学期
+    static final String firstSeme = "2019-2020秋季";  // 初始学期
+    static String seme; //当前学期
+
+    static {
+        try {
+            seme = getSeme();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public DBConnector() {
         try {
@@ -738,7 +747,7 @@ public class DBConnector {
      * @author YangJunhao
      * @function 生成某同学从入学学期到当前学期的学期列表
      */
-    public String[] getSemeList(int ID) {
+    public String[] getStuSemeList(int ID) {
         int grade = this.getStuGrade(ID);
         String tmp = grade + "-" + (grade + 1) + "秋季";
         String[] result = new String[12];
@@ -771,7 +780,7 @@ public class DBConnector {
      */
     public Object[][] getEverySemesterGPA(int ID) {
         int grade = this.getStuGrade(ID);
-        String[] tmp = getSemeList(ID);
+        String[] tmp = getStuSemeList(ID);
         Object[][] history = new Object[12][2];
         for (int i = 0; i < 12; i++) {
             history[i][0] = tmp[i];
@@ -1403,7 +1412,7 @@ public class DBConnector {
         out.close();
     }
 
-    public String getSeme() throws IOException {
+    public static String getSeme() throws IOException {
         File file = new File("semester.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
         seme = br.readLine();
@@ -1422,6 +1431,30 @@ public class DBConnector {
             res = seme.substring(0, 9) + "春季";
         }
         return res;
+    }
+
+    public String[] getSemeList(){
+        String[] result = new String[100];
+        String tmp = firstSeme;
+        // 不考虑夏季学期
+        for (int i = 0; i < 100; i++) {
+            result[i] = tmp;
+            if (!tmp.equals(seme)) {
+                if (tmp.charAt(9) == '春') {
+                    int year1 = java.lang.Integer.parseInt(tmp.substring(0, 4));
+                    int year2 = java.lang.Integer.parseInt(tmp.substring(5, 9));
+                    tmp = (year1 + 1) + "-" + (year2 + 1) + "秋季";
+                } else if (tmp.charAt(9) == '秋') {
+                    tmp = tmp.substring(0, 9) + "冬季";
+                } else if (tmp.charAt(9) == '冬') {
+                    tmp = tmp.substring(0, 9) + "春季";
+                }
+            } else {
+                break;
+            }
+        }
+        System.out.println(Arrays.toString(result));
+        return result;
     }
 }
 

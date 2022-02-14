@@ -127,6 +127,9 @@ public class adminFrame extends JFrame implements Exit {
                 if(n==0){
                     try {
                         t.setSeme(t.getNextSeme());
+                        JOptionPane.showMessageDialog(null, "学期更新成功！即将返回登录页面");
+                        dispose();
+                        JFrame newFrame = new CjFrame("成绩管理系统登录界面");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -556,12 +559,14 @@ public class adminFrame extends JFrame implements Exit {
         courseSemesterComboBox = new JComboBox();
         courseSemesterComboBox.setSelectedItem("任意");
         courseSemesterComboBox.addItem("任意");
-        courseSemesterComboBox.addItem("2019-2020秋季");
-        courseSemesterComboBox.addItem("2019-2020冬季");
-        courseSemesterComboBox.addItem("2019-2020春季");
-        courseSemesterComboBox.addItem("2020-2021秋季");
-        courseSemesterComboBox.addItem("2020-2021冬季");
-        courseSemesterComboBox.addItem("2020-2021春季");
+        DBConnector t = new DBConnector();
+        String[] sl = t.getSemeList();
+        for(int i=0;i< sl.length;i++){
+            courseSemesterComboBox.addItem(sl[i]);
+            if(Objects.equals(sl[i + 1], null)){
+                break;
+            }
+        }
         courseSemesterComboBox.setFont(font);
         courseSemesterComboBox.setPreferredSize(new Dimension(120, 30));
         showCourseQueryPanel.add(courseSemesterComboBox);
@@ -877,12 +882,14 @@ public class adminFrame extends JFrame implements Exit {
 
             JComboBox semesterText = new JComboBox();
             semesterText.setSelectedItem("2019-2020秋季");
-            semesterText.addItem("2019-2020秋季");
-            semesterText.addItem("2019-2020冬季");
-            semesterText.addItem("2019-2020春季");
-            semesterText.addItem("2020-2021秋季");
-            semesterText.addItem("2020-2021冬季");
-            semesterText.addItem("2020-2021春季");
+            DBConnector t = new DBConnector();
+            String[] sl = t.getSemeList();
+            for(int i=0;i< sl.length;i++){
+                semesterText.addItem(sl[i]);
+                if(Objects.equals(sl[i + 1], null)){
+                    break;
+                }
+            }
             semesterText.setFont(font);
             semesterText.setPreferredSize(new Dimension(110,30));
             panel.add(semesterText);

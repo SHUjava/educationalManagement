@@ -43,7 +43,7 @@ public class stuFrame extends JFrame implements Exit {
         this.id = ID;
         this.name = name;
         DBConnector t = new DBConnector();
-        this.semeList = t.getSemeList(ID);
+        this.semeList = t.getStuSemeList(ID);
         ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
         this.setIconImage(imageIcon.getImage().getScaledInstance(100, 140, 100));
         this.setResizable(false);
