@@ -1,5 +1,6 @@
 package jdbctest;
 
+
 import java.io.*;
 import java.sql.*;
 import java.util.Arrays;
@@ -13,9 +14,9 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-    //static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
-    //static final String PASS = "1240863915gg";
+    static final String PASS = "Zbb123150@";
+//    static final String PASS = "yang0417";
+        //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
     static final String firstSeme = "2019-2020秋季";  // 初始学期
@@ -28,6 +29,8 @@ public class DBConnector {
             e.printStackTrace();
         }
     }
+
+
 
     public DBConnector() {
         try {
@@ -74,8 +77,9 @@ public class DBConnector {
     }
 
 
-    public String queryName(String mode, int ID) {
-        if (mode.equals("admin")) {
+    public String queryName(String mode, int ID)
+    {
+        if(mode.equals("admin")){
             return "管理员";
         }
         String sql;
@@ -107,7 +111,7 @@ public class DBConnector {
                 }
                 sql = "select 课程编号, 课程名, 学分, 成绩, 绩点\n" +
                         "from used_score\n" +
-                        "where 学号='" + int_args[0] + "' and 学期 = '" + str_args[0] + "';\n";
+                        "where 学号='" + int_args[0] +"' and 学期 = '"+str_args[0] + "';\n";
                 rs = stmt.executeQuery(sql);
                 int id = 0;
                 while (rs.next()) {
@@ -150,7 +154,7 @@ public class DBConnector {
                     row.addElement(credit);
                     row.addElement(score);
                     row.addElement(gpa);
-                    row.addElement(semester.substring(0, 10));
+                    row.addElement(semester.substring(0,10));
                     tmp.addElement(row);
                 }
                 rs.close();
@@ -162,7 +166,7 @@ public class DBConnector {
                 }
                 sql = "select used_score.课程编号, used_score.课程名, used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.绩点\n" +
                         "from used_score, student\n" +
-                        "where used_score.工号 = '" + int_args[0] + "' and used_score.课程编号 ='" + int_args[1] + "' and used_score.学号=student.student_id\n" +
+                        "where used_score.工号 = '"+int_args[0]+"' and used_score.课程编号 ='"+int_args[1]+"' and used_score.学号=student.student_id\n" +
                         "order by used_score.成绩;";
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -193,12 +197,12 @@ public class DBConnector {
                         "used_score.平时成绩, used_score.考试成绩, used_score.绩点, course.course_id\n" +
                         "from used_score, student, course\n" +
                         "where used_score.工号 = '" + int_args[0] +
-                        "' and used_score.课程编号 ='" + int_args[1] +
+                        "' and used_score.课程编号 ='"+ int_args[1] +
                         "' and used_score.学号 =student.student_id and used_score.课程编号 = course.course_order " +
                         "order by used_score.学号;";
                 rs = stmt.executeQuery(sql);
                 String course_name = null;
-                int credit = 0;
+                int credit=0;
                 int course_id = 0;
                 while (rs.next()) {
                     course_name = rs.getString("课程名");
@@ -227,11 +231,11 @@ public class DBConnector {
                 System.out.println(sql);
                 break;
             case "管理员学生查询":
-                if (int_args.length != 2 || str_args.length != 3) {//学号、姓名、性别、院系、入学时间
-                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
-                if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女") && !Objects.equals(str_args[1], "")) {
-                    throw new CustomException("性别输入有误" + str_args[1]);
+                if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女") && !Objects.equals(str_args[1], "")){
+                    throw new CustomException("性别输入有误"+str_args[1]);
                 }
                 String part1;
                 String part2;
@@ -242,45 +246,45 @@ public class DBConnector {
                 String and = " ";
                 if (Objects.equals(int_args[0], "")) {
                     part1 = "";
-                } else {
-                    part1 = "student_id like '%" + int_args[0] + "%'";
+                }else{
+                    part1 = "student_id like '%"+int_args[0]+"%'";
                     and = " and ";
                 }
                 if (Objects.equals(int_args[1], "")) {
                     part2 = "";
-                } else {
-                    part2 = and + "student_grade like '%" + int_args[1] + "%'";
+                }else{
+                    part2 = and + "student_grade like '%"+int_args[1]+"%'";
                     and = " and ";
                 }
                 if (Objects.equals(str_args[0], "")) {
                     part3 = "";
-                } else {
-                    part3 = and + "student_name like '%" + str_args[0] + "%'";
+                }else{
+                    part3 = and + "student_name like '%"+str_args[0]+"%'";
                     and = " and ";
                 }
 
-                if (part3.contains("or") || part3.contains(";")) {
-                    throw new CustomException("姓名输入有误" + int_args[0]);
+                if (part3.contains("or") || part3.contains(";")){
+                    throw new CustomException("姓名输入有误"+int_args[0]);
                 }
                 if (str_args[1].equals("")) {
                     part4 = "";
-                } else {
-                    part4 = and + "student_sex like '%" + str_args[1] + "%'";
+                }else{
+                    part4 = and + "student_sex like '%"+str_args[1]+"%'";
                     and = " and ";
                 }
                 if (Objects.equals(str_args[2], "")) {
                     part5 = "";
-                } else {
-                    part5 = and + "student_major like '%" + str_args[2] + "%'";
+                }else{
+                    part5 = and + "student_major like '%"+str_args[2]+"%'";
                 }
-                if (part5.contains(" or ") || part5.contains(";")) {
-                    throw new CustomException("院系输入有误" + int_args[0]);
+                if (part5.contains(" or ") || part5.contains(";")){
+                    throw new CustomException("院系输入有误"+int_args[0]);
                 }
-                if (part1.equals("") && part2.equals("") && part3.equals("") && part4.equals("") && part5.equals("")) {
+                if (part1.equals("") && part2.equals("") && part3.equals("") && part4.equals("") && part5.equals("")){
                     part1 = "1=1";
                 }
                 sql = "select student_id, student_name, student_sex, student_major, student_grade from student where "
-                        + part1 + part2 + part3 + part4 + part5 + ";";
+                        +part1+part2+part3+part4+part5+";";
                 System.out.println(sql);
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -300,39 +304,39 @@ public class DBConnector {
                 rs.close();
                 break;
             case "管理员教师查询":
-                if (int_args.length != 1 || str_args.length != 2) {//工号、姓名、院系
-                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                if(int_args.length != 1 || str_args.length != 2){//工号、姓名、院系
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
                 and = "";
                 if (Objects.equals(int_args[0], "")) {
                     part1 = "";
-                } else {
-                    part1 = "teacher_id like '%" + int_args[0] + "%'";
+                }else{
+                    part1 = "teacher_id like '%"+int_args[0]+"%'";
                     and = " and ";
                 }
                 if (Objects.equals(str_args[0], "")) {
                     part2 = "";
-                } else {
-                    part2 = and + "teacher_name like '%" + str_args[0] + "%'";
+                }else{
+                    part2 = and + "teacher_name like '%"+str_args[0]+"%'";
                     and = " and ";
                 }
-                if (part2.contains(" or ") || part2.contains(";")) {
-                    throw new CustomException("姓名输入有误" + int_args[0]);
+                if (part2.contains(" or ") || part2.contains(";")){
+                    throw new CustomException("姓名输入有误"+int_args[0]);
                 }
                 if (Objects.equals(str_args[1], "")) {
                     part3 = "";
-                } else {
-                    part3 = and + "teacher_major like '%" + str_args[1] + "%'";
+                }else{
+                    part3 = and + "teacher_major like '%"+str_args[1]+"%'";
                 }
                 System.out.println(part3);
-                if (part3.contains(" or ") || part3.contains(";")) {
-                    throw new CustomException("院系输入有误" + int_args[0]);
+                if (part3.contains(" or ") || part3.contains(";")){
+                    throw new CustomException("院系输入有误"+int_args[0]);
                 }
-                if (part1.equals("") && part2.equals("") && part3.equals("")) {
+                if (part1.equals("") && part2.equals("") && part3.equals("")){
                     part1 = "1=1";
                 }
                 sql = "select teacher_id, teacher_name, teacher_major from teacher where "
-                        + part1 + part2 + part3 + ";";
+                        +part1+part2+part3+";";
                 System.out.println(sql);
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -348,61 +352,61 @@ public class DBConnector {
                 rs.close();
                 break;
             case "管理员课程查询":
-                if (int_args.length != 3 || str_args.length != 3) {//课号、课名、学分、工号、学期、上课时间
-                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                if(int_args.length != 3 || str_args.length != 3){//课号、课名、学分、工号、学期、上课时间
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
                 and = "";
                 if (Objects.equals(int_args[0], "")) {
                     part1 = "";
-                } else {
-                    part1 = "course_order like '%" + int_args[0] + "%'";
+                }else{
+                    part1 = "course_order like '%"+int_args[0]+"%'";
                     and = " and ";
                 }
                 if (Objects.equals(str_args[0], "")) {
                     part2 = "";
-                } else {
-                    part2 = and + "course_name like '%" + str_args[0] + "%'";
+                }else{
+                    part2 = and + "course_name like '%"+str_args[0]+"%'";
                     and = " and ";
                 }
-                if (part2.contains("or") || part2.contains(";")) {
-                    throw new CustomException("课名输入有误" + int_args[1]);
+                if (part2.contains("or") || part2.contains(";")){
+                    throw new CustomException("课名输入有误"+int_args[1]);
                 }
                 if (Objects.equals(int_args[1], "")) {
                     part3 = "";
-                } else {
-                    part3 = and + "course_credit like '%" + int_args[1] + "%'";
+                }else{
+                    part3 = and + "course_credit like '%"+int_args[1]+"%'";
                     and = " and ";
                 }
                 if (Objects.equals(int_args[2], "")) {
                     part4 = "";
-                } else {
-                    part4 = and + "teacher_id like '%" + int_args[2] + "%'";
+                }else{
+                    part4 = and + "teacher_id like '%"+int_args[2]+"%'";
                     and = " and ";
                 }
                 if (Objects.equals(str_args[1], "")) {
                     part5 = "";
-                } else {
-                    part5 = and + "course_semester like '%" + str_args[1] + "%'";
+                }else{
+                    part5 = and + "course_semester like '%"+str_args[1]+"%'";
                     and = " and ";
                 }
-                if (part5.contains("or") || part5.contains(";")) {
-                    throw new CustomException("学期输入有误" + int_args[1]);
+                if (part5.contains("or") || part5.contains(";")){
+                    throw new CustomException("学期输入有误"+int_args[1]);
                 }
                 if (Objects.equals(str_args[2], "")) {
                     part6 = "";
-                } else {
-                    part6 = and + "course_time like '%" + str_args[2] + "%'";
+                }else{
+                    part6 = and + "course_time like '%"+str_args[2]+"%'";
                 }
-                if (part6.contains("or") || part6.contains(";")) {
-                    throw new CustomException("上课时间输入有误" + int_args[1]);
+                if (part6.contains("or") || part6.contains(";")){
+                    throw new CustomException("上课时间输入有误"+int_args[1]);
                 }
 
-                if (part1.equals("") && part2.equals("") && part3.equals("") && part4.equals("") && part5.equals("") && part6.equals("")) {
+                if (part1.equals("") && part2.equals("") && part3.equals("") && part4.equals("") && part5.equals("") && part6.equals("")){
                     part1 = "1=1";
                 }
                 sql = "select course_id, course_order, course_name, course_credit, teacher_id, course_semester, course_time " +
                         "from course where "
-                        + part1 + part2 + part3 + part4 + part5 + part6 + ";";
+                        +part1+part2+part3+part4+part5+part6+";";
                 System.out.println(sql);
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -436,6 +440,7 @@ public class DBConnector {
                         "' and course_time = '" + str_args[2] +
                         "';\n";
                 rs = stmt.executeQuery(sql);
+                System.out.println(sql);
                 rs.next();
                 int course_order = rs.getInt("course_order");
                 sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
@@ -443,7 +448,8 @@ public class DBConnector {
                         "where used_score.工号 = '" + int_args[0] +
                         "' and used_score.课程编号 ='" + course_order +
                         "'\n" +
-                        "order by used_score.学号;";
+                        "and used_score.`学号` = student.student_id order by used_score.学号;";
+                System.out.println(sql);
                 rs = stmt.executeQuery(sql);
                 id = 0;
                 while (rs.next()) {
@@ -464,7 +470,7 @@ public class DBConnector {
                     tmp.addElement(row);
                 }
                 rs.close();
-                System.out.println(tmp);
+
                 break;
 //            case "教师成绩修改":
 //                if (int_args.length != 3 || str_args.length != 4) {
@@ -629,7 +635,7 @@ public class DBConnector {
 //                break;
         }
         int row = tmp.size();
-        if (row == 0) {
+        if (row == 0){
             return new Object[0][0];
         }
         int col = tmp.get(0).size();
@@ -653,7 +659,7 @@ public class DBConnector {
      */
     public double getAverageScore(int ID, String semester) {
         String sql = "select 学分,绩点 from used_score where 学号='" + ID + "'and 学期='" + semester + "';";
-        if (Objects.equals(semester, "总体")) {
+        if(Objects.equals(semester, "总体")){
             sql = "select 学分,绩点 from used_score where 学号='" + ID + "';";
         }
         Vector<Vector<Double>> tmp = new Vector<>();
@@ -685,7 +691,6 @@ public class DBConnector {
         aver = b.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();
         return aver;
     }
-
     /**
      * @param ID,semester 学号，学期
      * @return int 学分
@@ -694,7 +699,7 @@ public class DBConnector {
      */
     public int getCredit(int ID, String semester) {
         String sql = "select 学分 from used_score where 学号='" + ID + "'and 学期='" + semester + "';";
-        if (Objects.equals(semester, "总体")) {
+        if(Objects.equals(semester, "总体")){
             sql = "select 学分 from used_score where 学号='" + ID + "';";
         }
         Vector<Vector<Double>> tmp = new Vector<>();
@@ -716,7 +721,6 @@ public class DBConnector {
         }
         return creditSum;
     }
-
     /**
      * @param ID 学号
      * @return int 年级
@@ -740,14 +744,15 @@ public class DBConnector {
         System.out.println(grade);
         return grade;
     }
-
     /**
      * @param ID 学号
      * @return String[] ["学期"]
      * @author YangJunhao
      * @function 生成某同学从入学学期到当前学期的学期列表
      */
-    public String[] getStuSemeList(int ID) {
+
+    public String[] getStuSemeList(int ID){
+
         int grade = this.getStuGrade(ID);
         String tmp = grade + "-" + (grade + 1) + "秋季";
         String[] result = new String[12];
@@ -771,7 +776,6 @@ public class DBConnector {
         System.out.println(Arrays.toString(result));
         return result;
     }
-
     /**
      * @param ID,semester 学号，学期
      * @return Object[][] [["学期"，均绩],[]]
@@ -785,7 +789,7 @@ public class DBConnector {
         for (int i = 0; i < 12; i++) {
             history[i][0] = tmp[i];
             history[i][1] = getAverageScore(ID, history[i][0].toString());
-            if (tmp[i + 1] == null) {
+            if (tmp[i+1] == null) {
                 break;
             }
         }
@@ -817,7 +821,7 @@ public class DBConnector {
         result[0][0] = college;
         Vector<Vector<Double>> stu = new Vector<>();
         sql = "SELECT DISTINCT 学号 FROM used_score,student WHERE 学号=student_id AND student_major='" + college
-                + "' AND student_grade IN\n" +
+                +"' AND student_grade IN\n" +
                 "(SELECT student_grade FROM student WHERE student_id=" + ID + ");\n";
         try {
             rs = stmt.executeQuery(sql);
@@ -861,30 +865,29 @@ public class DBConnector {
         System.out.println(Arrays.deepToString(result));
         return result;
     }
-
     /**
      * @param ID,course,semester 工号，课程编号，学期
      * @return Object[][] [["绩点"，人数],[]]
      * @author YangJunhao
      * @function 生成该老师某学期某门课的学生绩点分布，供生成绩点分布图调用
      */
-    public Object[][] getClassGPADistribution(int ID, int course, String semester) {
+    public Object[][] getClassGPADistribution(int ID,int course,String semester){
         Object[][] distribution = new Object[11][2];
-        distribution[0][0] = "0.0";
-        distribution[1][0] = "1.0";
-        distribution[2][0] = "1.5";
-        distribution[3][0] = "1.7";
-        distribution[4][0] = "2.0";
-        distribution[5][0] = "2.3";
-        distribution[6][0] = "2.7";
-        distribution[7][0] = "3.0";
-        distribution[8][0] = "3.3";
-        distribution[9][0] = "3.7";
-        distribution[10][0] = "4.0";
+        distribution[0][0]="0.0";
+        distribution[1][0]="1.0";
+        distribution[2][0]="1.5";
+        distribution[3][0]="1.7";
+        distribution[4][0]="2.0";
+        distribution[5][0]="2.3";
+        distribution[6][0]="2.7";
+        distribution[7][0]="3.0";
+        distribution[8][0]="3.3";
+        distribution[9][0]="3.7";
+        distribution[10][0]="4.0";
         String sql;
         for (int i = 0; i < 11; i++) {
-            sql = "SELECT DISTINCT COUNT(学号) FROM used_score WHERE 工号=" + ID +
-                    " AND 学期='" + semester + "' AND 课程编号=" + course + " AND 绩点=" + distribution[i][0];
+            sql = "SELECT DISTINCT COUNT(学号) FROM used_score WHERE 工号="+ ID +
+                    " AND 学期='"+semester+"' AND 课程编号="+course+" AND 绩点="+distribution[i][0];
             try {
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -898,63 +901,64 @@ public class DBConnector {
         System.out.println(Arrays.deepToString(distribution));
         return distribution;
     }
-
     public void insert(String mode, String[] int_args, String[] str_args)
             throws CustomException, SQLException {
         String sql;
         ResultSet rs;
         switch (mode) {
             case "学生":
-                if (int_args.length != 2 || str_args.length != 3) {//学号、姓名、性别、院系、入学时间
-                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
-                if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女")) {
-                    throw new CustomException("性别输入有误" + int_args[0]);
+                if (!Objects.equals(str_args[1], "男") && !Objects.equals(str_args[1], "女")){
+                    throw new CustomException("性别输入有误"+int_args[0]);
                 }
                 sql = "INSERT INTO `educationalmanagementdb`.`student` " +
                         "(`student_id`, `student_name`, `student_password`, `student_sex`, `student_major`, `student_grade`) " +
-                        "VALUES ('" + int_args[0] + "', '" + str_args[0] + "', '123456', '" + str_args[1] + "', '" + str_args[2] + "', '" + int_args[1] + "');";
+                        "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"', '"+str_args[2]+"', '"+int_args[1]+"');";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
             case "教师":
-                if (int_args.length != 1 || str_args.length != 2) {//工号、名字、院系
-                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                if(int_args.length != 1 || str_args.length != 2){//工号、名字、院系
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
                 sql = "INSERT INTO `educationalmanagementdb`.`teacher` " +
                         "(`teacher_id`, `teacher_name`, `teacher_password`, `teacher_major`) " +
-                        "VALUES ('" + int_args[0] + "', '" + str_args[0] + "', '123456', '" + str_args[1] + "');";
+                        "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"');";
                 stmt.execute(sql);
                 break;
             case "课程":
-                if (int_args.length != 4 || str_args.length != 3) {//课号、课名、学分、工号、学期、时间、平时分占成
-                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                if(int_args.length != 4 || str_args.length != 3){//课号、课名、学分、工号、学期、时间、平时分占成
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
-                double ratio = (Double.parseDouble(int_args[3])) / 10;
+                double ratio = (Double.parseDouble(int_args[3]))/10;
                 sql = "INSERT INTO `educationalmanagementdb`.`course` " +
                         "(`course_order`, `course_name`, `course_credit`, `teacher_id`, `course_semester`, `course_time`, `score_ratio`) " +
-                        "VALUES ('" + int_args[0] + "', '" + str_args[0] + "', '" + int_args[1] + "', '" + int_args[2] +
-                        "', '" + str_args[1] + "', '" + str_args[2] + "', '" + ratio + "');";
+                        "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '"+int_args[1]+"', '"+int_args[2]+
+                        "', '"+str_args[1]+"', '"+str_args[2]+"', '"+ratio+"');";
                 stmt.execute(sql);
                 break;
             case "选课":
-                if (int_args.length != 4 || str_args.length != 0) {//学号、课程id、平时成绩、考试成绩
-                    throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+                if(int_args.length != 4 || str_args.length != 0){//学号、课程id、平时成绩、考试成绩
+                    throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
-                if (Objects.equals(int_args[2], "")) {
+                if (Objects.equals(int_args[2], "")){
                     int_args[2] = "NULL";
-                } else {
-                    int_args[2] = "'" + int_args[2] + "'";
                 }
-                if (Objects.equals(int_args[3], "")) {
+                else{
+                    int_args[2] = "'"+int_args[2]+"'";
+                }
+                if (Objects.equals(int_args[3], "")){
                     int_args[3] = "NULL";
-                } else {
-                    int_args[3] = "'" + int_args[3] + "'";
+                }
+                else{
+                    int_args[3] = "'"+int_args[3]+"'";
                 }
 
                 sql = "INSERT INTO `educationalmanagementdb`.`score` " +
                         "(`student_id`, `course_id`, `usual_score`, `test_score`) " +
-                        "VALUES ('" + int_args[0] + "', '" + int_args[1] + "', " + int_args[2] + ", " + int_args[3] + ");";
+                        "VALUES ('"+int_args[0]+"', '"+int_args[1]+"', "+int_args[2]+", "+int_args[3]+");";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
@@ -967,57 +971,58 @@ public class DBConnector {
     //用于删除某些记录，由于管理员的查询已支持模糊查询(缺失的数字用0代替，字符串用null代替)所以这里不支持模糊删除
 //有时删除输入的不是主键，所以需要关闭数据库的安全模式
     public void delete(String mode, String[] id)
-            throws CustomException, SQLException {
+            throws CustomException, SQLException{
         String sql;
         switch (mode) {
             case "学生"://学号
                 String[] stu_id = {id[0]};
                 this.delete("选课", stu_id);
-                sql = "delete from student where student_id = " + id[0] + ";";
+                sql = "delete from student where student_id = "+id[0]+";";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
             case "选课"://学号、课号
                 if (id.length == 2) {
                     sql = "delete from score where student_id = '" + id[0] + "' and course_id = '" + id[1] + "';";
-                } else {
-                    sql = "delete from score where student_id = '" + id[0] + "';";
+                }
+                else{
+                    sql = "delete from score where student_id = '"+id[0]+"';";
                 }
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
-            case "教师"://工号
+            case"教师"://工号
                 String[] int_args = new String[3];
                 String[] str_args = {null, null, null};
-                int_args[2] = "" + id[0];
+                int_args[2] = ""+id[0];
                 Vector<Object> ignore = new Vector<>();
                 Object[][] rs = this.search("管理员课程查询", int_args, str_args, ignore);
-                for (Object[] course : rs) {
-                    String[] tmp_id = {(String) course[0], id[0]};
+                for (Object[] course:rs){
+                    String[] tmp_id = {(String)course[0], id[0]};
                     this.delete("班级", tmp_id);
                 }
-                sql = "delete from teacher where teacher_id = " + id[0] + ";";
+                sql = "delete from teacher where teacher_id = "+id[0]+";";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
-            case "班级"://课号、工号
+            case"班级"://课号、工号
                 System.out.println("正在删除班级");
                 str_args = new String[0];
                 int_args = new String[2];
-                int_args[0] = "" + id[1];
-                int_args[1] = "" + id[0];
+                int_args[0] = ""+id[1];
+                int_args[1] = ""+id[0];
                 System.out.println(Arrays.toString(int_args));
                 System.out.println(Arrays.toString(str_args));
                 Vector<Object> course_id = new Vector<>();
                 rs = this.search("管理员班级成绩查询", int_args, str_args, course_id);
                 System.out.println(Arrays.deepToString(rs));
                 System.out.println(course_id.get(4));
-                for (Object[] student : rs) {
-                    String[] choose_id = {(String) student[0], (String) course_id.get(4)};
+                for (Object[] student:rs){
+                    String[] choose_id = {(String)student[0], (String)course_id.get(4)};
                     this.delete("选课", choose_id);
                 }
                 System.out.println("已删除该班级学生");
-                sql = "delete from course where course_id = " + course_id.get(4) + ";";
+                sql = "delete from course where course_id = "+ course_id.get(4) +";";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
@@ -1025,35 +1030,39 @@ public class DBConnector {
                 System.out.println("删除模式无匹配");
         }
     }
-
-    public void teacherScoreChange(int[] int_args, String[] str_args) throws CustomException, SQLException {
+    public boolean teacherScoreChange(int[] int_args, String[] str_args) throws CustomException, SQLException {
         String sql;
         ResultSet rs;
-        if (int_args.length != 3 || str_args.length != 4) {
+        if(int_args.length != 4 || str_args.length != 3){
             //工号，学号，修改后成绩  课程名称，课程学期，上课时间，平时成绩/考试成绩
-            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+            throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
         }
         sql = "select course_id from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + str_args[0] +
                 "' and course_semester = '" + str_args[1] +
                 "' and course_time = '" + str_args[2] +
                 "';\n";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         rs.next();
         int course_id = rs.getInt("course_id");
+        System.out.println(course_id);
         rs.close();
         String score_witch;
-        if (str_args[3] == "平时成绩") {
-            score_witch = "usual_score";
-        } else {
-            score_witch = "test_score";
+        if(int_args[3]==0){
+            score_witch="usual_score";
         }
-        sql = "update score set " + score_witch + " = '" + str_args[2] + "' where student_id = '" + int_args[1] +
-                "' and course_id = '" + course_id + "';\n";
+        else{
+            score_witch="test_score";
+        }
+        sql = "update score set " + score_witch + " = '" + int_args[2]+"' where student_id = '"+ int_args[1] +
+                "' and course_id = '" + course_id +"';\n";
         int row_count = stmt.executeUpdate(sql);//记录被修改的行数
-        if (row_count == 1) {
+        if(row_count==1){
             System.out.println("修改成绩成功");
+            return true;
         }
+        return false;
     }
 
     public void prepareTeacherEnterResult(int[] int_args, String[] str_args) throws CustomException, SQLException {
@@ -1061,25 +1070,27 @@ public class DBConnector {
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if (int_args.length != 1 || str_args.length != 3) {
+        if(int_args.length != 1 || str_args.length != 3){
             //工号  课程名称，课程学期，上课时间
-            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
+            throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
         }
         sql = "select * from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + str_args[0] +
                 "' and course_semester = '" + str_args[1] +
                 "' and course_time = '" + str_args[2] +
                 "';\n";
+
         rs = stmt.executeQuery(sql);
         rs.next();
         String score_entered = rs.getString("score_entered");
-        if (score_entered == "n") {
+        if(score_entered=="n"){
             int course_id = rs.getInt("course_id");
             rs.close();
             sql = "select score.student_id as '学号',student.student_name as '姓名' " +
-                    "from score,student where student.student_id=score.student_id and score.course_id = '" + course_id + "';\n";
+                    "from score,student where student.student_id=score.student_id and score.course_id = '"+course_id+"';\n";
             rs = stmt.executeQuery(sql);
-            while (rs.next()) {
+            while(rs.next())
+            {
                 int student_id = rs.getInt("学号");
                 String student_name = rs.getString("student_name");
                 Vector<Object> row = new Vector<>();
@@ -1089,19 +1100,19 @@ public class DBConnector {
             }
             rs.close();
             System.out.println(tmp);//输出两列数据:学号和学生姓名
-        } else {
+        }
+        else{
             System.out.println("已完成成绩录入");
         }
     }
-
     public void teacherEnterResultTwice(int[] int_args, String[] str_args, int[][] arg_args) throws CustomException, SQLException {
         //完成将学生成绩录入两遍，对两次录入数据不同的记录进行选择
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if (int_args.length != 1 || str_args.length != 3 || arg_args.length != 4) {
+        if(int_args.length != 1 || str_args.length != 3 || arg_args.length != 4){
             //工号  课程名称，课程学期，上课时间 平时成绩1，考试成绩1，平时成绩2，考试成绩2
-            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length + "   " + arg_args.length);
+            throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length+"   "+arg_args.length);
         }
         sql = "select * from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + str_args[0] +
@@ -1114,11 +1125,12 @@ public class DBConnector {
         rs.close();
         System.out.println("两次成绩录入情况不同的学生与录入成绩：");
         sql = "select score.student_id as '学号',student.student_name as '姓名' " +
-                "from score,student where student.student_id=score.student_id and score.course_id = '" + course_id + "';\n";
+                "from score,student where student.student_id=score.student_id and score.course_id = '"+course_id+"';\n";
         rs = stmt.executeQuery(sql);
         int id = 0;
-        while (rs.next()) {
-            if (arg_args[0][id] != arg_args[2][id] || arg_args[1][id] != arg_args[3][id]) {
+        while(rs.next())
+        {
+            if(arg_args[0][id] != arg_args[2][id] || arg_args[1][id] != arg_args[3][id]){
                 int student_id = rs.getInt("学号");
                 String student_name = rs.getString("student_name");
                 Vector<Object> row = new Vector<>();
@@ -1135,15 +1147,14 @@ public class DBConnector {
         rs.close();
         System.out.println(tmp);//输出所有两次录入数据不同的学生学号姓名和成绩，对两次录入成绩进行选择最终得到正确的录入数据
     }
-
     public void teacherEnterResultEnd(int[] int_args, String[] str_args, int[][] arg_args) throws CustomException, SQLException {
         //将正确的数据写入数据库中
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if (int_args.length != 1 || str_args.length != 3 || arg_args.length != 2) {
+        if(int_args.length != 1 || str_args.length != 3 || arg_args.length != 2){
             //工号  课程名称，课程学期，上课时间 平时成绩，考试成绩
-            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length + "   " + arg_args.length);
+            throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length+"   "+arg_args.length);
         }
         sql = "select * from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + str_args[0] +
@@ -1155,24 +1166,24 @@ public class DBConnector {
         int course_id = rs.getInt("course_id");
         rs.close();
         sql = "select score.student_id as '学号' " +
-                "from score where score.course_id = '" + course_id + "';\n";
+                "from score where score.course_id = '"+course_id+"';\n";
         rs = stmt.executeQuery(sql);
         int id = 0;
-        while (rs.next()) {
+        while(rs.next())
+        {
             int student_id = rs.getInt("学号");
-            sql = "update score set usual_score = '" + arg_args[0][id] + "' where student_id = '" + student_id +
-                    "' and course_id ='" + course_id + "';";
+            sql = "update score set usual_score = '"+arg_args[0][id]+"' where student_id = '"+student_id+
+                    "' and course_id ='"+ course_id +"';";
             stmt.executeUpdate(sql);
-            sql = "update score set test_score = '" + arg_args[1][id] + "' where student_id = '" + student_id +
-                    "' and course_id ='" + course_id + "';";
+            sql = "update score set test_score = '"+arg_args[1][id]+"' where student_id = '"+student_id+
+                    "' and course_id ='"+ course_id +"';";
             stmt.executeUpdate(sql);
             id++;
         }
-        sql = "update course set score_entered = 'y' where course_id = '" + course_id + "';\n";
+        sql = "update course set score_entered = 'y' where course_id = '" + course_id +"';\n";
         stmt.executeUpdate(sql);
     }
-
-    public boolean changePassword(int status, int ID, String PW) throws CustomException, SQLException {
+    public boolean changePassword(int status,int ID, String PW) throws CustomException, SQLException {
         //修改密码
         String sql;
 //        if(str_args.length != 2){
@@ -1191,25 +1202,25 @@ public class DBConnector {
 //            System.out.println("密码过长（长于20个字符）");
 //            return;
 //        }
-        System.out.println(status + ID + PW);
-        if (status == 0) {
-            sql = "update teacher set teacher_password = '" + PW + "' where teacher_id = '" + ID + "';";
+        System.out.println(status+ID+PW);
+        if(status==0){
+            sql = "update teacher set teacher_password = '"+PW+"' where teacher_id = '"+ID+"';";
             int row_count = stmt.executeUpdate(sql);
-            if (row_count == 1) {
+            if(row_count==1){
                 System.out.println("修改密码成功");
                 return true;
             }
-        } else if (status == 1) {
-            sql = "update student set student_password = '" + PW + "' where student_id = '" + ID + "';";
+        }
+        else if(status==1){
+            sql = "update student set student_password = '"+PW+"' where student_id = '"+ID+"';";
             int row_count = stmt.executeUpdate(sql);
-            if (row_count == 1) {
+            if(row_count==1){
                 System.out.println("修改密码成功");
                 return true;
             }
         }
         return false;
     }
-
     public boolean resetPassword(int status,int ID) throws CustomException, SQLException {
         //修改密码
         String sql;
@@ -1248,72 +1259,85 @@ public class DBConnector {
         return false;
     }
 
-    public void teacherGradeAnalysisText(int[] int_args, String[] str_args) throws CustomException, SQLException {
+    public Object[][] teacherGradeAnalysisText(int[] int_args, String[] str_args,String[] returnInfo) throws CustomException, SQLException {
         //教师课程成绩分析报告文字部分，包括输出班级平均分、优秀率、挂科率、前十名表单
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
+        if (int_args.length != 1 || str_args.length != 1) {//工号  课程编号
             throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
         }
-        sql = "select course_order from course where teacher_id = '" + int_args[0] +
-                "' and course_name = '" + str_args[0] +
-                "' and course_semester = '" + str_args[1] +
-                "' and course_time = '" + str_args[2] +
-                "';\n";
-        rs = stmt.executeQuery(sql);
-        rs.next();
-        int course_order = rs.getInt("course_order");
-        rs.close();
-        sql = "select avg(成绩)\n" +
+//        sql = "select course_order from course where teacher_id = '" + int_args[0] +
+//                "' and course_name = '" + str_args[0] +
+//                "' and course_semester = '" + str_args[1] +
+//                "' and course_time = '" + str_args[2] +
+//                "';\n";
+//        rs = stmt.executeQuery(sql);
+//        rs.next();
+//        int course_order = rs.getInt("course_order");
+          String course_order = str_args[0];
+//        rs.close();
+        sql="select avg(成绩)\n" +
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
                 "';\n";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         rs.next();
-        int avg = rs.getInt("成绩");
+        int avg = rs.getInt("avg(成绩)");
         rs.close();
-        System.out.println("平均成绩：" + avg);
-        sql = "select count(成绩)\n" +
+        returnInfo[0] = new String(String.valueOf(avg));
+        System.out.println("平均成绩："+avg);
+        sql="select count(成绩)\n" +
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
                 "';\n";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         rs.next();
-        int numOfPeople = rs.getInt("人数");
+        int numOfPeople = rs.getInt("count(成绩)");
+        System.out.println(numOfPeople);
+
         rs.close();
-        sql = "select count(成绩)\n" +
+        sql="select count(成绩)\n" +
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
                 "' and 成绩 >= 90 ;\n";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         rs.next();
-        int gradeA = rs.getInt("优秀人数");
+        int gradeA = rs.getInt("count(成绩)");
+        System.out.println(gradeA);
+
         rs.close();
-        System.out.println("优秀率：" + gradeA / numOfPeople * 100 + "%");
-        sql = "select count(成绩)\n" +
+        returnInfo[1] = (gradeA)*1.0/numOfPeople*100+"%";
+        System.out.println("优秀率："+(gradeA)*1.0/numOfPeople*100+"%");
+        sql="select count(成绩)\n" +
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
                 "' and 成绩 < 60 ;\n";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         rs.next();
-        int gradeD = rs.getInt("挂科人数");
+        int gradeD = rs.getInt("count(成绩)");
         rs.close();
-        System.out.println("挂科率：" + gradeD / numOfPeople * 100 + "%");
+        System.out.println("挂科率："+gradeD/numOfPeople*100+"%");
+        returnInfo[2] = (gradeD)*1.0/numOfPeople*100+"%";
         System.out.println("班级前十名表单：");
         sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
                 "from used_score, student\n" +
                 "where used_score.工号 = '" + int_args[0] +
                 "' and used_score.课程编号 ='" + course_order +
                 "'\n" +
-                "order by used_score.成绩;";
+                "and used_score.学号 = student.student_id order by used_score.成绩;";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         int id = 0;
-        while (rs.next() && id < 10) {
+        while (rs.next()&&id<10) {
             id++;
             int student_id = rs.getInt("学号");
             String student_name = rs.getString("student_name");
@@ -1332,64 +1356,77 @@ public class DBConnector {
             tmp.addElement(row);
         }
         rs.close();
-        System.out.println(tmp);//输出班级前10名的具体信息
-    }
+        int row = tmp.size();
+        if (row == 0){
+            return new Object[0][0];
+        }
+        int col = tmp.get(0).size();
+        Object[][] result = new Object[row][col];
+        //读取数据库
 
-    public int[] teacherGradeAnalysisPicture(int[] int_args, String[] str_args) throws CustomException, SQLException {
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                result[i][j] = ((Vector<?>) tmp.get(i)).get(j);
+            }
+        }
+        System.out.println(result);
+        System.out.println(tmp);//输出班级前10名的具体信息
+        return result;
+
+
+    }
+    public int[] teacherGradeAnalysisPicture(int teacherID, String course_order) throws CustomException, SQLException {
         //教师课程成绩分析报告图片部分，包括输出班级成绩分布饼状图
         String sql;
         ResultSet rs;
-        if (int_args.length != 1 || str_args.length != 3) {//工号  课程名称，课程学期，上课时间
-            throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
-        }
-        sql = "select course_order from course where teacher_id = '" + int_args[0] +
-                "' and course_name = '" + str_args[0] +
-                "' and course_semester = '" + str_args[1] +
-                "' and course_time = '" + str_args[2] +
-                "';\n";
-        rs = stmt.executeQuery(sql);
-        rs.next();
-        int course_order = rs.getInt("course_order");
-        rs.close();
-        sql = "select count(成绩) as 人数\n" +
+//        sql = "select course_order from course where teacher_id = '" + int_args[0] +
+//                "' and course_name = '" + str_args[0] +
+//                "' and course_semester = '" + str_args[1] +
+//                "' and course_time = '" + str_args[2] +
+//                "';\n";
+//        rs = stmt.executeQuery(sql);
+//        rs.next();
+//        int course_order = rs.getInt("course_order");
+//        rs.close();
+        sql="select count(成绩) as 人数\n" +
                 "from used_score\n" +
-                "where 工号 = '" + int_args[0] +
+                "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
                 "' and 成绩 >= 90 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
         int gradeA = rs.getInt("人数");
         rs.close();
-        sql = "select count(成绩) as 人数\n" +
+        sql="select count(成绩) as 人数\n" +
                 "from used_score\n" +
-                "where 工号 = '" + int_args[0] +
+                "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
                 "' and 成绩 >= 80 and 成绩 < 90 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
         int gradeB = rs.getInt("人数");
         rs.close();
-        sql = "select count(成绩) as 人数\n" +
+        sql="select count(成绩) as 人数\n" +
                 "from used_score\n" +
-                "where 工号 = '" + int_args[0] +
+                "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
                 "' and 成绩 >= 70 and 成绩 < 80 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
         int gradeC = rs.getInt("人数");
         rs.close();
-        sql = "select count(成绩) as 人数\n" +
+        sql="select count(成绩) as 人数\n" +
                 "from used_score\n" +
-                "where 工号 = '" + int_args[0] +
+                "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
                 "' and 成绩 >= 60 and 成绩 < 70 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
         int gradeD = rs.getInt("人数");
         rs.close();
-        sql = "select count(成绩) as 人数\n" +
+        sql="select count(成绩) as 人数\n" +
                 "from used_score\n" +
-                "where 工号 = '" + int_args[0] +
+                "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
                 "' and 成绩 < 60 ;\n";
         rs = stmt.executeQuery(sql);
@@ -1397,11 +1434,12 @@ public class DBConnector {
         int gradeE = rs.getInt("人数");
         rs.close();
         int[] row = new int[5];
-        row[0] = gradeA;
-        row[1] = gradeB;
-        row[2] = gradeC;
-        row[3] = gradeD;
-        row[4] = gradeE;
+        row[0]=gradeA;
+        row[1]=gradeB;
+        row[2]=gradeC;
+        row[3]=gradeD;
+        row[4]=gradeE;
+        System.out.println("ABCDE:"+gradeA+gradeB+gradeC+gradeD+gradeE);
         return row;
     }
 
