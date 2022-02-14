@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.security.spec.ECField;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -239,7 +240,12 @@ public class stuFrame extends JFrame implements Exit {
         buttonHistory.setFont(font);
         buttonHistory.setPreferredSize(new Dimension(90, 30));
         buttonHistory.addActionListener((e) -> {
-            JPanel showHistoryPanel = new Chart(id, t.getSeme(), "学生绩点走势", 0).getChartPanel();
+            JPanel showHistoryPanel = null;
+            try {
+                showHistoryPanel = new Chart(id, t.getSeme(), "学生绩点走势", 0).getChartPanel();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             showHistoryPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
             showHistoryPanel.setPreferredSize(new Dimension(550, 400));
             showHistoryPanel.setVisible(true);

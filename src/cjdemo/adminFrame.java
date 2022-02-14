@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -94,6 +95,45 @@ public class adminFrame extends JFrame implements Exit {
         showPanel.setPreferredSize(new Dimension(500, 600));
         showPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
         this.add(showPanel, "East");
+
+        /*
+         * @function: 在functionPanel中创建并添加【开始新学期】按钮newSemeButton.
+         * 为【开始新学期】按钮添加监听器，实现开始新学期功能
+         */
+        JButton newSemeButton = new JButton("开始新学期");
+        newSemeButton.setPreferredSize(new Dimension(120, 30));
+        newSemeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showPanel.removeAll();
+                showPanel.validate();
+                showPanel.repaint();
+                Object[] options = {"确认",
+                        "取消"};
+                DBConnector t =new DBConnector();
+                int n = 0;
+                try {
+                    n = JOptionPane.showOptionDialog(null,
+                            "当前学期为"+t.getSeme()+"，将开始新学期"+t.getNextSeme(),
+                            "开始新学期",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null,
+                            options,
+                            options[0]);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                if(n==0){
+                    try {
+                        t.setSeme(t.getNextSeme());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+        functionPanel.add(newSemeButton);
 
         /**
          * @function: 在functionPanel中创建并添加【班级成绩查询】按钮courseGradeQueryButton.
