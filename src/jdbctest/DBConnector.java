@@ -12,7 +12,7 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    //    static final String PASS = "Zx010426";
+//    static final String PASS = "Zx010426";
     //static final String PASS = "Zbb123150@";
     static final String PASS = "yang0417";
     //static final String PASS = "1240863915gg";
@@ -1195,6 +1195,44 @@ public class DBConnector {
             int row_count = stmt.executeUpdate(sql);
             if (row_count == 1) {
                 System.out.println("修改密码成功");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean resetPassword(int status,int ID) throws CustomException, SQLException {
+        //修改密码
+        String sql;
+//        if(str_args.length != 2){
+//            //身份标志位（0：教师，1：学生），id  第一遍输入密码，第二遍输入密码
+//            throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
+//        }
+//        if(PW1!=PW2){
+//            System.out.println("两次输入密码不一致");
+//            return false;
+//        }
+//        if(PW1.length()<6){
+//            System.out.println("密码过短（短于6个字符）");
+//            return;
+//        }
+//        if(str_args[0].length()>20){
+//            System.out.println("密码过长（长于20个字符）");
+//            return;
+//        }
+        if(status==0){
+            sql = "update teacher set teacher_password = '123456' where teacher_id = '"+ID+"';";
+            int row_count = stmt.executeUpdate(sql);
+            if(row_count==1){
+                System.out.println("重置密码成功");
+                return true;
+            }
+        }
+        else if(status==1){
+            sql = "update student set student_password = '123456' where student_id = '"+ID+"';";
+            int row_count = stmt.executeUpdate(sql);
+            if(row_count==1){
+                System.out.println("重置密码成功");
                 return true;
             }
         }
