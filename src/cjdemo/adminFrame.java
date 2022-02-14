@@ -125,7 +125,6 @@ public class adminFrame extends JFrame implements Exit {
                     ex.printStackTrace();
                 }
                 if(n==0){
-
                     try {
                         t.setSeme(t.getNextSeme());
                         JOptionPane.showMessageDialog(null, "学期更新成功！即将返回登录页面");
@@ -134,13 +133,6 @@ public class adminFrame extends JFrame implements Exit {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-
-                    try {
-                        t.setSeme(t.getNextSeme());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-
                 }
             }
         });
