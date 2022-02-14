@@ -29,6 +29,7 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.RefineryUtilities;
 
+import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -51,6 +52,8 @@ import java.util.Vector;
  *  @updateContent: 将绩点走势图X轴文字简化使之能完全显示，如“2019-2020秋季”->“2019秋”
  */
 public class Chart {
+    int id,order;
+    String semester;
     //构建容器面板，用于存放已经画好的图形报表
     private final ChartPanel frame;
     //用于获取学生绩点走势
@@ -79,6 +82,9 @@ public class Chart {
     }
     //在构造方法中将图形报表初始化
     public Chart(int ID,String semester,String mode,int course){
+        this.id = ID;
+        this.semester = semester;
+        this.order = course;
         //获取数据
         JFreeChart chart = null;
         if(Objects.equals(mode, "学生绩点走势")){
@@ -155,11 +161,17 @@ public class Chart {
         return frame;
     }
 
-    public static DefaultPieDataset getDataset3(int[] int_args, String[] str_args) throws SQLException, CustomException {
+    public Chart(int ID,String semester,int course) {
+        this.id = ID;
+        this.semester = semester;
+        this.order = course;
+        frame = null;
+    }
+    public static DefaultPieDataset getDataset3(int teacherID, String course_order ) throws SQLException, CustomException {
         //获取班级成绩分布数据
         DefaultPieDataset ds = new DefaultPieDataset();
         DBConnector test = new DBConnector();
-        int[] distribution = test.teacherGradeAnalysisPicture(int_args,str_args);
+        int[] distribution = test.teacherGradeAnalysisPicture(teacherID,course_order);
         ds.setValue(">90", distribution[0]);
         ds.setValue("80~90", distribution[1]);
         ds.setValue("70~80", distribution[2]);
@@ -181,24 +193,41 @@ public class Chart {
         pieplot.setSectionOutlinesVisible(false);
         pieplot.setNoDataMessage("没有可供使用的数据！");
     }
-    public void teacherGradeAnalysis(DefaultPieDataset ds){
+    public ChartPanel teacherGradeAnalysis(int ID,String order){
+        DefaultPieDataset ds=null;
+//        System.out.println(1);
+        try {
+            ds = getDataset3(id, new String(String.valueOf(order)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (CustomException e) {
+            e.printStackTrace();
+        }
+//        System.out.println(2);
+//        System.out.println(ds);
         JFreeChart chart = ChartFactory.createPieChart("成绩分布", // chart
                 ds, // data
                 true, // include legend
                 true, false);
+//        System.out.println(3);
         setChart(chart);
+//        System.out.println(4);
         PiePlot pieplot = (PiePlot) chart.getPlot();
         pieplot.setSectionPaint(">90", Color.decode("#749f83"));
         pieplot.setSectionPaint("80~90", Color.decode("#2f4554"));
         pieplot.setSectionPaint("70~80", Color.decode("#61a0a8"));
         pieplot.setSectionPaint("60~70", Color.decode("#91c7ae"));
         pieplot.setSectionPaint("<60", Color.decode("#c23531"));
+        chart.getTitle().setFont(new Font("宋体",Font.CENTER_BASELINE ,20));
+        ChartPanel newframe =new ChartPanel(chart,true);//将已经画好的图形报表存放到面板中
+
         try {
             ChartUtilities.saveChartAsPNG(new File("d:\\PieChart.png"), chart, 1500, 800);
             System.err.println("成功");
         } catch (Exception e) {
             System.err.println("创建图形时出错");
         }
+        return newframe;
     }
 }
 /*一个调用样例

@@ -1,22 +1,36 @@
 package cjdemo;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import jdbctest.CustomException;
+import jdbctest.DBConnector;
+import org.jfree.chart.ChartPanel;
 
 public class teacherFrame extends JFrame implements Exit {
     int id;
     String name;
     JPanel panel_show;
     JPanel showPanel;
-    JPanel showEnterGradePanel, showQueryGradePanel, showChangeGradePanel;
-    JTextField classText1,classText2,classText3, courseNameText1,courseNameText2,courseNameText3,stuIDText1,stuIDText2;
-    JButton checkEnterInfoButton;
-    JLabel courseNameLabel,classLabel,stuIDLabel;
+    Font font;
+    Object[][] data ;
+    JPanel showEnterGradePanel, showQueryGradePanel, showChangeGradePanel,showGradeAnalyzePanel,tablePanel;
+    JTabbedPane showAnalyzePanel;
+    JTextField classText1,courseNameText4,timeText2,timeText1,classText2,timeText, courseNameText1,courseNameText2,courseNameText3,stuIDText1,stuIDText2,newGradeText,tIDText;
+    JButton checkEnterInfoButton1,checkEnterInfoButton2,checkEnterInfoButton3,checkEnterInfoButton4;
+    JComboBox semesterText,choiceComBox,semesterText1,semesterText2;
+    DBConnector conn;
+    String []int_args;
+    int [] int_args1;
+    String[] str_args;
+    Object[][] tableData;
+    JTable cjtable;
+    JLabel courseNameLabel,timeLabel1,courseNameLabel2,timeLabel2,courseNameLabel3,semesterLabel,semesterLabel2,semesterLabel1,timeLabel,stuIDLabel,choiceLabel,tIDLabel,newGradeLabel;
 
     /**
      * @param id: 根据教师ID来创建学生页面
@@ -53,7 +67,7 @@ public class teacherFrame extends JFrame implements Exit {
          */
         JLabel welcomeTeacherLabel = new JLabel("欢迎您: " + this.name);
         welcomeTeacherLabel.setPreferredSize(new Dimension(120, 60));
-        Font font = new Font("Dialog", 1, 12);
+        font = new Font("Dialog", 1, 12);
         welcomeTeacherLabel.setFont(font);
         //将欢迎老师的信息添加到老师信息面板中
         teacherPanel.add(welcomeTeacherLabel);
@@ -150,28 +164,28 @@ public class teacherFrame extends JFrame implements Exit {
         courseNameText1.setPreferredSize(new Dimension(60, 30));
         showEnterGradePanel.add(courseNameText1);
 
-        classLabel = new JLabel("班级");
-        classLabel.setFont(font);
-        classLabel.setPreferredSize(new Dimension(35, 30));
-        showEnterGradePanel.add(classLabel);
+//        classLabel = new JLabel("班级");
+//        classLabel.setFont(font);
+//        classLabel.setPreferredSize(new Dimension(35, 30));
+//        showEnterGradePanel.add(classLabel);
 
         classText1 = new JTextField("");
         classText1.setFont(font);
         classText1.setPreferredSize(new Dimension(80, 30));
         showEnterGradePanel.add(classText1);
 
-        checkEnterInfoButton = new JButton("确认");
-        checkEnterInfoButton.setFont(font);
-        checkEnterInfoButton.setPreferredSize(new Dimension(100, 30));
-        checkEnterInfoButton.setContentAreaFilled(false);
-        checkEnterInfoButton.addActionListener(new ActionListener() {
+        checkEnterInfoButton1 = new JButton("确认");
+        checkEnterInfoButton1.setFont(font);
+        checkEnterInfoButton1.setPreferredSize(new Dimension(100, 30));
+        checkEnterInfoButton1.setContentAreaFilled(false);
+        checkEnterInfoButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println(1);
                 System.out.println("用户输入的课程名称为：" + courseNameText1.getText() + " 用户输入的班级为：" + classText1.getText());
             }
         });
-        showEnterGradePanel.add(checkEnterInfoButton);
+        showEnterGradePanel.add(checkEnterInfoButton1);
 
         //以下为显示录入成绩的表格，暂时未详细查看db中相关代码，陆续会更新
 
@@ -213,49 +227,80 @@ public class teacherFrame extends JFrame implements Exit {
          * courseNameLabel:课程名标签，classLabel:班级标签，stuIDLabel:学号标签；
          * courseNameText:文本输入框接收用户输入的课程名，classText:班级，stuIDText:学号；
          */
-        courseNameLabel = new JLabel("课程名");
-        courseNameLabel.setFont(font);
-        courseNameLabel.setPreferredSize(new Dimension(45, 30));
-        showQueryGradePanel.add(courseNameLabel);
+        courseNameLabel2 = new JLabel("课程名");
+        courseNameLabel2.setFont(font);
+        courseNameLabel2.setPreferredSize(new Dimension(45, 30));
+        showQueryGradePanel.add(courseNameLabel2);
 
         courseNameText2 = new JTextField("");
         courseNameText2.setFont(font);
-        courseNameText2.setPreferredSize(new Dimension(60, 30));
+        courseNameText2.setPreferredSize(new Dimension(80, 30));
         showQueryGradePanel.add(courseNameText2);
 
-        classLabel = new JLabel("班级");
-        classLabel.setFont(font);
-        classLabel.setPreferredSize(new Dimension(35, 30));
-        showQueryGradePanel.add(classLabel);
+        semesterLabel1 = new JLabel("学期选择");
+        semesterLabel1.setFont(font);
+        semesterLabel1.setPreferredSize(new Dimension(60, 30));
+        showQueryGradePanel.add(semesterLabel1);
 
-        classText2 = new JTextField("");
-        classText2.setFont(font);
-        classText2.setPreferredSize(new Dimension(80, 30));
-        showQueryGradePanel.add(classText2);
+        semesterText1 = new JComboBox();
+        semesterText1.setSelectedItem("2019-2020秋季");
+        semesterText1.addItem("2019-2020秋季");
+        semesterText1.addItem("2019-2020冬季");
+        semesterText1.addItem("2019-2020春季");
+        semesterText1.addItem("2020-2021秋季");
+        semesterText1.addItem("2020-2021冬季");
+        semesterText1.addItem("2020-2021春季");
+        semesterText1.setFont(font);
+        semesterText1.setPreferredSize(new Dimension(110, 30));
+        showQueryGradePanel.add(semesterText1);
 
-        stuIDLabel = new JLabel("学号");
-        stuIDLabel.setFont(font);
-        stuIDLabel.setPreferredSize(new Dimension(35, 30));
-        showQueryGradePanel.add(stuIDLabel);
+        timeLabel1 = new JLabel("上课时间");
+        timeLabel1.setFont(font);
+        timeLabel1.setPreferredSize(new Dimension(60, 30));
+        showQueryGradePanel.add(timeLabel1);
 
-        stuIDText1 = new JTextField("");
-        stuIDText1.setFont(font);
-        stuIDText1.setPreferredSize(new Dimension(80, 30));
-        showQueryGradePanel.add(stuIDText1);
+        timeText1 = new JTextField("");
+        timeText1.setFont(font);
+        timeText1.setPreferredSize(new Dimension(80, 30));
+        showQueryGradePanel.add(timeText1);
 
-        checkEnterInfoButton= new JButton("确认");
-        checkEnterInfoButton.setFont(font);
-        checkEnterInfoButton.setPreferredSize(new Dimension(100, 30));
-        checkEnterInfoButton.setContentAreaFilled(false);
-        checkEnterInfoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(2);
-                System.out.println("用户输入的课程名称为：" + courseNameText2.getText() + " 用户输入的班级为：" + classText2.getText()
-                        +" 用户输入的学号为："+stuIDText1.getText());
-            }
+        checkEnterInfoButton2= new JButton("确认");
+        checkEnterInfoButton2.setFont(font);
+        checkEnterInfoButton2.setPreferredSize(new Dimension(100, 30));
+        checkEnterInfoButton2.setContentAreaFilled(false);
+        checkEnterInfoButton2.addActionListener(e -> {
+            cjtable = getJTable(courseNameText2.getText(),semesterText1.getSelectedItem().toString(),timeText1.getText());
+            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+            r.setHorizontalAlignment(JLabel.CENTER);
+            cjtable.setDefaultRenderer(Object.class, r);
+            JPanel panel_export = new JPanel();
+            panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+            panel_export.setPreferredSize(new Dimension(500, 50));
+            Export export = new Export(cjtable);
+            JButton buttonExport = export.getButtonExport();
+            panel_export.add(buttonExport);
+            Print print = new Print(cjtable, this, this.name+"  "+semesterText1.getSelectedItem().toString()+"  "+courseNameText2.getText());
+            JButton buttonPrint = print.getButtonPrint();
+            panel_export.add(buttonPrint);
+            JScrollPane jScrollPane = new JScrollPane(cjtable);
+            jScrollPane.setPreferredSize(new Dimension(500, 300));
+            tablePanel.removeAll();
+            tablePanel.add(panel_export);
+            tablePanel.add(jScrollPane);
+            tablePanel.setVisible(true);
+            tablePanel.validate();
+            tablePanel.repaint();
+            cjtable.setPreferredSize(new Dimension(500, 300));
+            cjtable.setEnabled(false);  //不可编辑
+            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+
         });
-        showQueryGradePanel.add(checkEnterInfoButton);
+        showQueryGradePanel.add(checkEnterInfoButton2);
+        tablePanel = new JPanel();
+        tablePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        tablePanel.setPreferredSize(new Dimension(500, 300));
+        showQueryGradePanel.add(tablePanel);
 
         /**
          * @function: 在functionPanel中创建并添加修改成绩按钮changeGradeButton
@@ -283,8 +328,8 @@ public class teacherFrame extends JFrame implements Exit {
          * 默认为不显示，当点击【修改成绩】按钮时显示
          */
         showChangeGradePanel = new JPanel();
-        showChangeGradePanel.setPreferredSize(new Dimension(550, 500));
-        showChangeGradePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
+        showChangeGradePanel.setPreferredSize(new Dimension(500, 500));
+        showChangeGradePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 10));
         //默认不显示
         showChangeGradePanel.setVisible(false);
         showPanel.add(showChangeGradePanel, "East");
@@ -294,29 +339,10 @@ public class teacherFrame extends JFrame implements Exit {
          * courseNameLabel:课程名标签，classLabel:班级标签，stuIDLabel:学号标签；
          * courseNameText:文本输入框接收用户输入的课程名，classText:班级，stuIDText:学号；
          */
-        courseNameLabel = new JLabel("课程名");
-        courseNameLabel.setFont(font);
-        courseNameLabel.setPreferredSize(new Dimension(45, 30));
-        showChangeGradePanel.add(courseNameLabel);
-
-        courseNameText3 = new JTextField("");
-        courseNameText3.setFont(font);
-        courseNameText3.setPreferredSize(new Dimension(60, 30));
-        showChangeGradePanel.add(courseNameText3);
-
-        classLabel = new JLabel("班级");
-        classLabel.setFont(font);
-        classLabel.setPreferredSize(new Dimension(35, 30));
-        showChangeGradePanel.add(classLabel);
-
-        classText3 = new JTextField("");
-        classText3.setFont(font);
-        classText3.setPreferredSize(new Dimension(80, 30));
-        showChangeGradePanel.add(classText3);
 
         stuIDLabel = new JLabel("学号");
         stuIDLabel.setFont(font);
-        stuIDLabel.setPreferredSize(new Dimension(35, 30));
+        stuIDLabel.setPreferredSize(new Dimension(50, 30));
         showChangeGradePanel.add(stuIDLabel);
 
         stuIDText2 = new JTextField("");
@@ -324,21 +350,259 @@ public class teacherFrame extends JFrame implements Exit {
         stuIDText2.setPreferredSize(new Dimension(80, 30));
         showChangeGradePanel.add(stuIDText2);
 
-        checkEnterInfoButton= new JButton("确认");
-        checkEnterInfoButton.setFont(font);
-        checkEnterInfoButton.setPreferredSize(new Dimension(100, 30));
-        checkEnterInfoButton.setContentAreaFilled(false);
-        checkEnterInfoButton.addActionListener(new ActionListener() {
+        courseNameLabel = new JLabel("课程名");
+        courseNameLabel.setFont(font);
+        courseNameLabel.setPreferredSize(new Dimension(65, 30));
+        showChangeGradePanel.add(courseNameLabel);
+
+        courseNameText3 = new JTextField("");
+        courseNameText3.setFont(font);
+        courseNameText3.setPreferredSize(new Dimension(80, 30));
+        showChangeGradePanel.add(courseNameText3);
+
+        semesterLabel = new JLabel("课程学期");
+        semesterLabel.setFont(font);
+        semesterLabel.setPreferredSize(new Dimension(60, 30));
+        showChangeGradePanel.add(semesterLabel);
+
+        semesterText = new JComboBox();
+        semesterText.setSelectedItem("2019-2020秋季");
+        semesterText.addItem("2019-2020秋季");
+        semesterText.addItem("2019-2020冬季");
+        semesterText.addItem("2019-2020春季");
+        semesterText.addItem("2020-2021秋季");
+        semesterText.addItem("2020-2021冬季");
+        semesterText.addItem("2020-2021春季");
+        semesterText.setFont(font);
+        semesterText.setPreferredSize(new Dimension(110, 30));
+        showChangeGradePanel.add(semesterText);
+
+        timeLabel = new JLabel("上课时间");
+        timeLabel.setFont(font);
+        timeLabel.setPreferredSize(new Dimension(60, 30));
+        showChangeGradePanel.add(timeLabel);
+
+        timeText = new JTextField("");
+        timeText.setFont(font);
+        timeText.setPreferredSize(new Dimension(60, 30));
+        showChangeGradePanel.add(timeText);
+
+        choiceLabel = new JLabel("成绩选择");
+        choiceLabel.setFont(font);
+        choiceLabel.setPreferredSize(new Dimension(60, 30));
+        showChangeGradePanel.add(choiceLabel);
+
+        choiceComBox = new JComboBox();
+        choiceComBox.setSelectedItem("平时成绩");
+        choiceComBox.addItem("平时成绩");
+        choiceComBox.addItem("考试成绩");
+        choiceComBox.setFont(font);
+        choiceComBox.setPreferredSize(new Dimension(80, 30));
+        showChangeGradePanel.add(choiceComBox);
+
+        newGradeLabel = new JLabel("修改后成绩");
+        newGradeLabel.setFont(font);
+        newGradeLabel.setPreferredSize(new Dimension(70, 30));
+        showChangeGradePanel.add(newGradeLabel);
+
+        newGradeText = new JTextField("");
+        newGradeText.setFont(font);
+        newGradeText.setPreferredSize(new Dimension(60, 30));
+        showChangeGradePanel.add(newGradeText);
+
+        checkEnterInfoButton3= new JButton("确认");
+        checkEnterInfoButton3.setFont(font);
+        checkEnterInfoButton3.setPreferredSize(new Dimension(80, 30));
+        checkEnterInfoButton3.setContentAreaFilled(false);
+        checkEnterInfoButton3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(3);
-                System.out.println("用户输入的课程名称为：" + courseNameText3.getText() + " 用户输入的班级为：" + classText3.getText()
-                        +" 用户输入的学号为："+stuIDText2.getText());
+                conn = new DBConnector();
+                int_args1 = new int[]{id,Integer.parseInt(stuIDText2.getText()),
+                        Integer.parseInt(newGradeText.getText()),choiceComBox.getSelectedItem().toString().equals("平时成绩") ? 0 : 1};
+                str_args = new String[]{courseNameText3.getText(),semesterText.getSelectedItem().toString(),timeText.getText()};
+                try {
+                    if(conn.teacherScoreChange(int_args1,str_args)) {
+                        JOptionPane.showMessageDialog(null, "成绩修改成功");
+                    }
+                } catch (CustomException ex) {
+                    JOptionPane.showMessageDialog(null, "出现异常，请重新尝试");
+                    ex.printStackTrace();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "出现异常，请重新尝试");
+                    ex.printStackTrace();
+                }
+
             }
         });
-        showChangeGradePanel.add(checkEnterInfoButton);
+        showChangeGradePanel.add(checkEnterInfoButton3);
+
+        /**
+         * @function: 在functionPanel中创建并添加成绩分析按钮gradeAnalyzeButton
+         * 为【成绩分析】按钮添加监听器，实现相关功能
+         */
+        JButton gradeAnalyzeButton = new JButton("成绩分析");
+        gradeAnalyzeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showGradeAnalyzePanel.setVisible(true);
+                showPanel.removeAll();
+                showPanel.add(showGradeAnalyzePanel);
+                showPanel.validate();
+                showPanel.repaint();
+            }
+        });
+        gradeAnalyzeButton.setFont(font);
+        gradeAnalyzeButton.setContentAreaFilled(false);
+        gradeAnalyzeButton.setPreferredSize(new Dimension(90,30));
+        functionPanel.add(gradeAnalyzeButton);
+
+        /**
+         * @function: 录入成绩后的显示面板
+         * 默认为不显示，当点击【成绩分析】按钮时显示
+         */
+        showGradeAnalyzePanel = new JPanel();
+        showGradeAnalyzePanel.setPreferredSize(new Dimension(500, 500));
+        showGradeAnalyzePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
+        showGradeAnalyzePanel.setVisible(false);
+        showPanel.add(showGradeAnalyzePanel, "East");
+
+        courseNameLabel3 = new JLabel("课程编号");
+        courseNameLabel3.setFont(font);
+        courseNameLabel3.setPreferredSize(new Dimension(60, 30));
+        showGradeAnalyzePanel.add(courseNameLabel3);
+
+        courseNameText4 = new JTextField("");
+        courseNameText4.setFont(font);
+        courseNameText4.setPreferredSize(new Dimension(70, 30));
+        showGradeAnalyzePanel.add(courseNameText4);
+//
+        semesterLabel2 = new JLabel("学期选择");
+        semesterLabel2.setFont(font);
+        semesterLabel2.setPreferredSize(new Dimension(60, 30));
+        showGradeAnalyzePanel.add(semesterLabel2);
+
+        semesterText2 = new JComboBox();
+        semesterText2.setSelectedItem("2019-2020秋季");
+        semesterText2.addItem("2019-2020秋季");
+        semesterText2.addItem("2019-2020冬季");
+        semesterText2.addItem("2019-2020春季");
+        semesterText2.addItem("2020-2021秋季");
+        semesterText2.addItem("2020-2021冬季");
+        semesterText2.addItem("2020-2021春季");
+        semesterText2.setFont(font);
+        semesterText2.setPreferredSize(new Dimension(110, 30));
+        showGradeAnalyzePanel.add(semesterText2);
+//
+//        timeLabel2 = new JLabel("上课时间");
+//        timeLabel2.setFont(font);
+//        timeLabel2.setPreferredSize(new Dimension(60, 30));
+//        showGradeAnalyzePanel.add(timeLabel2);
+//
+//        timeText2 = new JTextField("");
+//        timeText2.setFont(font);
+//        timeText2.setPreferredSize(new Dimension(80, 30));
+//        showGradeAnalyzePanel.add(timeText2);
+
+        checkEnterInfoButton4= new JButton("确认");
+        checkEnterInfoButton4.addActionListener(e -> {
+
+            showAnalyzePanel.setVisible(true);
+            showAnalyzePanel.removeAll();
+            JComponent panel1 = makeAnalyzePanel(1);
+            showAnalyzePanel.addTab("条形图",panel1);
+            JComponent panel2 = makeAnalyzePanel(2);
+            showAnalyzePanel.addTab("饼状图",panel2);
+            JComponent panel3 = makeAnalyzePanel(3);
+            showAnalyzePanel.addTab("文本",panel3);
+            showAnalyzePanel.validate();
+            showAnalyzePanel.repaint();
+
+        });
+        checkEnterInfoButton4.setFont(font);
+        checkEnterInfoButton4.setPreferredSize(new Dimension(80, 30));
+        checkEnterInfoButton4.setContentAreaFilled(false);
+        showGradeAnalyzePanel.add(checkEnterInfoButton4);
+
+        showAnalyzePanel = new JTabbedPane();
+        showAnalyzePanel.setVisible(false);
+        showAnalyzePanel.setPreferredSize(new Dimension(500,300));
+        showGradeAnalyzePanel.add(showAnalyzePanel);
+
 
     }
+
+    private JComponent makeAnalyzePanel(int i) {
+        JPanel panel = new JPanel();
+        conn = new DBConnector();
+
+        if(i == 1) {
+            panel = new Chart(id,semesterText2.getSelectedItem().toString(),"课程绩点分布",Integer.parseInt(courseNameText4.getText())).getChartPanel();
+        }
+
+        else if(i==2){
+            Chart chart = new Chart(id,semesterText2.getSelectedItem().toString(),Integer.parseInt(courseNameText4.getText()));
+//            System.out.println(0);
+            panel = chart.teacherGradeAnalysis(id,courseNameText4.getText());
+        }
+        else if(i==3)
+        {
+            String[] info = new String[3];
+            int_args1 = new int[]{id};
+            str_args = new String[]{courseNameText4.getText()};
+            try {
+                data = conn.teacherGradeAnalysisText(int_args1,str_args,info);
+                System.out.println(info[0]+info[1]+info[2]);
+            } catch (CustomException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            JTextField gradeInfoText = new JTextField();
+            gradeInfoText.setFont(font);
+            gradeInfoText.setText("平均成绩："+info[0]+"\n优秀率为："+info[1]+"\n挂科率为："+info[2]);
+            panel.add(gradeInfoText);
+            String[] col_name = {"排名", "学生学号", "学生姓名", "平时成绩","考试成绩","成绩", "绩点"};
+            JTable cjtable = new JTable(data,col_name);
+            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+            r.setHorizontalAlignment(JLabel.CENTER);
+            cjtable.setDefaultRenderer(Object.class, r);
+            JScrollPane jScrollPane = new JScrollPane(cjtable);
+            jScrollPane.setPreferredSize(new Dimension(500, 300));
+            panel.add(jScrollPane);
+            cjtable.setPreferredSize(new Dimension(500, 300));
+            cjtable.setEnabled(false);  //不可编辑
+            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+
+
+        }
+        return panel;
+    }
+
+
+    /**
+     * @function : 构造成绩查询表格。
+     */
+    public JTable getJTable(String cName,String semester,String time) {
+        int_args = new String[1];
+        int_args[0] = new String(String.valueOf(id));
+        str_args = new String[]{cName,semester,time};
+        conn = new DBConnector();
+        Vector<Object> addtional = new Vector();
+        try {
+            tableData = conn.search("教师成绩查询", int_args, str_args, addtional);
+        } catch (CustomException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String[] col_name = {"学号", "学生姓名", "平时成绩", "考试成绩","成绩", "绩点"};
+        JTable cjtable = new JTable(tableData, col_name);
+        System.out.println(tableData.toString());
+        return cjtable;
+    }
+
 
     @Override
     public void doExit() {
