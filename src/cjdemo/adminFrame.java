@@ -18,7 +18,7 @@ import java.util.Vector;
 public class adminFrame extends JFrame implements Exit {
     JPanel showPanel;
     JPanel showCourseGradePanel, tablePanel, queryInfoPanel, queryTeacherInfoPanel, queryCourseInfoPanel, showStudentQueryPanel, showTeacherQueryPanel, showCourseQueryPanel;
-    JTabbedPane showAddInfoPanel,showDropInfoPanel;
+    JTabbedPane showSearchInfoPanel, showAddInfoPanel,showDropInfoPanel;
     JLabel teacherIDLabel1, courseIDLabel, studentIDLabel, studentAdmissionDateLabel, studentNameLabel, studentGenderLabel, studentFacultyLabel, teacherIDLabel2, teacherNameLabel, teacherFacultyLabel, courseIDLabel2, courseCreditLabel, teacherIDLabel3, courseNameLabel2, courseSemesterLabel, courseTimeLabel;
     JTextField teacherIDText1, courseIDText, studentIDText1, studentAdmissionDateText, studentNameText1, teacherIDText2, teacherNameText, courseIDText2, courseCreditText, teacherIDText3, courseNameText2, courseTimeText;
     JComboBox studentGenderComboBox, studentFacultyComboBox, teacherFacultyComboBox, courseSemesterComboBox;
@@ -142,359 +142,34 @@ public class adminFrame extends JFrame implements Exit {
          * @function: 在functionPanel中创建并添加【班级成绩查询】按钮courseGradeQueryButton.
          * 为【班级成绩查询】按钮添加监听器，实现班级成绩查询功能
          */
-        JButton courseGradeQueryButton = new JButton("班级成绩查询");
-        courseGradeQueryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showCourseGradePanel.setVisible(true);
-                showPanel.removeAll();
-                showPanel.add(showCourseGradePanel);
-                showPanel.validate();
-                showPanel.repaint();
 
-            }
+
+        JButton searchInfoButton = new JButton("查询信息");
+        searchInfoButton.addActionListener(e -> {
+            showSearchInfoPanel.setVisible(true);
+            showPanel.removeAll();
+            showPanel.add(showSearchInfoPanel);
+            showPanel.validate();
+            showPanel.repaint();
         });
-        courseGradeQueryButton.setFont(font);
-        courseGradeQueryButton.setContentAreaFilled(false);
-        courseGradeQueryButton.setPreferredSize(new Dimension(120, 30));
-        functionPanel.add(courseGradeQueryButton);
+        searchInfoButton.setFont(font);
+        searchInfoButton.setPreferredSize(new Dimension(120,30));
+        functionPanel.add(searchInfoButton);
 
-        /**
-         * @function: 班级成绩查询后的显示面板
-         * 默认为不显示，当点击【班级成绩查询】按钮时显示
-         */
-        showCourseGradePanel = new JPanel();
-        showCourseGradePanel.setPreferredSize(new Dimension(500, 500));
-        showCourseGradePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
-        showCourseGradePanel.setVisible(false);
-        showPanel.add(showCourseGradePanel, "East");
-
-        /**
-         * @function: 在班级成绩查询的显示面板中添加搜索筛选文本框信息
-         * teacherIDLabel:教师工号标签；
-         * teacherIDText:文本输入框接收用户输入的教师工号；
-         */
-        teacherIDLabel1 = new JLabel("教师工号");
-        teacherIDLabel1.setFont(font);
-        teacherIDLabel1.setPreferredSize(new Dimension(60, 30));
-        showCourseGradePanel.add(teacherIDLabel1);
-
-        teacherIDText1 = new JTextField("");
-        teacherIDText1.setFont(font);
-        teacherIDText1.setPreferredSize(new Dimension(60, 30));
-        showCourseGradePanel.add(teacherIDText1);
-
-        courseIDLabel = new JLabel("课程编号");
-        courseIDLabel.setFont(font);
-        courseIDLabel.setPreferredSize(new Dimension(60, 30));
-        showCourseGradePanel.add(courseIDLabel);
-
-        courseIDText = new JTextField("");
-        courseIDText.setFont(font);
-        courseIDText.setPreferredSize(new Dimension(80, 30));
-        showCourseGradePanel.add(courseIDText);
-
-        checkCouseGradeQueryInfoButton = new JButton("确认");
-        checkCouseGradeQueryInfoButton.setFont(font);
-        checkCouseGradeQueryInfoButton.setPreferredSize(new Dimension(100, 30));
-        checkCouseGradeQueryInfoButton.setContentAreaFilled(false);
-        checkCouseGradeQueryInfoButton.addActionListener(e -> {
-                    System.out.println("用户输入的教师工号为：" + teacherIDText1.getText() + " 用户输入的课程编号为：" + courseIDText.getText());
-                    cjtable = getJTable(teacherIDText1.getText(), courseIDText.getText());
-                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-                    r.setHorizontalAlignment(JLabel.CENTER);
-                    cjtable.setDefaultRenderer(Object.class, r);
-                    JPanel panel_export = new JPanel();
-                    panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-                    panel_export.setPreferredSize(new Dimension(500, 50));
-                    Export export = new Export(cjtable);
-                    JButton buttonExport = export.getButtonExport();
-                    panel_export.add(buttonExport);
-                    Print print = new Print(cjtable, this, "");
-                    JButton buttonPrint = print.getButtonPrint();
-                    panel_export.add(buttonPrint);
-                    JScrollPane jScrollPane = new JScrollPane(cjtable);
-                    jScrollPane.setPreferredSize(new Dimension(500, 300));
-                    tablePanel.removeAll();
-                    tablePanel.add(panel_export);
-                    tablePanel.add(jScrollPane);
-                    tablePanel.setVisible(true);
-                    tablePanel.validate();
-                    tablePanel.repaint();
-                    cjtable.setPreferredSize(new Dimension(500, 300));
-                    cjtable.setEnabled(false);  //不可编辑
-                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
-
-                }
-        );
-        showCourseGradePanel.add(checkCouseGradeQueryInfoButton);
-
-        tablePanel = new JPanel();
-        tablePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        tablePanel.setPreferredSize(new Dimension(500, 300));
-        showCourseGradePanel.add(tablePanel);
+        showSearchInfoPanel = new JTabbedPane();
+        showSearchInfoPanel.setPreferredSize(new Dimension(500,400));
+        JComponent panel1=makeSearchInfoPanel(1);
+        showSearchInfoPanel.addTab("班级成绩查询", panel1);
+        JComponent panel2=makeSearchInfoPanel(2);
+        showSearchInfoPanel.addTab("学生查询",panel2);
+        JComponent panel3=makeSearchInfoPanel(3);
+        showSearchInfoPanel.addTab("教师查询",panel3);
+        JComponent panel4=makeSearchInfoPanel(4);
+        showSearchInfoPanel.addTab("课程查询",panel4);
+        showSearchInfoPanel.setVisible(false);
+        showPanel.add(showSearchInfoPanel);
 
 
-        /**
-         * @function: 在functionPanel中创建并添加【学生查询】按钮studentQueryButton.
-         * 为【学生查询】按钮添加监听器，实现班级成绩查询功能
-         */
-        JButton studentQueryButton = new JButton("学生查询");
-        studentQueryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showStudentQueryPanel.setVisible(true);
-                showPanel.removeAll();
-                showPanel.add(showStudentQueryPanel);
-                showPanel.validate();
-                showPanel.repaint();
-
-            }
-        });
-        studentQueryButton.setFont(font);
-        studentQueryButton.setContentAreaFilled(false);
-        studentQueryButton.setPreferredSize(new Dimension(120, 30));
-        functionPanel.add(studentQueryButton);
-
-        /**
-         * @function: 学生查询后的显示面板
-         * 默认为不显示，当点击【学生查询】按钮时显示
-         */
-        showStudentQueryPanel = new JPanel();
-        showStudentQueryPanel.setPreferredSize(new Dimension(500, 500));
-        showStudentQueryPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        showStudentQueryPanel.setVisible(false);
-        showPanel.add(showStudentQueryPanel, "East");
-
-        /**
-         * @function: 在学生查询的显示面板中添加搜索筛选文本框信息
-         * courseNameLabel:课程名标签；
-         * courseNameText:文本输入框接收用户输入的课程名；
-         */
-        studentIDLabel = new JLabel("学号");
-        studentIDLabel.setFont(font);
-        studentIDLabel.setPreferredSize(new Dimension(50, 30));
-        showStudentQueryPanel.add(studentIDLabel);
-
-        studentIDText1 = new JTextField("");
-        studentIDText1.setFont(font);
-        studentIDText1.setPreferredSize(new Dimension(60, 30));
-        showStudentQueryPanel.add(studentIDText1);
-
-        studentAdmissionDateLabel = new JLabel("入学日期");
-        studentAdmissionDateLabel.setFont(font);
-        studentAdmissionDateLabel.setPreferredSize(new Dimension(80, 30));
-        showStudentQueryPanel.add(studentAdmissionDateLabel);
-
-        studentAdmissionDateText = new JTextField("");
-        studentAdmissionDateText.setFont(font);
-        studentAdmissionDateText.setPreferredSize(new Dimension(80, 30));
-        showStudentQueryPanel.add(studentAdmissionDateText);
-
-        studentNameLabel = new JLabel("姓名");
-        studentNameLabel.setFont(font);
-        studentNameLabel.setPreferredSize(new Dimension(80, 30));
-        showStudentQueryPanel.add(studentNameLabel);
-
-        studentNameText1 = new JTextField("");
-        studentNameText1.setFont(font);
-        studentNameText1.setPreferredSize(new Dimension(90, 30));
-        showStudentQueryPanel.add(studentNameText1);
-
-        studentGenderLabel = new JLabel("性别");
-        studentGenderLabel.setFont(font);
-        studentGenderLabel.setPreferredSize(new Dimension(60, 30));
-        showStudentQueryPanel.add(studentGenderLabel);
-
-        studentGenderComboBox = new JComboBox();
-        studentGenderComboBox.setSelectedItem("任意");
-        studentGenderComboBox.addItem("任意");
-        studentGenderComboBox.addItem("男");
-        studentGenderComboBox.addItem("女");
-        studentGenderComboBox.setFont(font);
-        studentGenderComboBox.setPreferredSize(new Dimension(60, 30));
-        showStudentQueryPanel.add(studentGenderComboBox);
-
-        studentFacultyLabel = new JLabel("院系");
-        studentFacultyLabel.setFont(font);
-        studentFacultyLabel.setPreferredSize(new Dimension(60, 30));
-        showStudentQueryPanel.add(studentFacultyLabel);
-
-        studentFacultyComboBox = new JComboBox();
-        studentFacultyComboBox.setSelectedItem("任意");
-        studentFacultyComboBox.addItem("任意");
-        studentFacultyComboBox.addItem("计算机系");
-        studentFacultyComboBox.addItem("物理系");
-        studentFacultyComboBox.setFont(font);
-        studentFacultyComboBox.setPreferredSize(new Dimension(80, 30));
-        showStudentQueryPanel.add(studentFacultyComboBox);
-
-        checkStudentQueryInfoButton = new JButton("确认");
-        checkStudentQueryInfoButton.setFont(font);
-        checkStudentQueryInfoButton.setPreferredSize(new Dimension(100, 30));
-        checkStudentQueryInfoButton.setContentAreaFilled(false);
-        checkStudentQueryInfoButton.addActionListener(e -> {
-                    System.out.println("用户输入的学号为：" + studentIDText1.getText() + " 用户输入的入学日期为：" + studentAdmissionDateText.getText() + " 用户输入的姓名为：" + studentNameText1.getText() + " 用户输入的性别为：" +
-                            studentGenderComboBox.getSelectedItem().toString() + " 用户输入的院系为：" + studentFacultyComboBox.getSelectedItem().toString());
-
-                    String stuGender = "";
-                    String stuFaculty = "";
-                    if (!Objects.equals(studentGenderComboBox.getSelectedItem().toString(), "任意")){
-                        stuGender = studentGenderComboBox.getSelectedItem().toString();
-                    }
-                    if (!Objects.equals(studentFacultyComboBox.getSelectedItem().toString(), "任意")){
-                        stuFaculty = studentFacultyComboBox.getSelectedItem().toString();
-                    }
-                    cjtable = getStudentQueryInfo(studentIDText1.getText(), studentAdmissionDateText.getText(), studentNameText1.getText(), stuGender, stuFaculty);
-                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-                    r.setHorizontalAlignment(JLabel.CENTER);
-                    cjtable.setDefaultRenderer(Object.class, r);
-                    JScrollPane jScrollPane = new JScrollPane(cjtable);
-                    jScrollPane.setPreferredSize(new Dimension(500, 300));
-                    queryInfoPanel.removeAll();
-                    queryInfoPanel.add(jScrollPane);
-                    queryInfoPanel.setVisible(true);
-                    queryInfoPanel.validate();
-                    queryInfoPanel.repaint();
-                    cjtable.setPreferredSize(new Dimension(500, 300));
-                    cjtable.setEnabled(false);  //不可编辑
-                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
-
-                }
-        );
-        showStudentQueryPanel.add(checkStudentQueryInfoButton);
-        queryInfoPanel = new JPanel();
-        queryInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        queryInfoPanel.setPreferredSize(new Dimension(500, 300));
-        showStudentQueryPanel.add(queryInfoPanel);
-
-        /**
-         * @function: 在functionPanel中创建并添加【教师查询】按钮teacherQueryButton.
-         * 为【教师查询】按钮添加监听器，实现班级成绩查询功能
-         */
-        JButton teacherQueryButton = new JButton("教师查询");
-        teacherQueryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showTeacherQueryPanel.setVisible(true);
-                showPanel.removeAll();
-                showPanel.add(showTeacherQueryPanel);
-                showPanel.validate();
-                showPanel.repaint();
-            }
-        });
-
-        teacherQueryButton.setFont(font);
-        teacherQueryButton.setContentAreaFilled(false);
-        teacherQueryButton.setPreferredSize(new Dimension(120, 30));
-        functionPanel.add(teacherQueryButton);
-
-        /**
-         * @function: 教师查询后的显示面板
-         * 默认为不显示，当点击【教师查询】按钮时显示
-         */
-        showTeacherQueryPanel = new JPanel();
-        showTeacherQueryPanel.setPreferredSize(new Dimension(500, 500));
-        showTeacherQueryPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        showTeacherQueryPanel.setVisible(false);
-        showPanel.add(showTeacherQueryPanel, "East");
-
-        /**
-         * @function: 在教师查询的显示面板中添加搜索筛选文本框信息
-         * courseNameLabel:课程名标签；
-         * courseNameText:文本输入框接收用户输入的课程名；
-         */
-        teacherIDLabel2 = new JLabel("教师工号");
-        teacherIDLabel2.setFont(font);
-        teacherIDLabel2.setPreferredSize(new Dimension(70, 30));
-        showTeacherQueryPanel.add(teacherIDLabel2);
-
-        teacherIDText2 = new JTextField("");
-        teacherIDText2.setFont(font);
-        teacherIDText2.setPreferredSize(new Dimension(120, 30));
-        showTeacherQueryPanel.add(teacherIDText2);
-
-        teacherNameLabel = new JLabel("教师姓名");
-        teacherNameLabel.setFont(font);
-        teacherNameLabel.setPreferredSize(new Dimension(70, 30));
-        showTeacherQueryPanel.add(teacherNameLabel);
-
-        teacherNameText = new JTextField("");
-        teacherNameText.setFont(font);
-        teacherNameText.setPreferredSize(new Dimension(120, 30));
-        showTeacherQueryPanel.add(teacherNameText);
-
-        teacherFacultyLabel = new JLabel("教师院系");
-        teacherFacultyLabel.setFont(font);
-        teacherFacultyLabel.setPreferredSize(new Dimension(70, 30));
-        showTeacherQueryPanel.add(teacherFacultyLabel);
-
-        teacherFacultyComboBox = new JComboBox();
-        teacherFacultyComboBox.setSelectedItem("任意");
-        teacherFacultyComboBox.addItem("任意");
-        teacherFacultyComboBox.addItem("计算机系");
-        teacherFacultyComboBox.addItem("物理系");
-        teacherFacultyComboBox.setFont(font);
-        teacherFacultyComboBox.setPreferredSize(new Dimension(90, 30));
-        showTeacherQueryPanel.add(teacherFacultyComboBox);
-
-        checkTeacherQueryInfoButton = new JButton("确认");
-        checkTeacherQueryInfoButton.setFont(font);
-        checkTeacherQueryInfoButton.setPreferredSize(new Dimension(60, 30));
-        checkTeacherQueryInfoButton.setContentAreaFilled(false);
-        checkTeacherQueryInfoButton.addActionListener(e -> {
-            System.out.println("用户输入的教师工号为：" + teacherIDText2.getText() + " 用户输入的教师姓名为：" + teacherNameText.getText() + " 用户输入的教师院系为：" + teacherFacultyComboBox.getSelectedItem().toString());
-
-            String teaFaculty = "";
-            if (!Objects.equals(teacherFacultyComboBox.getSelectedItem().toString(), "任意")){
-                teaFaculty = teacherFacultyComboBox.getSelectedItem().toString();
-            }
-            cjtable = getTeacherQueryInfo(teacherIDText2.getText(), teacherNameText.getText(), teaFaculty);
-            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-            r.setHorizontalAlignment(JLabel.CENTER);
-            cjtable.setDefaultRenderer(Object.class, r);
-            JScrollPane jScrollPane = new JScrollPane(cjtable);
-            jScrollPane.setPreferredSize(new Dimension(500, 300));
-            queryTeacherInfoPanel.removeAll();
-            queryTeacherInfoPanel.add(jScrollPane);
-            queryTeacherInfoPanel.setVisible(true);
-            queryTeacherInfoPanel.validate();
-            queryTeacherInfoPanel.repaint();
-            cjtable.setPreferredSize(new Dimension(500, 300));
-            cjtable.setEnabled(false);  //不可编辑
-            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
-
-        });
-        showTeacherQueryPanel.add(checkTeacherQueryInfoButton);
-        queryTeacherInfoPanel = new JPanel();
-        queryTeacherInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        queryTeacherInfoPanel.setPreferredSize(new Dimension(500, 300));
-        showTeacherQueryPanel.add(queryTeacherInfoPanel);
-
-
-        /**
-         * @function: 在functionPanel中创建并添加【课程查询】按钮courseQueryButton.
-         * 为【课程查询】按钮添加监听器，实现班级成绩查询功能
-         */
-        JButton courseQueryButton = new JButton("课程查询");
-        courseQueryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showCourseQueryPanel.setVisible(true);
-                showPanel.removeAll();
-                showPanel.add(showCourseQueryPanel);
-                showPanel.validate();
-                showPanel.repaint();
-            }
-        });
-
-        courseQueryButton.setFont(font);
-        courseQueryButton.setContentAreaFilled(false);
-        courseQueryButton.setPreferredSize(new Dimension(120, 30));
-        functionPanel.add(courseQueryButton);
 
         /**
          * @function: 课程查询后的显示面板
@@ -511,137 +186,33 @@ public class adminFrame extends JFrame implements Exit {
          * courseNameLabel:课程名标签；
          * courseNameText:文本输入框接收用户输入的课程名；
          */
-        courseIDLabel2 = new JLabel("课号");
-        courseIDLabel2.setFont(font);
-        courseIDLabel2.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseIDLabel2);
 
-        courseIDText2 = new JTextField("");
-        courseIDText2.setFont(font);
-        courseIDText2.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseIDText2);
-
-        courseCreditLabel = new JLabel("学分");
-        courseCreditLabel.setFont(font);
-        courseCreditLabel.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseCreditLabel);
-
-        courseCreditText = new JTextField("");
-        courseCreditText.setFont(font);
-        courseCreditText.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseCreditText);
-
-        teacherIDLabel3 = new JLabel("教师工号");
-        teacherIDLabel3.setFont(font);
-        teacherIDLabel3.setPreferredSize(new Dimension(70, 30));
-        showCourseQueryPanel.add(teacherIDLabel3);
-
-        teacherIDText3 = new JTextField("");
-        teacherIDText3.setFont(font);
-        teacherIDText3.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(teacherIDText3);
-
-        courseNameLabel2 = new JLabel("课名");
-        courseNameLabel2.setFont(font);
-        courseNameLabel2.setPreferredSize(new Dimension(40, 30));
-        showCourseQueryPanel.add(courseNameLabel2);
-
-        courseNameText2 = new JTextField("");
-        courseNameText2.setFont(font);
-        courseNameText2.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseNameText2);
-
-        courseSemesterLabel = new JLabel("学期");
-        courseSemesterLabel.setFont(font);
-        courseSemesterLabel.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseSemesterLabel);
-
-        courseSemesterComboBox = new JComboBox();
-        courseSemesterComboBox.setSelectedItem("任意");
-        courseSemesterComboBox.addItem("任意");
-        DBConnector t = new DBConnector();
-        String[] sl = t.getSemeList();
-        for(int i=0;i< sl.length;i++){
-            courseSemesterComboBox.addItem(sl[i]);
-            if(Objects.equals(sl[i + 1], null)){
-                break;
-            }
-        }
-        courseSemesterComboBox.setFont(font);
-        courseSemesterComboBox.setPreferredSize(new Dimension(120, 30));
-        showCourseQueryPanel.add(courseSemesterComboBox);
-
-        courseTimeLabel = new JLabel("上课时间");
-        courseTimeLabel.setFont(font);
-        courseTimeLabel.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseTimeLabel);
-
-        courseTimeText = new JTextField("");
-        courseTimeText.setFont(font);
-        courseTimeText.setPreferredSize(new Dimension(50, 30));
-        showCourseQueryPanel.add(courseTimeText);
-
-        checkCourseQueryInfoButton = new JButton("确认");
-        checkCourseQueryInfoButton.setFont(font);
-        checkCourseQueryInfoButton.setPreferredSize(new Dimension(60, 30));
-        checkCourseQueryInfoButton.setContentAreaFilled(false);
-        checkCourseQueryInfoButton.addActionListener(e -> {
-            String courseSeme = "";
-            if (!Objects.equals(courseSemesterComboBox.getSelectedItem().toString(), "任意")){
-                courseSeme = courseSemesterComboBox.getSelectedItem().toString();
-            }
-            System.out.println("用户输入的课号为：" + courseIDText2.getText() + " 用户输入的学分为：" + courseCreditText.getText() + " 用户输入的教师工号为：" + teacherIDText3.getText() + " 用户输入的课名为：" +
-                    courseNameText2.getText() + " 用户输入的学期为：" + courseSemesterComboBox.getSelectedItem().toString() + " 用户输入的上课时间为：" + courseTimeText.getText());
-
-            cjtable = getCourseQueryInfo(courseIDText2.getText(), courseCreditText.getText(), teacherIDText3.getText(), courseNameText2.getText(), courseSeme, courseTimeText.getText());
-            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-            r.setHorizontalAlignment(JLabel.CENTER);
-            cjtable.setDefaultRenderer(Object.class, r);
-            JScrollPane jScrollPane = new JScrollPane(cjtable);
-            jScrollPane.setPreferredSize(new Dimension(500, 200));
-            queryCourseInfoPanel.removeAll();
-            queryCourseInfoPanel.add(jScrollPane);
-            queryCourseInfoPanel.setVisible(true);
-            queryCourseInfoPanel.validate();
-            queryCourseInfoPanel.repaint();
-            cjtable.setPreferredSize(new Dimension(500, 200));
-            cjtable.setEnabled(false);  //不可编辑
-            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
-
-        });
-
-        showCourseQueryPanel.add(checkCourseQueryInfoButton);
-        queryCourseInfoPanel = new JPanel();
-        queryCourseInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        queryCourseInfoPanel.setPreferredSize(new Dimension(500, 200));
-        showCourseQueryPanel.add(queryCourseInfoPanel);
 
         /**
          * @function: 在functionPanel中创建并添加【新增信息】按钮addInfoButton.
          * 为【新增】按钮添加监听器，实现新增功能
          */
-        JButton addInfoButton = new JButton("新增信息");
-        addInfoButton.addActionListener(e -> {
+        searchInfoButton = new JButton("新增信息");
+        searchInfoButton.addActionListener(e -> {
             showAddInfoPanel.setVisible(true);
             showPanel.removeAll();
             showPanel.add(showAddInfoPanel);
             showPanel.validate();
             showPanel.repaint();
         });
-        addInfoButton.setFont(font);
-        addInfoButton.setPreferredSize(new Dimension(120,30));
-        functionPanel.add(addInfoButton);
+        searchInfoButton.setFont(font);
+        searchInfoButton.setPreferredSize(new Dimension(120,30));
+        functionPanel.add(searchInfoButton);
 
         showAddInfoPanel = new JTabbedPane();
         showAddInfoPanel.setPreferredSize(new Dimension(500,400));
-        JComponent panel1=makeAddInfoPanel(1);
+        panel1=makeAddInfoPanel(1);
         showAddInfoPanel.addTab("新增学生", panel1);
-        JComponent panel2=makeAddInfoPanel(2);
+        panel2=makeAddInfoPanel(2);
         showAddInfoPanel.addTab("新增教师",panel2);
-        JComponent panel3=makeAddInfoPanel(3);
+        panel3=makeAddInfoPanel(3);
         showAddInfoPanel.addTab("新增课程",panel3);
-        JComponent panel4=makeAddInfoPanel(4);
+        panel4=makeAddInfoPanel(4);
         showAddInfoPanel.addTab("新增选课",panel4);
         showAddInfoPanel.setVisible(false);
         showPanel.add(showAddInfoPanel);
@@ -675,6 +246,362 @@ public class adminFrame extends JFrame implements Exit {
         showDropInfoPanel.addTab("删除选课",panel8);
         showDropInfoPanel.setVisible(false);
         showPanel.add(showDropInfoPanel);
+    }
+
+
+    protected JComponent makeSearchInfoPanel(int mode){
+        JPanel panel=new JPanel(false);
+        panel.setPreferredSize(new Dimension(500,400) );
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER,8,10));
+
+        switch (mode){
+            case 1:
+                teacherIDLabel1 = new JLabel("教师工号");
+                teacherIDLabel1.setFont(font);
+                teacherIDLabel1.setPreferredSize(new Dimension(60, 30));
+                panel.add(teacherIDLabel1);
+
+                teacherIDText1 = new JTextField("");
+                teacherIDText1.setFont(font);
+                teacherIDText1.setPreferredSize(new Dimension(60, 30));
+                panel.add(teacherIDText1);
+
+                courseIDLabel = new JLabel("课程编号");
+                courseIDLabel.setFont(font);
+                courseIDLabel.setPreferredSize(new Dimension(60, 30));
+                panel.add(courseIDLabel);
+
+                courseIDText = new JTextField("");
+                courseIDText.setFont(font);
+                courseIDText.setPreferredSize(new Dimension(80, 30));
+                panel.add(courseIDText);
+
+                checkCouseGradeQueryInfoButton = new JButton("确认");
+                checkCouseGradeQueryInfoButton.setFont(font);
+                checkCouseGradeQueryInfoButton.setPreferredSize(new Dimension(100, 30));
+                checkCouseGradeQueryInfoButton.setContentAreaFilled(false);
+                checkCouseGradeQueryInfoButton.addActionListener(e -> {
+                            System.out.println("用户输入的教师工号为：" + teacherIDText1.getText() + " 用户输入的课程编号为：" + courseIDText.getText());
+                            cjtable = getJTable(teacherIDText1.getText(), courseIDText.getText());
+                            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                            r.setHorizontalAlignment(JLabel.CENTER);
+                            cjtable.setDefaultRenderer(Object.class, r);
+                            JPanel panel_export = new JPanel();
+                            panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+                            panel_export.setPreferredSize(new Dimension(500, 50));
+                            Export export = new Export(cjtable);
+                            JButton buttonExport = export.getButtonExport();
+                            panel_export.add(buttonExport);
+                            Print print = new Print(cjtable, this, "");
+                            JButton buttonPrint = print.getButtonPrint();
+                            panel_export.add(buttonPrint);
+                            JScrollPane jScrollPane = new JScrollPane(cjtable);
+                            jScrollPane.setPreferredSize(new Dimension(500, 300));
+                            tablePanel.removeAll();
+                            tablePanel.add(panel_export);
+                            tablePanel.add(jScrollPane);
+                            tablePanel.setVisible(true);
+                            tablePanel.validate();
+                            tablePanel.repaint();
+                            cjtable.setPreferredSize(new Dimension(500, 300));
+                            cjtable.setEnabled(false);  //不可编辑
+                            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                        }
+                );
+                panel.add(checkCouseGradeQueryInfoButton);
+                tablePanel = new JPanel();
+                tablePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+                tablePanel.setPreferredSize(new Dimension(500, 300));
+                panel.add(tablePanel);
+                break;
+            case 2:
+                studentIDLabel = new JLabel("学号");
+                studentIDLabel.setFont(font);
+                studentIDLabel.setPreferredSize(new Dimension(50, 30));
+                panel.add(studentIDLabel);
+
+                studentIDText1 = new JTextField("");
+                studentIDText1.setFont(font);
+                studentIDText1.setPreferredSize(new Dimension(60, 30));
+                panel.add(studentIDText1);
+
+                studentAdmissionDateLabel = new JLabel("入学日期");
+                studentAdmissionDateLabel.setFont(font);
+                studentAdmissionDateLabel.setPreferredSize(new Dimension(80, 30));
+                panel.add(studentAdmissionDateLabel);
+
+                studentAdmissionDateText = new JTextField("");
+                studentAdmissionDateText.setFont(font);
+                studentAdmissionDateText.setPreferredSize(new Dimension(80, 30));
+                panel.add(studentAdmissionDateText);
+
+                studentNameLabel = new JLabel("姓名");
+                studentNameLabel.setFont(font);
+                studentNameLabel.setPreferredSize(new Dimension(80, 30));
+                panel.add(studentNameLabel);
+
+                studentNameText1 = new JTextField("");
+                studentNameText1.setFont(font);
+                studentNameText1.setPreferredSize(new Dimension(90, 30));
+                panel.add(studentNameText1);
+
+                studentGenderLabel = new JLabel("性别");
+                studentGenderLabel.setFont(font);
+                studentGenderLabel.setPreferredSize(new Dimension(60, 30));
+                panel.add(studentGenderLabel);
+
+                studentGenderComboBox = new JComboBox();
+                studentGenderComboBox.setSelectedItem("任意");
+                studentGenderComboBox.addItem("任意");
+                studentGenderComboBox.addItem("男");
+                studentGenderComboBox.addItem("女");
+                studentGenderComboBox.setFont(font);
+                studentGenderComboBox.setPreferredSize(new Dimension(60, 30));
+                panel.add(studentGenderComboBox);
+
+                studentFacultyLabel = new JLabel("院系");
+                studentFacultyLabel.setFont(font);
+                studentFacultyLabel.setPreferredSize(new Dimension(60, 30));
+                panel.add(studentFacultyLabel);
+
+                studentFacultyComboBox = new JComboBox();
+                studentFacultyComboBox.setSelectedItem("任意");
+                studentFacultyComboBox.addItem("任意");
+                studentFacultyComboBox.addItem("计算机系");
+                studentFacultyComboBox.addItem("物理系");
+                studentFacultyComboBox.setFont(font);
+                studentFacultyComboBox.setPreferredSize(new Dimension(80, 30));
+                panel.add(studentFacultyComboBox);
+
+                checkStudentQueryInfoButton = new JButton("确认");
+                checkStudentQueryInfoButton.setFont(font);
+                checkStudentQueryInfoButton.setPreferredSize(new Dimension(100, 30));
+                checkStudentQueryInfoButton.setContentAreaFilled(false);
+                checkStudentQueryInfoButton.addActionListener(e -> {
+                            System.out.println("用户输入的学号为：" + studentIDText1.getText() + " 用户输入的入学日期为：" + studentAdmissionDateText.getText() + " 用户输入的姓名为：" + studentNameText1.getText() + " 用户输入的性别为：" +
+                                    studentGenderComboBox.getSelectedItem().toString() + " 用户输入的院系为：" + studentFacultyComboBox.getSelectedItem().toString());
+
+                            String stuGender = "";
+                            String stuFaculty = "";
+                            if (!Objects.equals(studentGenderComboBox.getSelectedItem().toString(), "任意")){
+                                stuGender = studentGenderComboBox.getSelectedItem().toString();
+                            }
+                            if (!Objects.equals(studentFacultyComboBox.getSelectedItem().toString(), "任意")){
+                                stuFaculty = studentFacultyComboBox.getSelectedItem().toString();
+                            }
+                            cjtable = getStudentQueryInfo(studentIDText1.getText(), studentAdmissionDateText.getText(), studentNameText1.getText(), stuGender, stuFaculty);
+                            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                            r.setHorizontalAlignment(JLabel.CENTER);
+                            cjtable.setDefaultRenderer(Object.class, r);
+                            JScrollPane jScrollPane = new JScrollPane(cjtable);
+                            jScrollPane.setPreferredSize(new Dimension(500, 300));
+                            queryInfoPanel.removeAll();
+                            queryInfoPanel.add(jScrollPane);
+                            queryInfoPanel.setVisible(true);
+                            queryInfoPanel.validate();
+                            queryInfoPanel.repaint();
+                            cjtable.setPreferredSize(new Dimension(500, 300));
+                            cjtable.setEnabled(false);  //不可编辑
+                            cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                            cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+
+                        }
+                );
+                panel.add(checkStudentQueryInfoButton);
+                queryInfoPanel = new JPanel();
+                queryInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+                queryInfoPanel.setPreferredSize(new Dimension(500, 300));
+                panel.add(queryInfoPanel);
+                break;
+            case 3:
+
+                /**
+                 * @function: 教师查询后的显示面板
+                 * 默认为不显示，当点击【教师查询】按钮时显示
+                 */
+                /**
+                 * @function: 在教师查询的显示面板中添加搜索筛选文本框信息
+                 * courseNameLabel:课程名标签；
+                 * courseNameText:文本输入框接收用户输入的课程名；
+                 */
+                teacherIDLabel2 = new JLabel("教师工号");
+                teacherIDLabel2.setFont(font);
+                teacherIDLabel2.setPreferredSize(new Dimension(70, 30));
+                panel.add(teacherIDLabel2);
+
+                teacherIDText2 = new JTextField("");
+                teacherIDText2.setFont(font);
+                teacherIDText2.setPreferredSize(new Dimension(120, 30));
+                panel.add(teacherIDText2);
+
+                teacherNameLabel = new JLabel("教师姓名");
+                teacherNameLabel.setFont(font);
+                teacherNameLabel.setPreferredSize(new Dimension(70, 30));
+                panel.add(teacherNameLabel);
+
+                teacherNameText = new JTextField("");
+                teacherNameText.setFont(font);
+                teacherNameText.setPreferredSize(new Dimension(120, 30));
+                panel.add(teacherNameText);
+
+                teacherFacultyLabel = new JLabel("教师院系");
+                teacherFacultyLabel.setFont(font);
+                teacherFacultyLabel.setPreferredSize(new Dimension(70, 30));
+                panel.add(teacherFacultyLabel);
+
+                teacherFacultyComboBox = new JComboBox();
+                teacherFacultyComboBox.setSelectedItem("任意");
+                teacherFacultyComboBox.addItem("任意");
+                teacherFacultyComboBox.addItem("计算机系");
+                teacherFacultyComboBox.addItem("物理系");
+                teacherFacultyComboBox.setFont(font);
+                teacherFacultyComboBox.setPreferredSize(new Dimension(90, 30));
+                panel.add(teacherFacultyComboBox);
+
+                checkTeacherQueryInfoButton = new JButton("确认");
+                checkTeacherQueryInfoButton.setFont(font);
+                checkTeacherQueryInfoButton.setPreferredSize(new Dimension(60, 30));
+                checkTeacherQueryInfoButton.setContentAreaFilled(false);
+                checkTeacherQueryInfoButton.addActionListener(e -> {
+                    System.out.println("用户输入的教师工号为：" + teacherIDText2.getText() + " 用户输入的教师姓名为：" + teacherNameText.getText() + " 用户输入的教师院系为：" + teacherFacultyComboBox.getSelectedItem().toString());
+
+                    String teaFaculty = "";
+                    if (!Objects.equals(teacherFacultyComboBox.getSelectedItem().toString(), "任意")){
+                        teaFaculty = teacherFacultyComboBox.getSelectedItem().toString();
+                    }
+                    cjtable = getTeacherQueryInfo(teacherIDText2.getText(), teacherNameText.getText(), teaFaculty);
+                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                    r.setHorizontalAlignment(JLabel.CENTER);
+                    cjtable.setDefaultRenderer(Object.class, r);
+                    JScrollPane jScrollPane = new JScrollPane(cjtable);
+                    jScrollPane.setPreferredSize(new Dimension(500, 300));
+                    queryTeacherInfoPanel.removeAll();
+                    queryTeacherInfoPanel.add(jScrollPane);
+                    queryTeacherInfoPanel.setVisible(true);
+                    queryTeacherInfoPanel.validate();
+                    queryTeacherInfoPanel.repaint();
+                    cjtable.setPreferredSize(new Dimension(500, 300));
+                    cjtable.setEnabled(false);  //不可编辑
+                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+
+                });
+                panel.add(checkTeacherQueryInfoButton);
+                queryTeacherInfoPanel = new JPanel();
+                queryTeacherInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+                queryTeacherInfoPanel.setPreferredSize(new Dimension(500, 300));
+                panel.add(queryTeacherInfoPanel);
+                break;
+            case 4:
+                courseIDLabel2 = new JLabel("课号");
+                courseIDLabel2.setFont(font);
+                courseIDLabel2.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseIDLabel2);
+
+                courseIDText2 = new JTextField("");
+                courseIDText2.setFont(font);
+                courseIDText2.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseIDText2);
+
+                courseCreditLabel = new JLabel("学分");
+                courseCreditLabel.setFont(font);
+                courseCreditLabel.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseCreditLabel);
+
+                courseCreditText = new JTextField("");
+                courseCreditText.setFont(font);
+                courseCreditText.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseCreditText);
+
+                teacherIDLabel3 = new JLabel("教师工号");
+                teacherIDLabel3.setFont(font);
+                teacherIDLabel3.setPreferredSize(new Dimension(70, 30));
+                panel.add(teacherIDLabel3);
+
+                teacherIDText3 = new JTextField("");
+                teacherIDText3.setFont(font);
+                teacherIDText3.setPreferredSize(new Dimension(50, 30));
+                panel.add(teacherIDText3);
+
+                courseNameLabel2 = new JLabel("课名");
+                courseNameLabel2.setFont(font);
+                courseNameLabel2.setPreferredSize(new Dimension(40, 30));
+                panel.add(courseNameLabel2);
+
+                courseNameText2 = new JTextField("");
+                courseNameText2.setFont(font);
+                courseNameText2.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseNameText2);
+
+                courseSemesterLabel = new JLabel("学期");
+                courseSemesterLabel.setFont(font);
+                courseSemesterLabel.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseSemesterLabel);
+
+                courseSemesterComboBox = new JComboBox();
+                courseSemesterComboBox.setSelectedItem("任意");
+                courseSemesterComboBox.addItem("任意");
+                DBConnector t = new DBConnector();
+                String[] sl = t.getSemeList();
+                for(int i=0;i< sl.length;i++){
+                    courseSemesterComboBox.addItem(sl[i]);
+                    if(Objects.equals(sl[i + 1], null)){
+                        break;
+                    }
+                }
+                courseSemesterComboBox.setFont(font);
+                courseSemesterComboBox.setPreferredSize(new Dimension(120, 30));
+                panel.add(courseSemesterComboBox);
+
+                courseTimeLabel = new JLabel("上课时间");
+                courseTimeLabel.setFont(font);
+                courseTimeLabel.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseTimeLabel);
+
+                courseTimeText = new JTextField("");
+                courseTimeText.setFont(font);
+                courseTimeText.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseTimeText);
+
+                checkCourseQueryInfoButton = new JButton("确认");
+                checkCourseQueryInfoButton.setFont(font);
+                checkCourseQueryInfoButton.setPreferredSize(new Dimension(60, 30));
+                checkCourseQueryInfoButton.setContentAreaFilled(false);
+                checkCourseQueryInfoButton.addActionListener(e -> {
+                    String courseSeme = "";
+                    if (!Objects.equals(courseSemesterComboBox.getSelectedItem().toString(), "任意")){
+                        courseSeme = courseSemesterComboBox.getSelectedItem().toString();
+                    }
+                    System.out.println("用户输入的课号为：" + courseIDText2.getText() + " 用户输入的学分为：" + courseCreditText.getText() + " 用户输入的教师工号为：" + teacherIDText3.getText() + " 用户输入的课名为：" +
+                            courseNameText2.getText() + " 用户输入的学期为：" + courseSemesterComboBox.getSelectedItem().toString() + " 用户输入的上课时间为：" + courseTimeText.getText());
+
+                    cjtable = getCourseQueryInfo(courseIDText2.getText(), courseCreditText.getText(), teacherIDText3.getText(), courseNameText2.getText(), courseSeme, courseTimeText.getText());
+                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                    r.setHorizontalAlignment(JLabel.CENTER);
+                    cjtable.setDefaultRenderer(Object.class, r);
+                    JScrollPane jScrollPane = new JScrollPane(cjtable);
+                    jScrollPane.setPreferredSize(new Dimension(500, 200));
+                    queryCourseInfoPanel.removeAll();
+                    queryCourseInfoPanel.add(jScrollPane);
+                    queryCourseInfoPanel.setVisible(true);
+                    queryCourseInfoPanel.validate();
+                    queryCourseInfoPanel.repaint();
+                    cjtable.setPreferredSize(new Dimension(500, 200));
+                    cjtable.setEnabled(false);  //不可编辑
+                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+
+                });
+
+                panel.add(checkCourseQueryInfoButton);
+                queryCourseInfoPanel = new JPanel();
+                queryCourseInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+                queryCourseInfoPanel.setPreferredSize(new Dimension(500, 200));
+                panel.add(queryCourseInfoPanel);
+                break;
+        }
+        return panel;
     }
 
     /**
