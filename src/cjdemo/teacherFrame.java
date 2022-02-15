@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -20,7 +21,7 @@ public class teacherFrame extends JFrame implements Exit {
     JPanel showPanel;
     Font font;
     Object[][] data ;
-    JPanel showEnterGradePanel, showQueryGradePanel, showChangeGradePanel,showGradeAnalyzePanel,tablePanel;
+    JPanel showEnterGradePanel, showQueryGradePanel, showChangeGradePanel,showGradeAnalyzePanel,tablePanel,tablePanel1,showStuPanel;
     JTabbedPane showAnalyzePanel;
     JTextField classText1,courseNameText4,timeText2,timeText1,classText2,timeText, courseNameText1,courseNameText2,courseNameText3,stuIDText1,stuIDText2,newGradeText,tIDText;
     JButton checkEnterInfoButton1,checkEnterInfoButton2,checkEnterInfoButton3,checkEnterInfoButton4;
@@ -120,6 +121,87 @@ public class teacherFrame extends JFrame implements Exit {
         showPanel.setLayout(new FlowLayout(FlowLayout.CENTER,5,10));
         this.add(showPanel,"Center");
 
+        JButton courseStuQueryButton = new JButton("学生查询");
+        courseStuQueryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showStuPanel.setVisible(true);
+                showPanel.removeAll();
+                showPanel.add(showStuPanel);
+                showPanel.validate();
+                showPanel.repaint();
+            }
+        });
+        courseStuQueryButton.setFont(font);
+        courseStuQueryButton.setContentAreaFilled(false);
+        courseStuQueryButton.setPreferredSize(new Dimension(90, 30));
+        functionPanel.add(courseStuQueryButton);
+
+        /**
+         * @function: 班级成绩查询后的显示面板
+         * 默认为不显示，当点击【班级成绩查询】按钮时显示
+         */
+        showStuPanel = new JPanel();
+        showStuPanel.setPreferredSize(new Dimension(500, 500));
+        showStuPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
+        showStuPanel.setVisible(false);
+        showPanel.add(showStuPanel, "East");
+
+        /**
+         * @function: 在班级成绩查询的显示面板中添加搜索筛选文本框信息
+         * teacherIDLabel:教师工号标签；
+         * teacherIDText:文本输入框接收用户输入的教师工号；
+         */
+        JLabel courseIDLabel = new JLabel("课程编号");
+        courseIDLabel.setFont(font);
+        courseIDLabel.setPreferredSize(new Dimension(60, 30));
+        showStuPanel.add(courseIDLabel);
+
+        JTextField courseIDText = new JTextField("");
+        courseIDText.setFont(font);
+        courseIDText.setPreferredSize(new Dimension(80, 30));
+        showStuPanel.add(courseIDText);
+
+        JButton checkStuQueryButton = new JButton("确认");
+        checkStuQueryButton.setFont(font);
+        checkStuQueryButton.setPreferredSize(new Dimension(100, 30));
+        checkStuQueryButton.setContentAreaFilled(false);
+        checkStuQueryButton.addActionListener(e -> {
+                    System.out.println("教师工号为：" + this.id + " 用户输入的课程编号为：" + courseIDText.getText());
+                    cjtable = getJTable1(String.valueOf(this.id), courseIDText.getText());
+                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                    r.setHorizontalAlignment(JLabel.CENTER);
+                    cjtable.setDefaultRenderer(Object.class, r);
+                    JPanel panel_export = new JPanel();
+                    panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+                    panel_export.setPreferredSize(new Dimension(500, 50));
+                    Export export = new Export(cjtable);
+                    JButton buttonExport = export.getButtonExport();
+                    panel_export.add(buttonExport);
+                    Print print = new Print(cjtable, this, "");
+                    JButton buttonPrint = print.getButtonPrint();
+                    panel_export.add(buttonPrint);
+                    JScrollPane jScrollPane = new JScrollPane(cjtable);
+                    jScrollPane.setPreferredSize(new Dimension(500, 300));
+            tablePanel1.removeAll();
+            tablePanel1.add(panel_export);
+            tablePanel1.add(jScrollPane);
+            tablePanel1.setVisible(true);
+            tablePanel1.validate();
+                    tablePanel1.repaint();
+                    cjtable.setPreferredSize(new Dimension(500, 300));
+                    cjtable.setEnabled(false);  //不可编辑
+                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                }
+        );
+        showStuPanel.add(checkStuQueryButton);
+
+        tablePanel1 = new JPanel();
+        tablePanel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        tablePanel1.setPreferredSize(new Dimension(500, 300));
+        showStuPanel.add(tablePanel1);
+
         /**
          * @function: 在functionPanel中创建并添加【录入成绩】按钮enterGradeButton.
          * 为【录入成绩】按钮添加监听器，实现录入成绩功能
@@ -189,6 +271,10 @@ public class teacherFrame extends JFrame implements Exit {
         });
         showEnterGradePanel.add(checkEnterInfoButton1);
 
+        Import ipt = new Import();
+        JButton buttonImport = ipt.getButtonImport();
+        showEnterGradePanel.add(buttonImport);
+        System.out.println(Arrays.deepToString(ipt.getResult()));
         //以下为显示录入成绩的表格，暂时未详细查看db中相关代码，陆续会更新
 
 
@@ -607,7 +693,25 @@ public class teacherFrame extends JFrame implements Exit {
         System.out.println(tableData.toString());
         return cjtable;
     }
-
+    public JTable getJTable1(String teacherID, String courseID) {
+        int_args = new String[2];
+        str_args = new String[0];
+        int_args[0] = ""+teacherID;
+        int_args[1] = ""+courseID;
+        conn = new DBConnector();
+        Vector<Object> addtional = new Vector();
+        try {
+            tableData = conn.search("班级学生查询", int_args, str_args, addtional);
+        } catch (CustomException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String[] col_name = {"学号", "姓名"};
+        JTable cjtable = new JTable(tableData, col_name);
+        System.out.println(tableData.toString());
+        return cjtable;
+    }
 
     @Override
     public void doExit() {

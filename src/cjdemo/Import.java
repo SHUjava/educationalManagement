@@ -24,7 +24,7 @@ public class Import {
             fileChooser.setLocation(400, 250);
             fileChooser.setCurrentDirectory(new File("."));
             fileChooser.setSelectedFile(new File("Untitled.xls"));
-            fileChooser.setFileFilter(new FileNameExtensionFilter( null,"xls"));
+            fileChooser.setFileFilter(new FileNameExtensionFilter(null, "xls"));
             fileChooser.showOpenDialog(null);
             File file = fileChooser.getSelectedFile();
             importTable(file);
@@ -43,11 +43,11 @@ public class Import {
         try {
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet = workbook.getSheet(0);
-            result = new Object[sheet.getRows()][sheet.getColumns()];
-            for (int i = 0; i < sheet.getRows(); i++) {
-                for (int j = 0; j < sheet.getColumns(); j++) {
+            result = new Object[sheet.getRows()-1][sheet.getColumns()-2];
+            for (int i = 1; i < sheet.getRows(); i++) {
+                for (int j = 2; j < sheet.getColumns(); j++) {
                     Cell cell = sheet.getCell(j, i);
-                    result[i][j] = cell.getContents();
+                    result[i-1][j-2] = cell.getContents();
                 }
             }
         } catch (Exception e) {

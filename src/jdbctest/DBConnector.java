@@ -14,8 +14,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
+//    static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
         //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -188,6 +188,31 @@ public class DBConnector {
                     tmp.addElement(row);
                 }
                 rs.close();
+                break;
+            case "班级学生查询":
+                if (int_args.length != 2 || str_args.length != 0) {// int_args[] = teacher_id, course_order
+                    throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length + "123456");
+                }
+                sql = "select used_score.学号, student.student_name from used_score, student\n" +
+                        "where used_score.工号 = '" + int_args[0] +
+                        "' and used_score.课程编号 ='"+ int_args[1] +
+                        "' and used_score.学号 =student.student_id" +
+                        " order by used_score.学号;";
+                System.out.println(sql);
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    int student_id = rs.getInt("学号");
+                    String student_name = rs.getString("student_name");
+                    Vector<Object> row = new Vector<>();
+                    row.addElement(student_id);
+                    row.addElement(student_name);
+                    tmp.addElement(row);
+                }
+                rs.close();
+                //additional向量用于返回该课程的信息，本次返回了教师工号、课程名、课程号、学分、课程id
+                additional.addElement(int_args[0]);
+                additional.addElement(int_args[1]);
+                System.out.println(sql);
                 break;
             case "管理员班级成绩查询":
                 if (int_args.length != 2 || str_args.length != 0) {// int_args[] = teacher_id, course_order
