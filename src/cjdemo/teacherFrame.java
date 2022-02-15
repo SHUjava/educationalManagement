@@ -55,6 +55,7 @@ public class teacherFrame extends JFrame implements Exit {
         this.setLocation(100, 100);
         //采用Border布局，水平间距50，垂直间距5
         this.setLayout(new BorderLayout(5, 20));
+        this.setResizable(false);
         ((JPanel) this.getContentPane()).setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
 
         /**
@@ -117,7 +118,7 @@ public class teacherFrame extends JFrame implements Exit {
         showPanel = new JPanel();
         showPanel.setPreferredSize(new Dimension(500,500));
         showPanel.setLayout(new FlowLayout(FlowLayout.CENTER,5,10));
-        this.add(showPanel,"East");
+        this.add(showPanel,"Center");
 
         /**
          * @function: 在functionPanel中创建并添加【录入成绩】按钮enterGradeButton.
@@ -564,6 +565,7 @@ public class teacherFrame extends JFrame implements Exit {
             JTextField gradeInfoText = new JTextField();
             gradeInfoText.setFont(font);
             gradeInfoText.setText("平均成绩："+info[0]+"\n优秀率为："+info[1]+"\n挂科率为："+info[2]);
+            gradeInfoText.setEditable(false);
             panel.add(gradeInfoText);
             String[] col_name = {"排名", "学生学号", "学生姓名", "平时成绩","考试成绩","成绩", "绩点"};
             JTable cjtable = new JTable(data,col_name);

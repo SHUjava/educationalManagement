@@ -39,7 +39,7 @@ public class adminFrame extends JFrame implements Exit {
         this.setBounds(100, 100, 1000, 800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-
+        this.setResizable(false);
         this.setSize(700, 600);
         this.setLocation(100, 100);
         //采用Border布局，水平间距50，垂直间距5

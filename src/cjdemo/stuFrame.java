@@ -97,7 +97,7 @@ public class stuFrame extends JFrame implements Exit {
         panel_show = new JPanel();
         panel_show.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         panel_show.setPreferredSize(new Dimension(550, 500));
-        this.add(panel_show, "East");
+        this.add(panel_show, "Center");
         panel_show.setVisible(false);
 
         // 一个空白模板
