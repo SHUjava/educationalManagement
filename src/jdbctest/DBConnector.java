@@ -17,8 +17,8 @@ public class DBConnector {
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
     //static final String PASS = "Zbb123150@";
-    static final String PASS = "yang0417";
-//static final String PASS = "1240863915gg";
+    //static final String PASS = "yang0417";
+static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
     static final String firstSeme = "2019-2020秋季";  // 初始学期
@@ -1549,10 +1549,10 @@ public class DBConnector {
     }
 
     public String[] getSemeList(){
-        String[] result = new String[100];
+        String[] result = new String[10];
         String tmp = firstSeme;
         // 不考虑夏季学期
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             result[i] = tmp;
             if (!tmp.equals(seme)) {
                 if (tmp.charAt(9) == '春') {

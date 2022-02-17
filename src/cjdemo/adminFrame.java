@@ -65,15 +65,7 @@ public class adminFrame extends JFrame implements Exit {
         //将管理员信息面板添加到主面板中
         this.add(adminPanel, "North");
 
-        JButton clearPW = new JButton("重置密码");
-        clearPW.addActionListener(e -> {
-            JFrame frame = new clearPWFrame(this);
-//            dispose();
-        });
-        clearPW.setPreferredSize(new Dimension(100, 30));
-        clearPW.setFont(font);
-        clearPW.setContentAreaFilled(false);
-        adminPanel.add(clearPW);
+
 
         /**
          * @function: 创建安全退出的按钮exitButton.
@@ -147,6 +139,16 @@ public class adminFrame extends JFrame implements Exit {
             }
         });
         functionPanel.add(newSemeButton);
+
+        JButton clearPW = new JButton("重置密码");
+        clearPW.addActionListener(e -> {
+            JFrame frame = new clearPWFrame(this);
+//            dispose();
+        });
+        functionPanel.add(clearPW);
+        clearPW.setPreferredSize(new Dimension(120, 30));
+//        clearPW.setFont(font);
+//        clearPW.setContentAreaFilled(false);
 
         /**
          * @function: 在functionPanel中创建并添加【班级成绩查询】按钮courseGradeQueryButton.
