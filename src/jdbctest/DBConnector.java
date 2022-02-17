@@ -14,9 +14,9 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-    //static final String PASS = "yang0417";
-//      static final String PASS = "1240863915gg";
+//    static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
+      //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
     static final String firstSeme = "2019-2020秋季";  // 初始学期
@@ -927,11 +927,10 @@ public class DBConnector {
         System.out.println(Arrays.deepToString(distribution));
         return distribution;
     }
-    public boolean insert(String mode, String[] int_args, String[] str_args)
+    public void insert(String mode, String[] int_args, String[] str_args)
             throws CustomException, SQLException {
         String sql;
         ResultSet rs;
-        boolean status = false;
         switch (mode) {
             case "学生":
                 if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
@@ -944,7 +943,7 @@ public class DBConnector {
                         "(`student_id`, `student_name`, `student_password`, `student_sex`, `student_major`, `student_grade`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"', '"+str_args[2]+"', '"+int_args[1]+"');";
                 System.out.println(sql);
-                status= stmt.execute(sql);
+                stmt.execute(sql);
                 break;
             case "教师":
                 if(int_args.length != 1 || str_args.length != 2){//工号、名字、院系
@@ -953,7 +952,7 @@ public class DBConnector {
                 sql = "INSERT INTO `educationalmanagementdb`.`teacher` " +
                         "(`teacher_id`, `teacher_name`, `teacher_password`, `teacher_major`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"');";
-                status = stmt.execute(sql);
+                stmt.execute(sql);
                 break;
             case "课程":
                 if(int_args.length != 4 || str_args.length != 3){//课号、课名、学分、工号、学期、时间、平时分占成
@@ -964,7 +963,7 @@ public class DBConnector {
                         "(`course_order`, `course_name`, `course_credit`, `teacher_id`, `course_semester`, `course_time`, `score_ratio`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '"+int_args[1]+"', '"+int_args[2]+
                         "', '"+str_args[1]+"', '"+str_args[2]+"', '"+ratio+"');";
-                status = stmt.execute(sql);
+                stmt.execute(sql);
                 break;
             case "选课":
                 if(int_args.length != 5 || str_args.length != 0){//学号、课程编号、平时成绩、考试成绩、学期
@@ -993,28 +992,26 @@ public class DBConnector {
                         "(`student_id`, `course_id`, `usual_score`, `test_score`) " +
                         "VALUES ('"+int_args[0]+"', '"+course_id+"', "+int_args[2]+", "+int_args[3]+");";
                 System.out.println(sql);
-                status = stmt.execute(sql);
+                stmt.execute(sql);
                 break;
             default:
                 System.out.println("插入模式无匹配");
 
         }
-        return status;
     }
 
     //用于删除某些记录，由于管理员的查询已支持模糊查询(缺失的数字用0代替，字符串用null代替)所以这里不支持模糊删除
 //有时删除输入的不是主键，所以需要关闭数据库的安全模式
-    public boolean delete(String mode, String[] id)
+    public void delete(String mode, String[] id)
             throws CustomException, SQLException{
         String sql;
-        boolean status = false;
         switch (mode) {
             case "学生"://学号
                 String[] stu_id = {id[0]};
                 this.delete("选课", stu_id);
                 sql = "delete from student where student_id = "+id[0]+";";
                 System.out.println(sql);
-                status = stmt.execute(sql);
+                stmt.execute(sql);
                 break;
             case "选课"://学号、课程编号、学期
                 if (id.length == 3) {
@@ -1026,8 +1023,7 @@ public class DBConnector {
                     sql = "delete from score where student_id = '"+id[0]+"';";
                 }
                 System.out.println(sql);
-                status = stmt.execute(sql);
-
+                stmt.execute(sql);
                 break;
             case"教师"://工号
                 String[] int_args = new String[3];
@@ -1041,8 +1037,7 @@ public class DBConnector {
                 }
                 sql = "delete from teacher where teacher_id = "+id[0]+";";
                 System.out.println(sql);
-                status = stmt.execute(sql);
-
+                stmt.execute(sql);
                 break;
             case"班级"://课号、工号、学期
                 System.out.println("正在删除班级");
@@ -1064,13 +1059,11 @@ public class DBConnector {
                 System.out.println("已删除该班级学生");
                 sql = "delete from course where course_order = '"+id[0]+"' and teacher_id = '"+id[1]+"' and course_semester = '"+id[2]+"';";
                 System.out.println(sql);
-                status = stmt.execute(sql);
-
+                stmt.execute(sql);
                 break;
             default:
                 System.out.println("删除模式无匹配");
         }
-        return status;
     }
     public boolean teacherScoreChange(int[] int_args, String[] str_args) throws CustomException, SQLException {
         String sql;
@@ -1198,32 +1191,34 @@ public class DBConnector {
             //工号  课程名称，课程学期，上课时间 平时成绩，考试成绩
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length+"   "+arg_args.length);
         }
-        sql = "select * from course where teacher_id = '" + int_args[0] +
+        sql = "select course_id, score.student_id as '学号' " +
+                "from score where score.course_id in(select course_id from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + str_args[0] +
                 "' and course_semester = '" + str_args[1] +
                 "' and course_time = '" + str_args[2] +
-                "';\n";
-        rs = stmt.executeQuery(sql);
-        rs.next();
-        int course_id = rs.getInt("course_id");
-        rs.close();
-        sql = "select score.student_id as '学号' " +
-                "from score where score.course_id = '"+course_id+"';\n";
+                "');\n";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         int id = 0;
+        int course_id = 0;
+        Statement stmt1 = conn.createStatement();
+        Statement stmt2 = conn.createStatement();
+        Statement stmt3 = conn.createStatement();
         while(rs.next())
         {
+            course_id = rs.getInt("course_id");
             int student_id = rs.getInt("学号");
             sql = "update score set usual_score = '"+arg_args[0][id]+"' where student_id = '"+student_id+
                     "' and course_id ='"+ course_id +"';";
-            stmt.executeUpdate(sql);
+            stmt1.executeUpdate(sql);
             sql = "update score set test_score = '"+arg_args[1][id]+"' where student_id = '"+student_id+
                     "' and course_id ='"+ course_id +"';";
-            stmt.executeUpdate(sql);
+            stmt2.executeUpdate(sql);
             id++;
         }
         sql = "update course set score_entered = 'y' where course_id = '" + course_id +"';\n";
-        stmt.executeUpdate(sql);
+        stmt3.executeUpdate(sql);
+        rs.close();
     }
     public boolean changePassword(int status,int ID, String PW) throws CustomException, SQLException {
         //修改密码
@@ -1263,7 +1258,7 @@ public class DBConnector {
         }
         return false;
     }
-    public boolean resetPassword(String ID) throws CustomException, SQLException {
+    public boolean resetPassword(int status,int ID) throws CustomException, SQLException {
         //修改密码
         String sql;
 //        if(str_args.length != 2){
@@ -1282,7 +1277,7 @@ public class DBConnector {
 //            System.out.println("密码过长（长于20个字符）");
 //            return;
 //        }
-        if(ID.startsWith("2")){
+        if(status==0){
             sql = "update teacher set teacher_password = '123456' where teacher_id = '"+ID+"';";
             int row_count = stmt.executeUpdate(sql);
             if(row_count==1){
@@ -1290,7 +1285,7 @@ public class DBConnector {
                 return true;
             }
         }
-        else if(ID.startsWith("1")){
+        else if(status==1){
             sql = "update student set student_password = '123456' where student_id = '"+ID+"';";
             int row_count = stmt.executeUpdate(sql);
             if(row_count==1){

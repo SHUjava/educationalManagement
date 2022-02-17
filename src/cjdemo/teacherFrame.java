@@ -1,10 +1,13 @@
 package cjdemo;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -23,7 +26,7 @@ public class teacherFrame extends JFrame implements Exit {
     Object[][] data ;
     JPanel showEnterGradePanel, showQueryGradePanel, showChangeGradePanel,showGradeAnalyzePanel,tablePanel,tablePanel1,showStuPanel;
     JTabbedPane showAnalyzePanel;
-    JTextField classText1,courseNameText4,timeText2,timeText1,classText2,timeText, courseNameText1,courseNameText2,courseNameText3,stuIDText1,stuIDText2,newGradeText,tIDText;
+    JTextField classText1,courseNameText4,timeText3,timeText2,timeText1,classText2,timeText, courseNameText1,courseNameText2,courseNameText3,stuIDText1,stuIDText2,newGradeText,tIDText;
     JButton checkEnterInfoButton1,checkEnterInfoButton2,checkEnterInfoButton3,checkEnterInfoButton4;
     JComboBox semesterText,choiceComBox,semesterText1,semesterText2;
     DBConnector conn;
@@ -248,34 +251,24 @@ public class teacherFrame extends JFrame implements Exit {
         courseNameText1.setPreferredSize(new Dimension(60, 30));
         showEnterGradePanel.add(courseNameText1);
 
-//        classLabel = new JLabel("班级");
-//        classLabel.setFont(font);
-//        classLabel.setPreferredSize(new Dimension(35, 30));
-//        showEnterGradePanel.add(classLabel);
+        timeLabel = new JLabel("上课时间");
+        timeLabel.setFont(font);
+        timeLabel.setPreferredSize(new Dimension(60, 30));
+        showEnterGradePanel.add(timeLabel);
 
-        classText1 = new JTextField("");
-        classText1.setFont(font);
-        classText1.setPreferredSize(new Dimension(80, 30));
-        showEnterGradePanel.add(classText1);
+        timeText3 = new JTextField("");
+        timeText3.setFont(font);
+        timeText3.setPreferredSize(new Dimension(80, 30));
+        showEnterGradePanel.add(timeText3);
 
-        checkEnterInfoButton1 = new JButton("确认");
-        checkEnterInfoButton1.setFont(font);
-        checkEnterInfoButton1.setPreferredSize(new Dimension(100, 30));
-        checkEnterInfoButton1.setContentAreaFilled(false);
-        checkEnterInfoButton1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(1);
-                System.out.println("用户输入的课程名称为：" + courseNameText1.getText() + " 用户输入的班级为：" + classText1.getText());
-            }
-        });
-        showEnterGradePanel.add(checkEnterInfoButton1);
-
-        Import ipt = new Import();
+        Import ipt = new Import(this.id);
         JButton buttonImport = ipt.getButtonImport();
+        buttonImport.addActionListener(e -> {
+            ipt.setCourse(courseNameText1.getText(),timeText3.getText());
+            ipt.startImport();
+        });
         showEnterGradePanel.add(buttonImport);
-        System.out.println(Arrays.deepToString(ipt.getResult()));
-        //以下为显示录入成绩的表格，暂时未详细查看db中相关代码，陆续会更新
+
 
 
         /**
