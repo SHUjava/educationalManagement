@@ -17,8 +17,8 @@ public class DBConnector {
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
     //static final String PASS = "Zbb123150@";
-    //static final String PASS = "yang0417";
-      static final String PASS = "1240863915gg";
+    static final String PASS = "yang0417";
+//static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
     static final String firstSeme = "2019-2020秋季";  // 初始学期
@@ -1233,7 +1233,7 @@ public class DBConnector {
                 "' and course_name = '" + str_args[0] +
                 "' and course_semester = '" + str_args[1] +
                 "' and course_time = '" + str_args[2] +
-                "';\n";
+                "');\n";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
         int id = 0;
@@ -1247,9 +1247,11 @@ public class DBConnector {
             int student_id = rs.getInt("学号");
             sql = "update score set usual_score = '"+arg_args[0][id]+"' where student_id = '"+student_id+
                     "' and course_id ='"+ course_id +"';";
+            System.out.println(sql);
             stmt1.executeUpdate(sql);
             sql = "update score set test_score = '"+arg_args[1][id]+"' where student_id = '"+student_id+
                     "' and course_id ='"+ course_id +"';";
+            System.out.println(sql);
             stmt2.executeUpdate(sql);
             id++;
         }

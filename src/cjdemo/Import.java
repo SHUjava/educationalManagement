@@ -46,11 +46,11 @@ public class Import {
         try {
             Workbook workbook = Workbook.getWorkbook(file);
             Sheet sheet = workbook.getSheet(0);
-            result = new int[sheet.getRows() - 1][sheet.getColumns() - 2];
+            result = new int[sheet.getColumns() - 2][sheet.getRows() - 1];
             for (int i = 1; i < sheet.getRows(); i++) {
                 for (int j = 2; j < sheet.getColumns(); j++) {
                     Cell cell = sheet.getCell(j, i);
-                    result[i - 1][j - 2] = Integer.parseInt(cell.getContents());
+                    result[j - 2][i - 1] = Integer.parseInt(cell.getContents());
                 }
             }
         } catch (Exception e) {
