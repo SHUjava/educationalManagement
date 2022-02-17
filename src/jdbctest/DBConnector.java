@@ -15,8 +15,8 @@ public class DBConnector {
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
 //    static final String PASS = "Zbb123150@";
-    //static final String PASS = "yang0417";
-      static final String PASS = "1240863915gg";
+    static final String PASS = "yang0417";
+      //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
     static final String firstSeme = "2019-2020秋季";  // 初始学期
@@ -1191,32 +1191,34 @@ public class DBConnector {
             //工号  课程名称，课程学期，上课时间 平时成绩，考试成绩
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length+"   "+arg_args.length);
         }
-        sql = "select * from course where teacher_id = '" + int_args[0] +
+        sql = "select course_id, score.student_id as '学号' " +
+                "from score where score.course_id in(select course_id from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + str_args[0] +
                 "' and course_semester = '" + str_args[1] +
                 "' and course_time = '" + str_args[2] +
-                "';\n";
-        rs = stmt.executeQuery(sql);
-        rs.next();
-        int course_id = rs.getInt("course_id");
-        rs.close();
-        sql = "select score.student_id as '学号' " +
-                "from score where score.course_id = '"+course_id+"';\n";
+                "');\n";
+        System.out.println(sql);
         rs = stmt.executeQuery(sql);
         int id = 0;
+        int course_id = 0;
+        Statement stmt1 = conn.createStatement();
+        Statement stmt2 = conn.createStatement();
+        Statement stmt3 = conn.createStatement();
         while(rs.next())
         {
+            course_id = rs.getInt("course_id");
             int student_id = rs.getInt("学号");
             sql = "update score set usual_score = '"+arg_args[0][id]+"' where student_id = '"+student_id+
                     "' and course_id ='"+ course_id +"';";
-            stmt.executeUpdate(sql);
+            stmt1.executeUpdate(sql);
             sql = "update score set test_score = '"+arg_args[1][id]+"' where student_id = '"+student_id+
                     "' and course_id ='"+ course_id +"';";
-            stmt.executeUpdate(sql);
+            stmt2.executeUpdate(sql);
             id++;
         }
         sql = "update course set score_entered = 'y' where course_id = '" + course_id +"';\n";
-        stmt.executeUpdate(sql);
+        stmt3.executeUpdate(sql);
+        rs.close();
     }
     public boolean changePassword(int status,int ID, String PW) throws CustomException, SQLException {
         //修改密码
