@@ -276,9 +276,9 @@ public class adminFrame extends JFrame implements Exit {
                 teacherIDText1.setPreferredSize(new Dimension(60, 30));
                 panel.add(teacherIDText1);
 
-                courseIDLabel = new JLabel("课程编号");
+                courseIDLabel = new JLabel("课名/课程编号");
                 courseIDLabel.setFont(font);
-                courseIDLabel.setPreferredSize(new Dimension(60, 30));
+                courseIDLabel.setPreferredSize(new Dimension(90, 30));
                 panel.add(courseIDLabel);
 
                 courseIDText = new JTextField("");
@@ -288,7 +288,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 courseSemesterLabel2 = new JLabel("学期");
                 courseSemesterLabel2.setFont(font);
-                courseSemesterLabel2.setPreferredSize(new Dimension(50, 30));
+                courseSemesterLabel2.setPreferredSize(new Dimension(30, 30));
                 panel.add(courseSemesterLabel2);
 
                 courseSemesterComboBox2 = new JComboBox();
@@ -566,7 +566,7 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(queryTeacherInfoPanel);
                 break;
             case 4:
-                courseIDLabel2 = new JLabel("课号");
+                courseIDLabel2 = new JLabel("课程编号");
                 courseIDLabel2.setFont(font);
                 courseIDLabel2.setPreferredSize(new Dimension(50, 30));
                 panel.add(courseIDLabel2);
@@ -771,7 +771,7 @@ public class adminFrame extends JFrame implements Exit {
                 str_args[2] = facultyComboBox.getSelectedItem().toString();
 
                 try {
-                    if(conn.insert("学生",int_args,str_args)){
+                    if(conn.insert("学生",int_args,str_args) !=0){
                         JOptionPane.showMessageDialog(null, "新增成功！");
                     }
                     else{
@@ -849,7 +849,7 @@ public class adminFrame extends JFrame implements Exit {
                 str_args[0] = teacherNameText4.getText();
                 str_args[1] = facultyComboBox.getSelectedItem().toString();
                 try {
-                    if(conn.insert("教师",int_args,str_args)){
+                    if(conn.insert("教师",int_args,str_args)!=0){
                         JOptionPane.showMessageDialog(null, "新增成功！");
                     }
                     else{
@@ -973,7 +973,7 @@ public class adminFrame extends JFrame implements Exit {
                 str_args[1] = semesterText.getSelectedItem().toString();
                 str_args[2] = timeText.getText();
                 try {
-                    if(conn.insert("课程",int_args,str_args)){
+                    if(conn.insert("课程",int_args,str_args)!=0){
                         JOptionPane.showMessageDialog(null, "新增成功！");
                     }
                     else{
@@ -1012,7 +1012,7 @@ public class adminFrame extends JFrame implements Exit {
         {
             JLabel IDLabel4 = new JLabel("学号");
             IDLabel4.setFont(font);
-            IDLabel4.setPreferredSize(new Dimension(50,30));
+            IDLabel4.setPreferredSize(new Dimension(30,30));
             panel.add(IDLabel4);
 
             JTextField IDText4 = new JTextField("");
@@ -1020,9 +1020,9 @@ public class adminFrame extends JFrame implements Exit {
             IDText4.setPreferredSize(new Dimension(50,30));
             panel.add(IDText4);
 
-            JLabel IDLabel5 = new JLabel("课程编号");
+            JLabel IDLabel5 = new JLabel("课名/课程编号");
             IDLabel5.setFont(font);
-            IDLabel5.setPreferredSize(new Dimension(50,30));
+            IDLabel5.setPreferredSize(new Dimension(90,30));
             panel.add(IDLabel5);
             JTextField IDText5 = new JTextField("");
             IDText5.setFont(font);
@@ -1079,7 +1079,7 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[3] = IDText7.getText();
                 int_args[4] = courseSemesterComboBox5.getSelectedItem().toString();
                 try {
-                    if(conn.insert("选课",int_args,str_args)){
+                    if(conn.insert("选课",int_args,str_args) !=0){
                         JOptionPane.showMessageDialog(null, "新增成功！");
                     }
                     else{
@@ -1143,7 +1143,7 @@ public class adminFrame extends JFrame implements Exit {
                 int_args = new String[1];
                 int_args[0] = studentIDText5.getText();
                 try {
-                    if(conn.delete("学生",int_args)){
+                    if(conn.delete("学生",int_args)!=0){
                         JOptionPane.showMessageDialog(null, "删除成功！");
                     }
                     else{
@@ -1190,7 +1190,7 @@ public class adminFrame extends JFrame implements Exit {
                 int_args = new String[1];
                 int_args[0] = teacherIDText5.getText();
                 try {
-                    if(conn.delete("教师",int_args)){
+                    if(conn.delete("教师",int_args)!=0){
                         JOptionPane.showMessageDialog(null, "删除成功！");
                     }
                     else{
@@ -1220,9 +1220,9 @@ public class adminFrame extends JFrame implements Exit {
         }
         else if(mode==3)
         {
-            JLabel courseLabel = new JLabel("课号");
+            JLabel courseLabel = new JLabel("课名/课程编号");
             courseLabel.setFont(font);
-            courseLabel.setPreferredSize(new Dimension(50,30));
+            courseLabel.setPreferredSize(new Dimension(100,30));
             panel.add(courseLabel);
 
             JTextField courseText = new JTextField("");
@@ -1270,7 +1270,7 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[1] = teacherIDText6.getText();
                 int_args[2] = courseSemesterComboBox3.getSelectedItem().toString();
                 try {
-                    if(conn.delete("班级",int_args)){
+                    if(conn.delete("班级",int_args)!=0){
                         JOptionPane.showMessageDialog(null, "删除成功！");
                     }
                     else{
@@ -1314,9 +1314,9 @@ public class adminFrame extends JFrame implements Exit {
             courseText.setPreferredSize(new Dimension(50,30));
             panel.add(courseText);
 
-            JLabel stuIDLabel6 = new JLabel("课程编号");
+            JLabel stuIDLabel6 = new JLabel("课名/课程编号");
             stuIDLabel6.setFont(font);
-            stuIDLabel6.setPreferredSize(new Dimension(50,30));
+            stuIDLabel6.setPreferredSize(new Dimension(100,30));
             panel.add(stuIDLabel6);
             JTextField stuIDText6 = new JTextField("");
             stuIDText6.setFont(font);
@@ -1353,7 +1353,7 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[1] = stuIDText6.getText();
                 int_args[2] = courseSemesterComboBox4.getSelectedItem().toString();
                 try {
-                    if(conn.delete("选课",int_args)){
+                    if(conn.delete("选课",int_args)!=0){
                         JOptionPane.showMessageDialog(null, "删除成功！");
                     }
                     else{
@@ -1411,7 +1411,7 @@ public class adminFrame extends JFrame implements Exit {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String[] col_name = {"课号", "课名", "学分", "工号", "学期", "上课时间"};
+        String[] col_name = {"课程编号", "课名", "学分", "工号", "学期", "上课时间"};
         JTable table = new JTable(data, col_name);
 //        System.out.println(data.toString());
         return table;

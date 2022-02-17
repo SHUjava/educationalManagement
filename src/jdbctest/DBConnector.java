@@ -1,11 +1,13 @@
 package jdbctest;
 
 
+
 import java.io.*;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 
 public class DBConnector {
@@ -14,9 +16,9 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
 //    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
+    //static final String PASS = "Zbb123150@";
     //static final String PASS = "yang0417";
-//      static final String PASS = "1240863915gg";
+      static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
     static final String firstSeme = "2019-2020秋季";  // 初始学期
@@ -215,14 +217,21 @@ public class DBConnector {
                 System.out.println(sql);
                 break;
             case "管理员班级成绩查询":
-                if (int_args.length != 2 || str_args.length != 1) {// int_args[] = teacher_id, course_order
+                if (int_args.length != 2 || str_args.length != 1) {// int_args[] = teacher_id, course_name/course_order
                     throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length + "123456");
                 }
-                sql = "select used_score.课程名, used_score.学分, used_score.学号, student.student_name, " +
+                String nameOrOrder = "";
+                Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+                if (pattern.matcher(int_args[1]).matches()){
+                    nameOrOrder = "used_score.课程编号 = '"+int_args[1];
+                }else{
+                    nameOrOrder = "used_score.课程名 ='"+int_args[1];
+                }
+            sql = "select used_score.课程名, used_score.学分, used_score.学号, student.student_name, " +
                         "used_score.平时成绩, used_score.考试成绩, used_score.绩点, course.course_id\n" +
                         "from used_score, student, course\n" +
                         "where used_score.工号 = '" + int_args[0] +
-                        "' and used_score.课程编号 ='"+ int_args[1] +
+                        "' and "+ nameOrOrder +
                         "' and course.course_semester ='"+ str_args[0] +
                         "' and used_score.学号 =student.student_id and used_score.课程编号 = course.course_order " +
                         "order by used_score.学号;";
@@ -927,11 +936,11 @@ public class DBConnector {
         System.out.println(Arrays.deepToString(distribution));
         return distribution;
     }
-    public boolean insert(String mode, String[] int_args, String[] str_args)
+    public int insert(String mode, String[] int_args, String[] str_args)
             throws CustomException, SQLException {
         String sql;
         ResultSet rs;
-        boolean status = false;
+        int status = 0;
         switch (mode) {
             case "学生":
                 if(int_args.length != 2 || str_args.length != 3){//学号、姓名、性别、院系、入学时间
@@ -944,7 +953,7 @@ public class DBConnector {
                         "(`student_id`, `student_name`, `student_password`, `student_sex`, `student_major`, `student_grade`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"', '"+str_args[2]+"', '"+int_args[1]+"');";
                 System.out.println(sql);
-                status= stmt.execute(sql);
+                status= stmt.executeUpdate(sql);
                 break;
             case "教师":
                 if(int_args.length != 1 || str_args.length != 2){//工号、名字、院系
@@ -953,7 +962,7 @@ public class DBConnector {
                 sql = "INSERT INTO `educationalmanagementdb`.`teacher` " +
                         "(`teacher_id`, `teacher_name`, `teacher_password`, `teacher_major`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '123456', '"+str_args[1]+"');";
-                status = stmt.execute(sql);
+                status = stmt.executeUpdate(sql);
                 break;
             case "课程":
                 if(int_args.length != 4 || str_args.length != 3){//课号、课名、学分、工号、学期、时间、平时分占成
@@ -964,10 +973,10 @@ public class DBConnector {
                         "(`course_order`, `course_name`, `course_credit`, `teacher_id`, `course_semester`, `course_time`, `score_ratio`) " +
                         "VALUES ('"+int_args[0]+"', '"+str_args[0]+"', '"+int_args[1]+"', '"+int_args[2]+
                         "', '"+str_args[1]+"', '"+str_args[2]+"', '"+ratio+"');";
-                status = stmt.execute(sql);
+                status = stmt.executeUpdate(sql);
                 break;
             case "选课":
-                if(int_args.length != 5 || str_args.length != 0){//学号、课程编号、平时成绩、考试成绩、学期
+                if(int_args.length != 5 || str_args.length != 0){//学号、课名/课程编号、平时成绩、考试成绩、学期
                     throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
                 if (Objects.equals(int_args[2], "")){
@@ -982,7 +991,14 @@ public class DBConnector {
                 else{
                     int_args[3] = "'"+int_args[3]+"'";
                 }
-                sql = "select course_id from course where course_order = '"+int_args[1]+"' and course_semester = '"+int_args[4]+"';";
+                String nameOrOrder = "";
+                Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+                if (pattern.matcher(int_args[1]).matches()){
+                    nameOrOrder = "course_order = '"+int_args[1];
+                }else{
+                    nameOrOrder = "course_name ='"+int_args[1];
+                }
+                sql = "select course_id from course where "+nameOrOrder+"' and course_semester = '"+int_args[4]+"';";
                 rs = stmt.executeQuery(sql);
                 int course_id=0;
                 while (rs.next()) {
@@ -993,7 +1009,7 @@ public class DBConnector {
                         "(`student_id`, `course_id`, `usual_score`, `test_score`) " +
                         "VALUES ('"+int_args[0]+"', '"+course_id+"', "+int_args[2]+", "+int_args[3]+");";
                 System.out.println(sql);
-                status = stmt.execute(sql);
+                status = stmt.executeUpdate(sql);
                 break;
             default:
                 System.out.println("插入模式无匹配");
@@ -1004,29 +1020,36 @@ public class DBConnector {
 
     //用于删除某些记录，由于管理员的查询已支持模糊查询(缺失的数字用0代替，字符串用null代替)所以这里不支持模糊删除
 //有时删除输入的不是主键，所以需要关闭数据库的安全模式
-    public boolean delete(String mode, String[] id)
+    public int delete(String mode, String[] id)
             throws CustomException, SQLException{
         String sql;
-        boolean status = false;
+        int status = 0;
         switch (mode) {
             case "学生"://学号
                 String[] stu_id = {id[0]};
                 this.delete("选课", stu_id);
                 sql = "delete from student where student_id = "+id[0]+";";
                 System.out.println(sql);
-                status = stmt.execute(sql);
+                status = stmt.executeUpdate(sql);
                 break;
-            case "选课"://学号、课程编号、学期
+            case "选课"://学号、课名/课程编号、学期
                 if (id.length == 3) {
+                    String nameOrOrder = "";
+                    Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+                    if (pattern.matcher(id[1]).matches()){
+                        nameOrOrder = "course_order = '"+id[1];
+                    }else{
+                        nameOrOrder = "course_name ='"+id[1];
+                    }
                     sql = "delete from score where student_id = '"+id[0]+"' and course_id in (select\n" +
                             "course_id from course\n" +
-                            "where course_order = '"+id[1]+"' and course_semester = '"+id[2]+"');";
+                            "where "+nameOrOrder+"' and course_semester = '"+id[2]+"');";
                 }
                 else{
                     sql = "delete from score where student_id = '"+id[0]+"';";
                 }
                 System.out.println(sql);
-                status = stmt.execute(sql);
+                status = stmt.executeUpdate(sql);
 
                 break;
             case"教师"://工号
@@ -1041,10 +1064,10 @@ public class DBConnector {
                 }
                 sql = "delete from teacher where teacher_id = "+id[0]+";";
                 System.out.println(sql);
-                status = stmt.execute(sql);
+                status = stmt.executeUpdate(sql);
 
                 break;
-            case"班级"://课号、工号、学期
+            case"班级"://课名/课程编号、工号、学期
                 System.out.println("正在删除班级");
                 str_args = new String[1];
                 int_args = new String[2];
@@ -1062,9 +1085,16 @@ public class DBConnector {
                     this.delete("选课", choose_id);
                 }
                 System.out.println("已删除该班级学生");
-                sql = "delete from course where course_order = '"+id[0]+"' and teacher_id = '"+id[1]+"' and course_semester = '"+id[2]+"';";
+                String nameOrOrder = "";
+                Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+                if (pattern.matcher(id[1]).matches()){
+                    nameOrOrder = "course_order = '"+id[1];
+                }else{
+                    nameOrOrder = "course_name ='"+id[1];
+                }
+                sql = "delete from course where "+nameOrOrder+"' and teacher_id = '"+id[1]+"' and course_semester = '"+id[2]+"';";
                 System.out.println(sql);
-                status = stmt.execute(sql);
+                status = stmt.executeUpdate(sql);
 
                 break;
             default:
