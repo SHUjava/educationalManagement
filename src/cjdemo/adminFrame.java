@@ -54,7 +54,7 @@ public class adminFrame extends JFrame implements Exit {
         adminPanel.setPreferredSize(new Dimension(700, 80));
         adminPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         /**
-         * @function: 创建欢迎老师的标签welcomeAadminLabel.
+         * @function: 创建欢迎管理员的标签welcomeAdminLabel.
          */
         JLabel welcomeAdminLabel = new JLabel("欢迎您，管理员 ");
         welcomeAdminLabel.setPreferredSize(new Dimension(120, 60));
@@ -65,6 +65,15 @@ public class adminFrame extends JFrame implements Exit {
         //将管理员信息面板添加到主面板中
         this.add(adminPanel, "North");
 
+        JButton clearPW = new JButton("重置密码");
+        clearPW.addActionListener(e -> {
+            JFrame frame = new clearPWFrame(this);
+//            dispose();
+        });
+        clearPW.setPreferredSize(new Dimension(100, 30));
+        clearPW.setFont(font);
+        clearPW.setContentAreaFilled(false);
+        adminPanel.add(clearPW);
 
         /**
          * @function: 创建安全退出的按钮exitButton.
@@ -298,7 +307,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 checkCouseGradeQueryInfoButton = new JButton("确认");
                 checkCouseGradeQueryInfoButton.setFont(font);
-                checkCouseGradeQueryInfoButton.setPreferredSize(new Dimension(100, 30));
+                checkCouseGradeQueryInfoButton.setPreferredSize(new Dimension(60, 30));
                 checkCouseGradeQueryInfoButton.setContentAreaFilled(false);
                 checkCouseGradeQueryInfoButton.addActionListener(e -> {
                             System.out.println("用户输入的教师工号为：" + teacherIDText1.getText() + " 用户输入的课程编号为：" + courseIDText.getText());
@@ -330,6 +339,20 @@ public class adminFrame extends JFrame implements Exit {
                         }
                 );
                 panel.add(checkCouseGradeQueryInfoButton);
+
+                JButton clearInputInfoButton = new JButton("重置");
+                clearInputInfoButton.setFont(font);
+                clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+                clearInputInfoButton.setContentAreaFilled(false);
+                clearInputInfoButton.addActionListener(e->{
+                    teacherIDText1.setText("");
+                    courseIDText.setText("");
+                    courseSemesterComboBox2.setSelectedItem("2019-2020秋季");
+
+                });
+                panel.add(clearInputInfoButton);
+
+
                 tablePanel = new JPanel();
                 tablePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
                 tablePanel.setPreferredSize(new Dimension(500, 300));
@@ -385,6 +408,7 @@ public class adminFrame extends JFrame implements Exit {
                 studentFacultyLabel.setPreferredSize(new Dimension(60, 30));
                 panel.add(studentFacultyLabel);
 
+
                 studentFacultyComboBox = new JComboBox();
                 studentFacultyComboBox.setSelectedItem("任意");
                 studentFacultyComboBox.addItem("任意");
@@ -396,7 +420,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 checkStudentQueryInfoButton = new JButton("确认");
                 checkStudentQueryInfoButton.setFont(font);
-                checkStudentQueryInfoButton.setPreferredSize(new Dimension(100, 30));
+                checkStudentQueryInfoButton.setPreferredSize(new Dimension(60, 30));
                 checkStudentQueryInfoButton.setContentAreaFilled(false);
                 checkStudentQueryInfoButton.addActionListener(e -> {
                             System.out.println("用户输入的学号为：" + studentIDText1.getText() + " 用户输入的入学日期为：" + studentAdmissionDateText.getText() + " 用户输入的姓名为：" + studentNameText1.getText() + " 用户输入的性别为：" +
@@ -429,6 +453,21 @@ public class adminFrame extends JFrame implements Exit {
                         }
                 );
                 panel.add(checkStudentQueryInfoButton);
+
+                JButton clearInputInfoButton1 = new JButton("重置");
+                clearInputInfoButton1.setFont(font);
+                clearInputInfoButton1.setPreferredSize(new Dimension(60,30));
+                clearInputInfoButton1.setContentAreaFilled(false);
+                clearInputInfoButton1.addActionListener(e->{
+                    studentIDText1.setText("");
+                    studentAdmissionDateText.setText("");
+                    studentNameText1.setText("");
+                    studentGenderComboBox.setSelectedItem("任意");
+                    studentFacultyComboBox.setSelectedItem("任意");
+
+                });
+                panel.add(clearInputInfoButton1);
+
                 queryInfoPanel = new JPanel();
                 queryInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
                 queryInfoPanel.setPreferredSize(new Dimension(500, 300));
@@ -508,6 +547,19 @@ public class adminFrame extends JFrame implements Exit {
 
                 });
                 panel.add(checkTeacherQueryInfoButton);
+
+                JButton clearInputInfoButton2 = new JButton("重置");
+                clearInputInfoButton2.setFont(font);
+                clearInputInfoButton2.setPreferredSize(new Dimension(60,30));
+                clearInputInfoButton2.setContentAreaFilled(false);
+                clearInputInfoButton2.addActionListener(e->{
+                    teacherIDText2.setText("");
+                    teacherNameText.setText("");
+                    teacherFacultyComboBox.setSelectedItem("任意");
+
+                });
+                panel.add(clearInputInfoButton2);
+
                 queryTeacherInfoPanel = new JPanel();
                 queryTeacherInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
                 queryTeacherInfoPanel.setPreferredSize(new Dimension(500, 300));
@@ -615,6 +667,22 @@ public class adminFrame extends JFrame implements Exit {
                 });
 
                 panel.add(checkCourseQueryInfoButton);
+
+                JButton clearInputInfoButton3 = new JButton("重置");
+                clearInputInfoButton3.setFont(font);
+                clearInputInfoButton3.setPreferredSize(new Dimension(60,30));
+                clearInputInfoButton3.setContentAreaFilled(false);
+                clearInputInfoButton3.addActionListener(e->{
+                    courseIDText2.setText("");
+                    courseCreditText.setText("");
+                    teacherIDText3.setText("");
+                    courseNameText2.setText("");
+                    courseSemesterComboBox.setSelectedItem("任意");
+                    courseTimeText.setText("");
+
+
+                });
+                panel.add(clearInputInfoButton3);
                 queryCourseInfoPanel = new JPanel();
                 queryCourseInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
                 queryCourseInfoPanel.setPreferredSize(new Dimension(500, 200));
@@ -649,7 +717,6 @@ public class adminFrame extends JFrame implements Exit {
             dateLabel4.setFont(font);
             dateLabel4.setPreferredSize(new Dimension(80,30));
             panel.add(dateLabel4);
-
             JTextField dateText4 = new JTextField("");
             dateText4.setFont(font);
             dateText4.setPreferredSize(new Dimension(70,30));
@@ -700,9 +767,16 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[0] = studentIDText4.getText();
                 int_args[1] = dateText4.getText();
                 str_args[0] = nameText.getText();
+                str_args[1] = sexComboBox.getSelectedItem().toString();
+                str_args[2] = facultyComboBox.getSelectedItem().toString();
 
                 try {
-                    conn.insert("学生",int_args,str_args);
+                    if(conn.insert("学生",int_args,str_args)){
+                        JOptionPane.showMessageDialog(null, "新增成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -713,6 +787,23 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                studentIDText4.setText("");
+                dateText4.setText("");
+                nameText.setText("");
+                sexComboBox.setSelectedItem("男");
+                facultyComboBox.setSelectedItem("计算机系");
+
+
+            });
+            panel.add(clearInputInfoButton);
+
+
         }
         else if(mode==2)
         {
@@ -756,8 +847,14 @@ public class adminFrame extends JFrame implements Exit {
                 str_args = new String[2];
                 int_args[0] = teacherIDText4.getText();
                 str_args[0] = teacherNameText4.getText();
+                str_args[1] = facultyComboBox.getSelectedItem().toString();
                 try {
-                    conn.insert("教师",int_args,str_args);
+                    if(conn.insert("教师",int_args,str_args)){
+                        JOptionPane.showMessageDialog(null, "新增成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -769,6 +866,18 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                teacherIDText4.setText("");
+                teacherNameText4.setText("");
+                facultyComboBox.setSelectedItem("计算机系");
+
+            });
+            panel.add(clearInputInfoButton);
         }
         else if(mode==3)
         {
@@ -864,7 +973,12 @@ public class adminFrame extends JFrame implements Exit {
                 str_args[1] = semesterText.getSelectedItem().toString();
                 str_args[2] = timeText.getText();
                 try {
-                    conn.insert("课程",int_args,str_args);
+                    if(conn.insert("课程",int_args,str_args)){
+                        JOptionPane.showMessageDialog(null, "新增成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -877,6 +991,21 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                IDText.setText("");
+                creditText.setText("");
+                tIDText.setText("");
+                percentText.setText("");
+                cNameText.setText("");
+                semesterText.setSelectedItem("2019-2020秋季");
+                timeText.setText("");
+            });
+            panel.add(clearInputInfoButton);
         }
 
         else if(mode==4)
@@ -895,7 +1024,6 @@ public class adminFrame extends JFrame implements Exit {
             IDLabel5.setFont(font);
             IDLabel5.setPreferredSize(new Dimension(50,30));
             panel.add(IDLabel5);
-
             JTextField IDText5 = new JTextField("");
             IDText5.setFont(font);
             IDText5.setPreferredSize(new Dimension(50,30));
@@ -951,7 +1079,12 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[3] = IDText7.getText();
                 int_args[4] = courseSemesterComboBox5.getSelectedItem().toString();
                 try {
-                    conn.insert("选课",int_args,str_args);
+                    if(conn.insert("选课",int_args,str_args)){
+                        JOptionPane.showMessageDialog(null, "新增成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -963,6 +1096,21 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                IDText4.setText("");
+                IDText5.setText("");
+                IDText6.setText("");
+                IDText7.setText("");
+                courseSemesterComboBox5.setSelectedItem("2019-2020秋季");
+
+
+            });
+            panel.add(clearInputInfoButton);
         }
         return panel;
     }
@@ -995,7 +1143,12 @@ public class adminFrame extends JFrame implements Exit {
                 int_args = new String[1];
                 int_args[0] = studentIDText5.getText();
                 try {
-                    conn.delete("学生",int_args);
+                    if(conn.delete("学生",int_args)){
+                        JOptionPane.showMessageDialog(null, "删除成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -1006,6 +1159,17 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                studentIDText5.setText("");
+
+
+            });
+            panel.add(clearInputInfoButton);
         }
         else if(mode==2)
         {
@@ -1026,7 +1190,12 @@ public class adminFrame extends JFrame implements Exit {
                 int_args = new String[1];
                 int_args[0] = teacherIDText5.getText();
                 try {
-                    conn.delete("教师",int_args);
+                    if(conn.delete("教师",int_args)){
+                        JOptionPane.showMessageDialog(null, "删除成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -1038,6 +1207,16 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                teacherIDText5.setText("");
+            });
+            panel.add(clearInputInfoButton);
+
         }
         else if(mode==3)
         {
@@ -1091,7 +1270,12 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[1] = teacherIDText6.getText();
                 int_args[2] = courseSemesterComboBox3.getSelectedItem().toString();
                 try {
-                    conn.delete("班级",int_args);
+                    if(conn.delete("班级",int_args)){
+                        JOptionPane.showMessageDialog(null, "删除成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -1103,6 +1287,20 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                courseText.setText("");
+                teacherIDText6.setText("");
+                courseSemesterComboBox3.setSelectedItem("2019-2020秋季");
+
+
+            });
+            panel.add(clearInputInfoButton);
+
         }
         else if(mode==4)
         {
@@ -1120,7 +1318,6 @@ public class adminFrame extends JFrame implements Exit {
             stuIDLabel6.setFont(font);
             stuIDLabel6.setPreferredSize(new Dimension(50,30));
             panel.add(stuIDLabel6);
-
             JTextField stuIDText6 = new JTextField("");
             stuIDText6.setFont(font);
             stuIDText6.setPreferredSize(new Dimension(50,30));
@@ -1156,7 +1353,12 @@ public class adminFrame extends JFrame implements Exit {
                 int_args[1] = stuIDText6.getText();
                 int_args[2] = courseSemesterComboBox4.getSelectedItem().toString();
                 try {
-                    conn.delete("选课",int_args);
+                    if(conn.delete("选课",int_args)){
+                        JOptionPane.showMessageDialog(null, "删除成功！");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+                    }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
                 } catch (SQLException ex) {
@@ -1168,6 +1370,20 @@ public class adminFrame extends JFrame implements Exit {
             checkButton.setContentAreaFilled(false);
             checkButton.setFont(font);
             panel.add(checkButton);
+
+            JButton clearInputInfoButton = new JButton("重置");
+            clearInputInfoButton.setFont(font);
+            clearInputInfoButton.setPreferredSize(new Dimension(60,30));
+            clearInputInfoButton.setContentAreaFilled(false);
+            clearInputInfoButton.addActionListener(e->{
+                courseText.setText("");
+                stuIDText6.setText("");
+                courseSemesterComboBox4.setSelectedItem("2019-2020秋季");
+
+
+            });
+            panel.add(clearInputInfoButton);
+
         }
 
         return panel;
