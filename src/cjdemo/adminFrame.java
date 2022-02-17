@@ -19,9 +19,10 @@ public class adminFrame extends JFrame implements Exit {
     JPanel showPanel;
     JPanel showCourseGradePanel, tablePanel, queryInfoPanel, queryTeacherInfoPanel, queryCourseInfoPanel, showStudentQueryPanel, showTeacherQueryPanel, showCourseQueryPanel;
     JTabbedPane showSearchInfoPanel, showAddInfoPanel,showDropInfoPanel;
-    JLabel teacherIDLabel1, courseIDLabel, studentIDLabel, studentAdmissionDateLabel, studentNameLabel, studentGenderLabel, studentFacultyLabel, teacherIDLabel2, teacherNameLabel, teacherFacultyLabel, courseIDLabel2, courseCreditLabel, teacherIDLabel3, courseNameLabel2, courseSemesterLabel, courseTimeLabel;
+    JLabel teacherIDLabel1, courseIDLabel, studentIDLabel, studentAdmissionDateLabel, studentNameLabel, studentGenderLabel, studentFacultyLabel, teacherIDLabel2, teacherNameLabel, teacherFacultyLabel,
+            courseIDLabel2, courseCreditLabel, teacherIDLabel3, courseNameLabel2, courseSemesterLabel, courseTimeLabel, courseSemesterLabel2, courseSemesterLabel3, courseSemesterLabel4, courseSemesterLabel5;
     JTextField teacherIDText1, courseIDText, studentIDText1, studentAdmissionDateText, studentNameText1, teacherIDText2, teacherNameText, courseIDText2, courseCreditText, teacherIDText3, courseNameText2, courseTimeText;
-    JComboBox studentGenderComboBox, studentFacultyComboBox, teacherFacultyComboBox, courseSemesterComboBox;
+    JComboBox studentGenderComboBox, studentFacultyComboBox, teacherFacultyComboBox, courseSemesterComboBox, courseSemesterComboBox2, courseSemesterComboBox3, courseSemesterComboBox4, courseSemesterComboBox5;
     JButton checkCouseGradeQueryInfoButton, checkStudentQueryInfoButton, checkTeacherQueryInfoButton, checkCourseQueryInfoButton;
     JTable cjtable;
     Font font;
@@ -276,13 +277,32 @@ public class adminFrame extends JFrame implements Exit {
                 courseIDText.setPreferredSize(new Dimension(80, 30));
                 panel.add(courseIDText);
 
+                courseSemesterLabel2 = new JLabel("学期");
+                courseSemesterLabel2.setFont(font);
+                courseSemesterLabel2.setPreferredSize(new Dimension(50, 30));
+                panel.add(courseSemesterLabel2);
+
+                courseSemesterComboBox2 = new JComboBox();
+                courseSemesterComboBox2.setSelectedItem("2019-2020秋季");
+                DBConnector t = new DBConnector();
+                String[] sl = t.getSemeList();
+                for(int i=0;i< sl.length;i++){
+                    courseSemesterComboBox2.addItem(sl[i]);
+                    if(Objects.equals(sl[i + 1], null)){
+                        break;
+                    }
+                }
+                courseSemesterComboBox2.setFont(font);
+                courseSemesterComboBox2.setPreferredSize(new Dimension(120, 30));
+                panel.add(courseSemesterComboBox2);
+
                 checkCouseGradeQueryInfoButton = new JButton("确认");
                 checkCouseGradeQueryInfoButton.setFont(font);
                 checkCouseGradeQueryInfoButton.setPreferredSize(new Dimension(100, 30));
                 checkCouseGradeQueryInfoButton.setContentAreaFilled(false);
                 checkCouseGradeQueryInfoButton.addActionListener(e -> {
                             System.out.println("用户输入的教师工号为：" + teacherIDText1.getText() + " 用户输入的课程编号为：" + courseIDText.getText());
-                            cjtable = getJTable(teacherIDText1.getText(), courseIDText.getText());
+                            cjtable = getJTable(teacherIDText1.getText(), courseIDText.getText(), courseSemesterComboBox2.getSelectedItem().toString());
                             DefaultTableCellRenderer r = new DefaultTableCellRenderer();
                             r.setHorizontalAlignment(JLabel.CENTER);
                             cjtable.setDefaultRenderer(Object.class, r);
@@ -542,8 +562,8 @@ public class adminFrame extends JFrame implements Exit {
                 courseSemesterComboBox = new JComboBox();
                 courseSemesterComboBox.setSelectedItem("任意");
                 courseSemesterComboBox.addItem("任意");
-                DBConnector t = new DBConnector();
-                String[] sl = t.getSemeList();
+                t = new DBConnector();
+                sl = t.getSemeList();
                 for(int i=0;i< sl.length;i++){
                     courseSemesterComboBox.addItem(sl[i]);
                     if(Objects.equals(sl[i + 1], null)){
@@ -871,10 +891,72 @@ public class adminFrame extends JFrame implements Exit {
             IDText4.setPreferredSize(new Dimension(50,30));
             panel.add(IDText4);
 
+            JLabel IDLabel5 = new JLabel("课程编号");
+            IDLabel5.setFont(font);
+            IDLabel5.setPreferredSize(new Dimension(50,30));
+            panel.add(IDLabel5);
+
+            JTextField IDText5 = new JTextField("");
+            IDText5.setFont(font);
+            IDText5.setPreferredSize(new Dimension(50,30));
+            panel.add(IDText5);
+
+            JLabel IDLabel6 = new JLabel("平时成绩");
+            IDLabel6.setFont(font);
+            IDLabel6.setPreferredSize(new Dimension(50,30));
+            panel.add(IDLabel6);
+
+            JTextField IDText6 = new JTextField("");
+            IDText6.setFont(font);
+            IDText6.setPreferredSize(new Dimension(50,30));
+            panel.add(IDText6);
+
+            JLabel IDLabel7 = new JLabel("考试成绩");
+            IDLabel7.setFont(font);
+            IDLabel7.setPreferredSize(new Dimension(50,30));
+            panel.add(IDLabel7);
+
+            JTextField IDText7 = new JTextField("");
+            IDText7.setFont(font);
+            IDText7.setPreferredSize(new Dimension(50,30));
+            panel.add(IDText7);
+
+            courseSemesterLabel4 = new JLabel("学期");
+            courseSemesterLabel4.setFont(font);
+            courseSemesterLabel4.setPreferredSize(new Dimension(50, 30));
+            panel.add(courseSemesterLabel4);
+
+            courseSemesterComboBox5 = new JComboBox();
+            courseSemesterComboBox5.setSelectedItem("2019-2020秋季");
+            DBConnector t = new DBConnector();
+            String[] sl = t.getSemeList();
+            for(int i=0;i< sl.length;i++){
+                courseSemesterComboBox5.addItem(sl[i]);
+                if(Objects.equals(sl[i + 1], null)){
+                    break;
+                }
+            }
+            courseSemesterComboBox5.setFont(font);
+            courseSemesterComboBox5.setPreferredSize(new Dimension(120, 30));
+            panel.add(courseSemesterComboBox5);
+
             JButton checkButton = new JButton("确认");
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
-
+                String[] int_args = new String[5];
+                String[] str_args = new String[0];
+                int_args[0] = IDText4.getText();
+                int_args[1] = IDText5.getText();
+                int_args[2] = IDText6.getText();
+                int_args[3] = IDText7.getText();
+                int_args[4] = courseSemesterComboBox5.getSelectedItem().toString();
+                try {
+                    conn.insert("选课",int_args,str_args);
+                } catch (CustomException ex) {
+                    ex.printStackTrace();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 System.out.println(IDText4.getText());
             });
             checkButton.setPreferredSize(new Dimension(60,30));
@@ -979,15 +1061,35 @@ public class adminFrame extends JFrame implements Exit {
             teacherIDText6.setPreferredSize(new Dimension(50,30));
             panel.add(teacherIDText6);
 
+            courseSemesterLabel3 = new JLabel("学期");
+            courseSemesterLabel3.setFont(font);
+            courseSemesterLabel3.setPreferredSize(new Dimension(50, 30));
+            panel.add(courseSemesterLabel3);
+
+            courseSemesterComboBox3 = new JComboBox();
+            courseSemesterComboBox3.setSelectedItem("2019-2020秋季");
+            DBConnector t = new DBConnector();
+            String[] sl = t.getSemeList();
+            for(int i=0;i< sl.length;i++){
+                courseSemesterComboBox3.addItem(sl[i]);
+                if(Objects.equals(sl[i + 1], null)){
+                    break;
+                }
+            }
+            courseSemesterComboBox3.setFont(font);
+            courseSemesterComboBox3.setPreferredSize(new Dimension(120, 30));
+            panel.add(courseSemesterComboBox3);
+
 
 
             JButton checkButton = new JButton("确认");
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
-                System.out.println(courseText.getText()+teacherIDText6.getText());
-                int_args = new String[2];
+                System.out.println(courseText.getText()+teacherIDText6.getText()+courseSemesterComboBox3.getSelectedItem().toString());
+                int_args = new String[3];
                 int_args[0] = courseText.getText();
                 int_args[1] = teacherIDText6.getText();
+                int_args[2] = courseSemesterComboBox3.getSelectedItem().toString();
                 try {
                     conn.delete("班级",int_args);
                 } catch (CustomException ex) {
@@ -1004,7 +1106,7 @@ public class adminFrame extends JFrame implements Exit {
         }
         else if(mode==4)
         {
-            JLabel courseLabel = new JLabel("课号");
+            JLabel courseLabel = new JLabel("学号");
             courseLabel.setFont(font);
             courseLabel.setPreferredSize(new Dimension(50,30));
             panel.add(courseLabel);
@@ -1014,7 +1116,7 @@ public class adminFrame extends JFrame implements Exit {
             courseText.setPreferredSize(new Dimension(50,30));
             panel.add(courseText);
 
-            JLabel stuIDLabel6 = new JLabel("学号");
+            JLabel stuIDLabel6 = new JLabel("课程编号");
             stuIDLabel6.setFont(font);
             stuIDLabel6.setPreferredSize(new Dimension(50,30));
             panel.add(stuIDLabel6);
@@ -1024,15 +1126,35 @@ public class adminFrame extends JFrame implements Exit {
             stuIDText6.setPreferredSize(new Dimension(50,30));
             panel.add(stuIDText6);
 
+            courseSemesterLabel4 = new JLabel("学期");
+            courseSemesterLabel4.setFont(font);
+            courseSemesterLabel4.setPreferredSize(new Dimension(50, 30));
+            panel.add(courseSemesterLabel4);
+
+            courseSemesterComboBox4 = new JComboBox();
+            courseSemesterComboBox4.setSelectedItem("2019-2020秋季");
+            DBConnector t = new DBConnector();
+            String[] sl = t.getSemeList();
+            for(int i=0;i< sl.length;i++){
+                courseSemesterComboBox4.addItem(sl[i]);
+                if(Objects.equals(sl[i + 1], null)){
+                    break;
+                }
+            }
+            courseSemesterComboBox4.setFont(font);
+            courseSemesterComboBox4.setPreferredSize(new Dimension(120, 30));
+            panel.add(courseSemesterComboBox4);
+
 
 
             JButton checkButton = new JButton("确认");
             checkButton.addActionListener(e -> {
                 conn = new DBConnector();
-                System.out.println(courseText.getText()+stuIDText6.getText());
-                int_args = new String[2];
+                System.out.println(courseText.getText()+stuIDText6.getText()+courseSemesterComboBox4.getSelectedItem().toString());
+                int_args = new String[3];
                 int_args[0] = courseText.getText();
                 int_args[1] = stuIDText6.getText();
+                int_args[2] = courseSemesterComboBox4.getSelectedItem().toString();
                 try {
                     conn.delete("选课",int_args);
                 } catch (CustomException ex) {
@@ -1133,11 +1255,12 @@ public class adminFrame extends JFrame implements Exit {
     /**
      * @function : 构造成绩查询表格。
      */
-    public JTable getJTable(String teacherID, String courseID) {
+    public JTable getJTable(String teacherID, String courseID, String courseSemester) {
         int_args = new String[2];
-        str_args = new String[0];
+        str_args = new String[1];
         int_args[0] = ""+teacherID;
         int_args[1] = ""+courseID;
+        str_args[0] = courseSemester;
         conn = new DBConnector();
         Vector<Object> addtional = new Vector();
         try {

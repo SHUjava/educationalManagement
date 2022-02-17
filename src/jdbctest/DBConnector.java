@@ -215,7 +215,7 @@ public class DBConnector {
                 System.out.println(sql);
                 break;
             case "管理员班级成绩查询":
-                if (int_args.length != 2 || str_args.length != 0) {// int_args[] = teacher_id, course_order
+                if (int_args.length != 2 || str_args.length != 1) {// int_args[] = teacher_id, course_order
                     throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length + "123456");
                 }
                 sql = "select used_score.课程名, used_score.学分, used_score.学号, student.student_name, " +
@@ -223,6 +223,7 @@ public class DBConnector {
                         "from used_score, student, course\n" +
                         "where used_score.工号 = '" + int_args[0] +
                         "' and used_score.课程编号 ='"+ int_args[1] +
+                        "' and course.course_semester ='"+ str_args[0] +
                         "' and used_score.学号 =student.student_id and used_score.课程编号 = course.course_order " +
                         "order by used_score.学号;";
                 rs = stmt.executeQuery(sql);
@@ -965,7 +966,7 @@ public class DBConnector {
                 stmt.execute(sql);
                 break;
             case "选课":
-                if(int_args.length != 4 || str_args.length != 0){//学号、课程id、平时成绩、考试成绩
+                if(int_args.length != 5 || str_args.length != 0){//学号、课程编号、平时成绩、考试成绩、学期
                     throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
                 }
                 if (Objects.equals(int_args[2], "")){
@@ -980,10 +981,16 @@ public class DBConnector {
                 else{
                     int_args[3] = "'"+int_args[3]+"'";
                 }
-
+                sql = "select course_id from course where course_order = '"+int_args[1]+"' and course_semester = '"+int_args[4]+"';";
+                rs = stmt.executeQuery(sql);
+                int course_id=0;
+                while (rs.next()) {
+                    course_id = rs.getInt("course_id");
+                }
+                rs.close();
                 sql = "INSERT INTO `educationalmanagementdb`.`score` " +
                         "(`student_id`, `course_id`, `usual_score`, `test_score`) " +
-                        "VALUES ('"+int_args[0]+"', '"+int_args[1]+"', "+int_args[2]+", "+int_args[3]+");";
+                        "VALUES ('"+int_args[0]+"', '"+course_id+"', "+int_args[2]+", "+int_args[3]+");";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
@@ -1006,9 +1013,11 @@ public class DBConnector {
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
-            case "选课"://学号、课号
-                if (id.length == 2) {
-                    sql = "delete from score where student_id = '" + id[0] + "' and course_id = '" + id[1] + "';";
+            case "选课"://学号、课程编号、学期
+                if (id.length == 3) {
+                    sql = "delete from score where student_id = '"+id[0]+"' and course_id in (select\n" +
+                            "course_id from course\n" +
+                            "where course_order = '"+id[1]+"' and course_semester = '"+id[2]+"');";
                 }
                 else{
                     sql = "delete from score where student_id = '"+id[0]+"';";
@@ -1030,12 +1039,13 @@ public class DBConnector {
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
-            case"班级"://课号、工号
+            case"班级"://课号、工号、学期
                 System.out.println("正在删除班级");
-                str_args = new String[0];
+                str_args = new String[1];
                 int_args = new String[2];
                 int_args[0] = ""+id[1];
                 int_args[1] = ""+id[0];
+                str_args[0] = id[2];
                 System.out.println(Arrays.toString(int_args));
                 System.out.println(Arrays.toString(str_args));
                 Vector<Object> course_id = new Vector<>();
@@ -1047,7 +1057,7 @@ public class DBConnector {
                     this.delete("选课", choose_id);
                 }
                 System.out.println("已删除该班级学生");
-                sql = "delete from course where course_id = "+ course_id.get(4) +";";
+                sql = "delete from course where course_order = '"+id[0]+"' and teacher_id = '"+id[1]+"' and course_semester = '"+id[2]+"';";
                 System.out.println(sql);
                 stmt.execute(sql);
                 break;
