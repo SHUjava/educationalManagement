@@ -167,11 +167,11 @@ public class Chart {
         this.order = course;
         frame = null;
     }
-    public static DefaultPieDataset getDataset3(int teacherID, String course_order ) throws SQLException, CustomException {
+    public static DefaultPieDataset getDataset3(int teacherID, String course, String course_semester ) throws SQLException, CustomException {
         //获取班级成绩分布数据
         DefaultPieDataset ds = new DefaultPieDataset();
         DBConnector test = new DBConnector();
-        int[] distribution = test.teacherGradeAnalysisPicture(teacherID,course_order);
+        int[] distribution = test.teacherGradeAnalysisPicture(teacherID,course,course_semester);
         ds.setValue(">90", distribution[0]);
         ds.setValue("80~90", distribution[1]);
         ds.setValue("70~80", distribution[2]);
@@ -197,7 +197,7 @@ public class Chart {
         DefaultPieDataset ds=null;
 //        System.out.println(1);
         try {
-            ds = getDataset3(id, new String(String.valueOf(order)));
+            ds = getDataset3(id, new String(String.valueOf(order)),new String(String.valueOf(semester)));
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (CustomException e) {
