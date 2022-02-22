@@ -15,8 +15,8 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    static final String PASS = "Zx010426";
-    //static final String PASS = "Zbb123150@";
+//    static final String PASS = "Zx010426";
+    static final String PASS = "Zbb123150@";
     //static final String PASS = "yang0417";
 //static final String PASS = "1240863915gg";
     Connection conn = null;
@@ -1366,7 +1366,7 @@ public class DBConnector {
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if (int_args.length != 1 || str_args.length != 1) {//工号  课程名称\课程编号
+        if (int_args.length != 1 || str_args.length != 2) {//工号  课程名称\课程编号
             throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
         }
 //        sql = "select course_order from course where teacher_id = '" + int_args[0] +
@@ -1378,23 +1378,26 @@ public class DBConnector {
 //        rs.next();
 //        int course_order = rs.getInt("course_order");
         int course_order;
-        String reg="[0-9]{8}";
-        if(!str_args[0].matches(reg)){
-            sql = "select course_order from course where course_name = '" + str_args[0] + "';\n";
-            rs = stmt.executeQuery(sql);
-            System.out.println(sql);
-            rs.next();
-            course_order = rs.getInt("course_order");
-        }
-        else{
-            course_order=Integer.parseInt(str_args[0]);
-        }
+        String reg="[0-9]{7}";
+//        if(!str_args[0].matches(reg)){
+//            sql = "select course_order from course where course_name = '" + str_args[0] + "';\n";
+//            rs = stmt.executeQuery(sql);
+//            System.out.println(sql);
+//            rs.next();
+//            course_order = rs.getInt("course_order");
+//        }
+//        else{
+//            course_order=Integer.parseInt(str_args[0]);
+//        }
 //        rs.close();
+//
+        course_order=Integer.parseInt(str_args[0]);
+
         sql="select avg(成绩)\n" +
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + str_args[1] +
                 "';\n";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
@@ -1407,7 +1410,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + str_args[1] +
                 "';\n";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
@@ -1420,7 +1423,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + str_args[1] +
                 "' and 成绩 >= 90 ;\n";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
@@ -1435,7 +1438,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + str_args[1] +
                 "' and 成绩 < 60 ;\n";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
@@ -1449,7 +1452,7 @@ public class DBConnector {
                 "from used_score, student\n" +
                 "where used_score.工号 = '" + int_args[0] +
                 "' and used_score.课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + str_args[1] +
                 "'\n" +
                 "and used_score.学号 = student.student_id order by used_score.成绩;";
         System.out.println(sql);
@@ -1493,7 +1496,7 @@ public class DBConnector {
 
 
     }
-    public int[] teacherGradeAnalysisPicture(int teacherID, String course) throws CustomException, SQLException {
+    public int[] teacherGradeAnalysisPicture(int teacherID, String course,String semester) throws CustomException, SQLException {
         //教师课程成绩分析报告图片部分，包括输出班级成绩分布饼状图
         //course处可输入课程学期或课程号
         String sql;
@@ -1509,21 +1512,23 @@ public class DBConnector {
 //        rs.close();
         int course_order;
         String reg="[0-9]{8}";
-        if(!course.matches(reg)){
-            sql = "select course_order from course where course_name = '" + course + "';\n";
-            rs = stmt.executeQuery(sql);
-            System.out.println(sql);
-            rs.next();
-            course_order = rs.getInt("course_order");
-        }
-        else{
-            course_order=Integer.parseInt(course);
-        }
+//        if(!course.matches(reg)){
+//            sql = "select course_order from course where course_name = '" + course + "';\n";
+//            rs = stmt.executeQuery(sql);
+//            System.out.println(sql);
+//            rs.next();
+//            course_order = rs.getInt("course_order");
+//        }
+//        else{
+//            course_order=Integer.parseInt(course);
+//        }
+        course_order=Integer.parseInt(course);
+
         sql="select count(成绩) as 人数\n" +
                 "from used_score\n" +
                 "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + semester +
                 "' and 成绩 >= 90 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
@@ -1533,7 +1538,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + semester +
                 "' and 成绩 >= 80 and 成绩 < 90 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
@@ -1543,7 +1548,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + semester +
                 "' and 成绩 >= 70 and 成绩 < 80 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
@@ -1553,7 +1558,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + semester +
                 "' and 成绩 >= 60 and 成绩 < 70 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();
@@ -1563,7 +1568,7 @@ public class DBConnector {
                 "from used_score\n" +
                 "where 工号 = '" + teacherID +
                 "' and 课程编号 ='" + course_order +
-                "' and 学期 ='" + this.seme +
+                "' and 学期 ='" + semester +
                 "' and 成绩 < 60 ;\n";
         rs = stmt.executeQuery(sql);
         rs.next();

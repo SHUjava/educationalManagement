@@ -623,13 +623,13 @@ public class teacherFrame extends JFrame implements Exit {
         else if(i==2){
             Chart chart = new Chart(id,semesterText2.getSelectedItem().toString(),Integer.parseInt(courseNameText4.getText()));
 //            System.out.println(0);
-            panel = chart.teacherGradeAnalysis(id,courseNameText4.getText());
+            panel = chart.teacherGradeAnalysis(id,courseNameText4.getText(),semesterText2.getSelectedItem().toString());
         }
         else if(i==3)
         {
             String[] info = new String[3];
             int_args1 = new int[]{id};
-            str_args = new String[]{courseNameText4.getText()};
+            str_args = new String[]{courseNameText4.getText(),semesterText2.getSelectedItem().toString()};
             try {
                 data = conn.teacherGradeAnalysisText(int_args1,str_args,info);
                 System.out.println(info[0]+info[1]+info[2]);
