@@ -15,9 +15,11 @@ public class clearPWFrame extends JFrame implements Exit {
         this.setIconImage(imageIcon.getImage().getScaledInstance(100, 140, 100));
         this.setTitle("重置密码");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setBounds(100, 100, 240, 200);
+//        this.setBounds(100, 100, 240, 200);
         this.setSize(240, 200);
-        this.setLocation(100, 100);
+        this.setLocationRelativeTo(null);//居中显示
+
+//        this.setLocation(100, 100);
         this.setLayout(new BorderLayout(5, 20));
         ((JPanel) this.getContentPane()).setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
 

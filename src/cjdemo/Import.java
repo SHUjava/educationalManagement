@@ -21,9 +21,9 @@ public class Import {
     String courseName;
     String courseTime;
 
-    public void setCourse(String cn, String ct) {
+    public void setCourse(String cn) {
         courseName = cn;
-        courseTime = ct;
+//        courseTime = ct;
     }
 
     public Import(int id) {

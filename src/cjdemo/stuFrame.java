@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import jdbctest.DBConnector;
 import jdbctest.CustomException;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 import org.jfree.chart.ChartPanel;
 
 /**
@@ -55,7 +56,9 @@ public class stuFrame extends JFrame implements Exit {
         this.setVisible(true);
 
         this.setSize(700, 600);
-        this.setLocation(100, 100);
+        this.setLocationRelativeTo(null);//居中显示
+
+//        this.setLocation(100, 100);
         this.setLayout(new BorderLayout(5, 20));
         ((JPanel) this.getContentPane()).setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
 
@@ -76,22 +79,26 @@ public class stuFrame extends JFrame implements Exit {
         stuPanel.add(stuInfo);
 
         JButton changePW = new JButton("修改密码");
+        changePW.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+
         changePW.addActionListener(e -> {
             JFrame frame = new changePWFrame(1, this.id, this);
 //            dispose();
         });
         changePW.setPreferredSize(new Dimension(100, 30));
         changePW.setFont(font);
-        changePW.setContentAreaFilled(false);
+//        changePW.setContentAreaFilled(false);
         stuPanel.add(changePW);
 
         JButton exitButton = new JButton("安全退出");
+        exitButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+
         exitButton.addActionListener(e -> {
             doExit();
         });
         exitButton.setPreferredSize(new Dimension(100, 30));
         exitButton.setFont(font);
-        exitButton.setContentAreaFilled(false);
+//        exitButton.setContentAreaFilled(false);
         stuPanel.add(exitButton);
 
         panel_show = new JPanel();
@@ -115,7 +122,11 @@ public class stuFrame extends JFrame implements Exit {
         this.add(panel_function, "West");
 
         JButton buttonQuery = new JButton("成绩查询");
-        buttonQuery.setContentAreaFilled(false);
+//        buttonQuery.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+
+        buttonQuery.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
+//        buttonQuery.setContentAreaFilled(false);
         buttonQuery.setFont(font);
         buttonQuery.setPreferredSize(new Dimension(90, 30));
 
@@ -193,7 +204,9 @@ public class stuFrame extends JFrame implements Exit {
          * @author: YangJunhao
          */
         JButton buttonQueryAll = new JButton("成绩大表");
-        buttonQueryAll.setContentAreaFilled(false);
+        buttonQueryAll.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
+//        buttonQueryAll.setContentAreaFilled(false);
         buttonQueryAll.setFont(font);
         buttonQueryAll.setPreferredSize(new Dimension(90, 30));
         buttonQueryAll.addActionListener((e) -> {
@@ -236,7 +249,9 @@ public class stuFrame extends JFrame implements Exit {
          * @author: YangJunhao
          */
         JButton buttonHistory = new JButton("绩点走势");
-        buttonHistory.setContentAreaFilled(false);
+        buttonHistory.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
+//        buttonHistory.setContentAreaFilled(false);
         buttonHistory.setFont(font);
         buttonHistory.setPreferredSize(new Dimension(90, 30));
         buttonHistory.addActionListener((e) -> {
@@ -262,7 +277,9 @@ public class stuFrame extends JFrame implements Exit {
          * @author: YangJunhao
          */
         JButton buttonRanking = new JButton("成绩排名");
-        buttonRanking.setContentAreaFilled(false);
+        buttonRanking.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
+//        buttonRanking.setContentAreaFilled(false);
         buttonRanking.setFont(font);
         buttonRanking.setPreferredSize(new Dimension(90, 30));
         buttonRanking.addActionListener((e) -> {

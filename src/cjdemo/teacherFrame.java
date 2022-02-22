@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import jdbctest.CustomException;
 import jdbctest.DBConnector;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 import org.jfree.chart.ChartPanel;
 
 public class teacherFrame extends JFrame implements Exit {
@@ -48,12 +49,14 @@ public class teacherFrame extends JFrame implements Exit {
         //添加图标校徽
         ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
         this.setIconImage(imageIcon.getImage().getScaledInstance(100, 140, 100));
-        this.setBounds(100, 100, 1000, 800);
+//        this.setBounds(100, 100, 1000, 800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
 
         this.setSize(700, 600);
-        this.setLocation(100, 100);
+        this.setLocationRelativeTo(null);//居中显示
+
+//        this.setLocation(100, 100);
         //采用Border布局，水平间距50，垂直间距5
         this.setLayout(new BorderLayout(5, 20));
         this.setResizable(false);
@@ -81,9 +84,11 @@ public class teacherFrame extends JFrame implements Exit {
          * @function: 创建修改密码的按钮changePWButton
          */
         JButton changePWButton = new JButton("修改密码");
+        changePWButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+
         changePWButton.setPreferredSize(new Dimension(100, 30));
         changePWButton.setFont(font);
-        changePWButton.setContentAreaFilled(false);
+//        changePWButton.setContentAreaFilled(false);
         teacherPanel.add(changePWButton);
         changePWButton.addActionListener(e->{
             JFrame frame = new changePWFrame(0,this.id,this);
@@ -94,6 +99,8 @@ public class teacherFrame extends JFrame implements Exit {
          * @function: 创建安全退出的按钮exitButton.
          */
         JButton exitButton = new JButton("安全退出");
+        exitButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -102,7 +109,7 @@ public class teacherFrame extends JFrame implements Exit {
         });
         exitButton.setPreferredSize(new Dimension(100, 30));
         exitButton.setFont(font);
-        exitButton.setContentAreaFilled(false);
+//        exitButton.setContentAreaFilled(false);
         teacherPanel.add(exitButton);
 
         /**
@@ -122,6 +129,7 @@ public class teacherFrame extends JFrame implements Exit {
         this.add(showPanel,"Center");
 
         JButton courseStuQueryButton = new JButton("学生查询");
+        courseStuQueryButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
         courseStuQueryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -133,7 +141,7 @@ public class teacherFrame extends JFrame implements Exit {
             }
         });
         courseStuQueryButton.setFont(font);
-        courseStuQueryButton.setContentAreaFilled(false);
+//        courseStuQueryButton.setContentAreaFilled(false);
         courseStuQueryButton.setPreferredSize(new Dimension(90, 30));
         functionPanel.add(courseStuQueryButton);
 
@@ -152,9 +160,9 @@ public class teacherFrame extends JFrame implements Exit {
          * teacherIDLabel:教师工号标签；
          * teacherIDText:文本输入框接收用户输入的教师工号；
          */
-        JLabel courseIDLabel = new JLabel("课程编号");
+        JLabel courseIDLabel = new JLabel("课程名/编号");
         courseIDLabel.setFont(font);
-        courseIDLabel.setPreferredSize(new Dimension(60, 30));
+        courseIDLabel.setPreferredSize(new Dimension(65, 30));
         showStuPanel.add(courseIDLabel);
 
         JTextField courseIDText = new JTextField("");
@@ -207,6 +215,8 @@ public class teacherFrame extends JFrame implements Exit {
          * 为【录入成绩】按钮添加监听器，实现录入成绩功能
          */
         JButton enterGradeButton = new JButton("录入成绩");
+        enterGradeButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
         enterGradeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -219,7 +229,7 @@ public class teacherFrame extends JFrame implements Exit {
             }
         });
         enterGradeButton.setFont(font);
-        enterGradeButton.setContentAreaFilled(false);
+//        enterGradeButton.setContentAreaFilled(false);
         enterGradeButton.setPreferredSize(new Dimension(90, 30));
         functionPanel.add(enterGradeButton);
 
@@ -238,9 +248,9 @@ public class teacherFrame extends JFrame implements Exit {
          * courseNameLabel:课程名标签；
          * courseNameText:文本输入框接收用户输入的课程名；
          */
-        courseNameLabel = new JLabel("课程名");
+        courseNameLabel = new JLabel("课程名/编号");
         courseNameLabel.setFont(font);
-        courseNameLabel.setPreferredSize(new Dimension(45, 30));
+        courseNameLabel.setPreferredSize(new Dimension(65, 30));
         showEnterGradePanel.add(courseNameLabel);
 
         courseNameText1 = new JTextField("");
@@ -248,20 +258,20 @@ public class teacherFrame extends JFrame implements Exit {
         courseNameText1.setPreferredSize(new Dimension(60, 30));
         showEnterGradePanel.add(courseNameText1);
 
-        timeLabel = new JLabel("上课时间");
-        timeLabel.setFont(font);
-        timeLabel.setPreferredSize(new Dimension(60, 30));
-        showEnterGradePanel.add(timeLabel);
-
-        timeText3 = new JTextField("");
-        timeText3.setFont(font);
-        timeText3.setPreferredSize(new Dimension(80, 30));
-        showEnterGradePanel.add(timeText3);
+//        timeLabel = new JLabel("上课时间");
+//        timeLabel.setFont(font);
+//        timeLabel.setPreferredSize(new Dimension(60, 30));
+//        showEnterGradePanel.add(timeLabel);
+//
+//        timeText3 = new JTextField("");
+//        timeText3.setFont(font);
+//        timeText3.setPreferredSize(new Dimension(80, 30));
+//        showEnterGradePanel.add(timeText3);
 
         Import ipt = new Import(this.id);
         JButton buttonImport = ipt.getButtonImport();
         buttonImport.addActionListener(e -> {
-            ipt.setCourse(courseNameText1.getText(),timeText3.getText());
+            ipt.setCourse(courseNameText1.getText());
             ipt.startImport();
         });
         showEnterGradePanel.add(buttonImport);
@@ -273,9 +283,11 @@ public class teacherFrame extends JFrame implements Exit {
          * 为【成绩查询】按钮添加监听器，实现成绩查询功能
          */
         JButton queryGradeButton = new JButton("成绩查询");
+        queryGradeButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
         queryGradeButton.setPreferredSize(new Dimension(90, 30));
         queryGradeButton.setFont(font);
-        queryGradeButton.setContentAreaFilled(false);
+//        queryGradeButton.setContentAreaFilled(false);
         functionPanel.add(queryGradeButton);
         queryGradeButton.addActionListener(new ActionListener() {
             @Override
@@ -305,9 +317,9 @@ public class teacherFrame extends JFrame implements Exit {
          * courseNameLabel:课程名标签，classLabel:班级标签，stuIDLabel:学号标签；
          * courseNameText:文本输入框接收用户输入的课程名，classText:班级，stuIDText:学号；
          */
-        courseNameLabel2 = new JLabel("课程名");
+        courseNameLabel2 = new JLabel("课程名/编号");
         courseNameLabel2.setFont(font);
-        courseNameLabel2.setPreferredSize(new Dimension(45, 30));
+        courseNameLabel2.setPreferredSize(new Dimension(65, 30));
         showQueryGradePanel.add(courseNameLabel2);
 
         courseNameText2 = new JTextField("");
@@ -334,22 +346,22 @@ public class teacherFrame extends JFrame implements Exit {
         semesterText1.setPreferredSize(new Dimension(110, 30));
         showQueryGradePanel.add(semesterText1);
 
-        timeLabel1 = new JLabel("上课时间");
-        timeLabel1.setFont(font);
-        timeLabel1.setPreferredSize(new Dimension(60, 30));
-        showQueryGradePanel.add(timeLabel1);
-
-        timeText1 = new JTextField("");
-        timeText1.setFont(font);
-        timeText1.setPreferredSize(new Dimension(80, 30));
-        showQueryGradePanel.add(timeText1);
+//        timeLabel1 = new JLabel("上课时间");
+//        timeLabel1.setFont(font);
+//        timeLabel1.setPreferredSize(new Dimension(60, 30));
+//        showQueryGradePanel.add(timeLabel1);
+//
+//        timeText1 = new JTextField("");
+//        timeText1.setFont(font);
+//        timeText1.setPreferredSize(new Dimension(80, 30));
+//        showQueryGradePanel.add(timeText1);
 
         checkEnterInfoButton2= new JButton("确认");
         checkEnterInfoButton2.setFont(font);
         checkEnterInfoButton2.setPreferredSize(new Dimension(100, 30));
         checkEnterInfoButton2.setContentAreaFilled(false);
         checkEnterInfoButton2.addActionListener(e -> {
-            cjtable = getJTable(courseNameText2.getText(),semesterText1.getSelectedItem().toString(),timeText1.getText());
+            cjtable = getJTable(courseNameText2.getText(),semesterText1.getSelectedItem().toString());
             DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
@@ -387,6 +399,8 @@ public class teacherFrame extends JFrame implements Exit {
          * 为【修改成绩】按钮添加监听器，实现相关功能
          */
         JButton changeGradeButton = new JButton("修改成绩");
+        changeGradeButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
         changeGradeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -399,7 +413,7 @@ public class teacherFrame extends JFrame implements Exit {
         });
         changeGradeButton.setPreferredSize(new Dimension(90, 30));
         changeGradeButton.setFont(font);
-        changeGradeButton.setContentAreaFilled(false);
+//        changeGradeButton.setContentAreaFilled(false);
         functionPanel.add(changeGradeButton);
 
 
@@ -409,7 +423,7 @@ public class teacherFrame extends JFrame implements Exit {
          */
         showChangeGradePanel = new JPanel();
         showChangeGradePanel.setPreferredSize(new Dimension(500, 500));
-        showChangeGradePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 10));
+        showChangeGradePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 10));
         //默认不显示
         showChangeGradePanel.setVisible(false);
         showPanel.add(showChangeGradePanel, "East");
@@ -430,7 +444,7 @@ public class teacherFrame extends JFrame implements Exit {
         stuIDText2.setPreferredSize(new Dimension(80, 30));
         showChangeGradePanel.add(stuIDText2);
 
-        courseNameLabel = new JLabel("课程名");
+        courseNameLabel = new JLabel("课程名/编号");
         courseNameLabel.setFont(font);
         courseNameLabel.setPreferredSize(new Dimension(65, 30));
         showChangeGradePanel.add(courseNameLabel);
@@ -457,15 +471,15 @@ public class teacherFrame extends JFrame implements Exit {
         semesterText.setPreferredSize(new Dimension(110, 30));
         showChangeGradePanel.add(semesterText);
 
-        timeLabel = new JLabel("上课时间");
-        timeLabel.setFont(font);
-        timeLabel.setPreferredSize(new Dimension(60, 30));
-        showChangeGradePanel.add(timeLabel);
-
-        timeText = new JTextField("");
-        timeText.setFont(font);
-        timeText.setPreferredSize(new Dimension(60, 30));
-        showChangeGradePanel.add(timeText);
+//        timeLabel = new JLabel("上课时间");
+//        timeLabel.setFont(font);
+//        timeLabel.setPreferredSize(new Dimension(60, 30));
+//        showChangeGradePanel.add(timeLabel);
+//
+//        timeText = new JTextField("");
+//        timeText.setFont(font);
+//        timeText.setPreferredSize(new Dimension(60, 30));
+//        showChangeGradePanel.add(timeText);
 
         choiceLabel = new JLabel("成绩选择");
         choiceLabel.setFont(font);
@@ -522,6 +536,7 @@ public class teacherFrame extends JFrame implements Exit {
          * 为【成绩分析】按钮添加监听器，实现相关功能
          */
         JButton gradeAnalyzeButton = new JButton("成绩分析");
+        gradeAnalyzeButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
         gradeAnalyzeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -533,7 +548,7 @@ public class teacherFrame extends JFrame implements Exit {
             }
         });
         gradeAnalyzeButton.setFont(font);
-        gradeAnalyzeButton.setContentAreaFilled(false);
+//        gradeAnalyzeButton.setContentAreaFilled(false);
         gradeAnalyzeButton.setPreferredSize(new Dimension(90,30));
         functionPanel.add(gradeAnalyzeButton);
 
@@ -592,20 +607,26 @@ public class teacherFrame extends JFrame implements Exit {
             conn = new DBConnector();
             int_args1 = new int[]{id};
             str_args = new String[]{courseNameText4.getText(),semesterText2.getSelectedItem().toString()};
+
             try {
-                System.out.println(conn.dataTest(int_args1,str_args));
+                if(conn.dataTest(int_args1,str_args)){
+                    System.out.println(conn.dataTest(int_args1,str_args));
+                    JComponent panel1 = makeAnalyzePanel(1);
+                    showAnalyzePanel.addTab("条形图",panel1);
+                    JComponent panel2 = makeAnalyzePanel(2);
+                    showAnalyzePanel.addTab("饼状图",panel2);
+                    JComponent panel3 = makeAnalyzePanel(3);
+                    showAnalyzePanel.addTab("文本",panel3);
+                    showAnalyzePanel.validate();
+                    showAnalyzePanel.repaint();
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "出现异常，未查询出对应数据，请尝试检查筛选条件并重试");
+                    showAnalyzePanel.validate();
+                    showAnalyzePanel.repaint();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            JComponent panel1 = makeAnalyzePanel(1);
-            showAnalyzePanel.addTab("条形图",panel1);
-            JComponent panel2 = makeAnalyzePanel(2);
-            showAnalyzePanel.addTab("饼状图",panel2);
-            JComponent panel3 = makeAnalyzePanel(3);
-            showAnalyzePanel.addTab("文本",panel3);
-            showAnalyzePanel.validate();
-            showAnalyzePanel.repaint();
-
         });
         checkEnterInfoButton4.setFont(font);
         checkEnterInfoButton4.setPreferredSize(new Dimension(80, 30));
@@ -673,7 +694,7 @@ public class teacherFrame extends JFrame implements Exit {
     /**
      * @function : 构造成绩查询表格。
      */
-    public JTable getJTable(String cName,String semester,String time) {
+    public JTable getJTable(String cName,String semester) {
         int_args = new String[1];
         int_args[0] = new String(String.valueOf(id));
         str_args = new String[]{cName,semester};

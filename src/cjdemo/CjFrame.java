@@ -2,6 +2,7 @@ package cjdemo;
 
 import jdbctest.CustomException;
 import jdbctest.DBConnector;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,6 +99,7 @@ public class CjFrame extends JFrame implements Exit {
 
         //登录按钮组件
         JButton login_button = new JButton("登录");
+        login_button.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
         //向容器内添加登录按钮组件
 //        root_panel.add(login_button);
         this.add(login_button);
@@ -171,13 +173,15 @@ public class CjFrame extends JFrame implements Exit {
         radioButton1_test.setBounds(140,225,100,50);
         radioButton2_test.setBounds(260,225,100,50);
         radioButton3_test.setBounds(380,225,100,50);
-        login_button.setBounds(250,280,100,40);
+        login_button.setBounds(230,280,100,40);
 //        status.setBounds(140,340,320,50);
 
 
         //设置窗口大小
 //        this.setSize(100,60);
-        this.setBounds(700,300,550,500);
+//        this.setBounds(700,300,550,500);
+        this.setSize(550,450);
+        this.setLocationRelativeTo(null);//居中显示
 
         //设置窗口可显示
         this.setVisible(true);

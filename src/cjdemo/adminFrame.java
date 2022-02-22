@@ -2,6 +2,7 @@ package cjdemo;
 
 import jdbctest.CustomException;
 import jdbctest.DBConnector;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -37,12 +38,15 @@ public class adminFrame extends JFrame implements Exit {
         //添加图标校徽
         ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
         this.setIconImage(imageIcon.getImage().getScaledInstance(100, 140, 100));
-        this.setBounds(100, 100, 1000, 800);
+//        this.setBounds(100, 100, 1000, 800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.setResizable(false);
         this.setSize(700, 600);
-        this.setLocation(100, 100);
+
+        this.setLocationRelativeTo(null);//居中显示
+
+//        this.setLocation(100, 100);
         //采用Border布局，水平间距50，垂直间距5
         this.setLayout(new BorderLayout(5, 20));
         ((JPanel) this.getContentPane()).setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
@@ -71,6 +75,7 @@ public class adminFrame extends JFrame implements Exit {
          * @function: 创建安全退出的按钮exitButton.
          */
         JButton exitButton = new JButton("安全退出");
+        exitButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -79,7 +84,7 @@ public class adminFrame extends JFrame implements Exit {
         });
         exitButton.setPreferredSize(new Dimension(100, 30));
         exitButton.setFont(font);
-        exitButton.setContentAreaFilled(false);
+//        exitButton.setContentAreaFilled(false);
         adminPanel.add(exitButton);
 
         /**
@@ -103,6 +108,8 @@ public class adminFrame extends JFrame implements Exit {
          * 为【开始新学期】按钮添加监听器，实现开始新学期功能
          */
         JButton newSemeButton = new JButton("开始新学期");
+        newSemeButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
         newSemeButton.setPreferredSize(new Dimension(120, 30));
         newSemeButton.addActionListener(new ActionListener() {
             @Override
@@ -141,6 +148,8 @@ public class adminFrame extends JFrame implements Exit {
         functionPanel.add(newSemeButton);
 
         JButton clearPW = new JButton("重置密码");
+        clearPW.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
         clearPW.addActionListener(e -> {
             JFrame frame = new clearPWFrame(this);
 //            dispose();
@@ -157,6 +166,8 @@ public class adminFrame extends JFrame implements Exit {
 
 
         JButton searchInfoButton = new JButton("查询信息");
+        searchInfoButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
         searchInfoButton.addActionListener(e -> {
             showSearchInfoPanel.setVisible(true);
             showPanel.removeAll();
@@ -204,17 +215,19 @@ public class adminFrame extends JFrame implements Exit {
          * @function: 在functionPanel中创建并添加【新增信息】按钮addInfoButton.
          * 为【新增】按钮添加监听器，实现新增功能
          */
-        searchInfoButton = new JButton("新增信息");
-        searchInfoButton.addActionListener(e -> {
+        JButton addInfoButton = new JButton("新增信息");
+        addInfoButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
+        addInfoButton.addActionListener(e -> {
             showAddInfoPanel.setVisible(true);
             showPanel.removeAll();
             showPanel.add(showAddInfoPanel);
             showPanel.validate();
             showPanel.repaint();
         });
-        searchInfoButton.setFont(font);
-        searchInfoButton.setPreferredSize(new Dimension(120,30));
-        functionPanel.add(searchInfoButton);
+        addInfoButton.setFont(font);
+        addInfoButton.setPreferredSize(new Dimension(120,30));
+        functionPanel.add(addInfoButton);
 
         showAddInfoPanel = new JTabbedPane();
         showAddInfoPanel.setPreferredSize(new Dimension(500,400));
@@ -235,6 +248,8 @@ public class adminFrame extends JFrame implements Exit {
          * 为【删除】按钮添加监听器，实现新增功能
          */
         JButton dropInfoButton = new JButton("删除信息");
+        dropInfoButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
         dropInfoButton.addActionListener(e -> {
             showDropInfoPanel.setVisible(true);
             showPanel.removeAll();
