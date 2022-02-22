@@ -15,8 +15,8 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-//    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
+    static final String PASS = "Zx010426";
+//    static final String PASS = "Zbb123150@";
     //static final String PASS = "yang0417";
 //static final String PASS = "1240863915gg";
     Connection conn = null;
@@ -195,9 +195,21 @@ public class DBConnector {
                 if (int_args.length != 2 || str_args.length != 0) {// int_args[] = teacher_id, course_order
                     throw new CustomException("输入参数个数不正确" + int_args.length + str_args.length + "123456");
                 }
+                String reg="[0-9]{7}";
+                String course_order;
+                if(!int_args[1].matches(reg)){
+                    sql = "select course_order from course where course_name = '" + int_args[1] + "';\n";
+                    rs = stmt.executeQuery(sql);
+                    System.out.println(sql);
+                    rs.next();
+                    course_order = rs.getString("course_order");
+                }
+                else{
+                    course_order=int_args[1];
+                }
                 sql = "select used_score.学号, student.student_name from used_score, student\n" +
                         "where used_score.工号 = '" + int_args[0] +
-                        "' and used_score.课程编号 ='"+ int_args[1] +
+                        "' and used_score.课程编号 ='"+ course_order +
                         "' and used_score.学号 =student.student_id" +
                         " order by used_score.学号;";
                 System.out.println(sql);
@@ -446,7 +458,7 @@ public class DBConnector {
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     course_id = rs.getInt("course_id");
-                    int course_order = rs.getInt("course_order");
+                    course_order = rs.getString("course_order");
                     course_name = rs.getString("course_name");
                     int course_credit = rs.getInt("course_credit");
                     int teacher_id = rs.getInt("teacher_id");
@@ -466,26 +478,25 @@ public class DBConnector {
                 break;
 
             case "教师成绩查询":
-                if (int_args.length != 1 || str_args.length != 1) {//工号  课程名称\课程号
+                if (int_args.length != 1 || str_args.length != 2) {//工号  课程名称\课程号,学期
                     throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
                 }
-                int course_order;
-                String reg="[0-9]{8}";
+                reg="[0-9]{7}";
                 if(!str_args[0].matches(reg)){
                     sql = "select course_order from course where course_name = '" + str_args[0] + "';\n";
                     rs = stmt.executeQuery(sql);
                     System.out.println(sql);
                     rs.next();
-                    course_order = rs.getInt("course_order");
+                    course_order = rs.getString("course_order");
                 }
                 else{
-                    course_order=Integer.parseInt(str_args[0]);
+                    course_order=str_args[0];
                 }
                 sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
                         "from used_score, student\n" +
                         "where used_score.工号 = '" + int_args[0] +
                         "' and used_score.课程编号 ='" + course_order +
-                        "' and used_score.学期 ='"+ this.seme +
+                        "' and used_score.学期 ='"+ str_args[1] +
                         "'\n" +
                         "and used_score.`学号` = student.student_id order by used_score.学号;";
                 System.out.println(sql);
@@ -1113,7 +1124,7 @@ public class DBConnector {
             //工号，学号，修改后成绩，平时成绩/考试成绩  课程名称\课程号
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
         }
-        String reg="[0-9]{8}";
+        String reg="[0-9]{7}";
         String course_name;
         if(str_args[0].matches(reg)){
             sql = "select course_name from course where course_order = '" + str_args[0] + "';\n";
@@ -1127,12 +1138,18 @@ public class DBConnector {
         }
         sql = "select course_id from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + course_name +
-                "' and course_semester = '" + this.seme +
+                "' and course_semester = '" + seme +
                 "';\n";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
-        rs.next();
-        int course_id = rs.getInt("course_id");
+        int course_id;
+        if(rs.next()){
+            course_id = rs.getInt("course_id");
+        }
+        else{
+            System.out.println("修改失败");
+            return false;
+        }
         System.out.println(course_id);
         rs.close();
         String score_witch;
@@ -1243,7 +1260,7 @@ public class DBConnector {
             //工号  课程名称\课程号 平时成绩，考试成绩
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length+"   "+arg_args.length);
         }
-        String reg="[0-9]{8}";
+        String reg="[0-9]{7}";
         String course_name;
         if(str_args[0].matches(reg)){
             sql = "select course_name from course where course_order = '" + str_args[0] + "';\n";
@@ -1258,7 +1275,7 @@ public class DBConnector {
         sql = "select course_id, score.student_id as '学号' " +
                 "from score where score.course_id in(select course_id from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + course_name +
-                "' and course_semester = '" + this.seme +
+                "' and course_semester = '" + seme +
                 "');\n";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
@@ -1361,12 +1378,40 @@ public class DBConnector {
         return false;
     }
 
+    public boolean dataTest(int[] int_args, String[] str_args) throws SQLException {
+        ResultSet rs;
+        String sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
+                "from used_score, student\n" +
+                "where used_score.工号 = '" + int_args[0] +
+                "' and used_score.课程编号 ='" + str_args[0] +
+                "' and 学期 ='" + str_args[1] +
+                "'\n" +
+                "and used_score.学号 = student.student_id order by used_score.成绩;";
+        rs = stmt.executeQuery(sql);
+        int id = 0;
+        rs.next();
+        while (rs.next()&&id<10) {
+            id++;
+        }
+        System.out.println(id);
+        rs.close();
+        boolean test;
+        if(id==0){
+            test=false;
+        }
+        else{
+            test=true;
+        }
+        System.out.println("asdqwe"+test);
+        return test;
+    }
+
     public Object[][] teacherGradeAnalysisText(int[] int_args, String[] str_args,String[] returnInfo) throws CustomException, SQLException {
         //教师课程成绩分析报告文字部分，包括输出班级平均分、优秀率、挂科率、前十名表单
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if (int_args.length != 1 || str_args.length != 2) {//工号  课程名称\课程编号
+        if (int_args.length != 1 || str_args.length != 2) {//工号  课程名称\课程编号，学期
             throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
         }
 //        sql = "select course_order from course where teacher_id = '" + int_args[0] +
@@ -1378,7 +1423,7 @@ public class DBConnector {
 //        rs.next();
 //        int course_order = rs.getInt("course_order");
         int course_order;
-        String reg="[0-9]{7}";
+//        String reg="[0-9]{7}";
 //        if(!str_args[0].matches(reg)){
 //            sql = "select course_order from course where course_name = '" + str_args[0] + "';\n";
 //            rs = stmt.executeQuery(sql);
@@ -1477,6 +1522,7 @@ public class DBConnector {
             tmp.addElement(row);
         }
         rs.close();
+        System.out.println("id="+id);
         int row = tmp.size();
         if (row == 0){
             return new Object[0][0];
@@ -1496,7 +1542,7 @@ public class DBConnector {
 
 
     }
-    public int[] teacherGradeAnalysisPicture(int teacherID, String course,String semester) throws CustomException, SQLException {
+    public int[] teacherGradeAnalysisPicture(int teacherID, String course,String semester,String[] returnInfo) throws CustomException, SQLException {
         //教师课程成绩分析报告图片部分，包括输出班级成绩分布饼状图
         //course处可输入课程学期或课程号
         String sql;
@@ -1511,19 +1557,38 @@ public class DBConnector {
 //        int course_order = rs.getInt("course_order");
 //        rs.close();
         int course_order;
-        String reg="[0-9]{8}";
-//        if(!course.matches(reg)){
-//            sql = "select course_order from course where course_name = '" + course + "';\n";
-//            rs = stmt.executeQuery(sql);
-//            System.out.println(sql);
-//            rs.next();
-//            course_order = rs.getInt("course_order");
-//        }
-//        else{
-//            course_order=Integer.parseInt(course);
-//        }
-        course_order=Integer.parseInt(course);
-
+        String reg="[0-9]{7}";
+        if(!course.matches(reg)){
+            sql = "select course_order from course where course_name = '" + course + "';\n";
+            rs = stmt.executeQuery(sql);
+            System.out.println(sql);
+            rs.next();
+            course_order = rs.getInt("course_order");
+        }
+        else{
+            course_order=Integer.parseInt(course);
+        }
+//        course_order=Integer.parseInt(course);
+        sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
+                "from used_score, student\n" +
+                "where used_score.工号 = '" + teacherID +
+                "' and used_score.课程编号 ='" + course_order +
+                "' and 学期 ='" + semester +
+                "'\n" +
+                "and used_score.学号 = student.student_id order by used_score.成绩;";
+        System.out.println(sql);
+        rs = stmt.executeQuery(sql);
+        int id = 0;
+        while (rs.next()&&id<10) {
+            id++;
+        }
+        if(id==0){
+            returnInfo[0]="0";
+        }
+        else{
+            returnInfo[0]="1";
+        }
+        rs.close();
         sql="select count(成绩) as 人数\n" +
                 "from used_score\n" +
                 "where 工号 = '" + teacherID +

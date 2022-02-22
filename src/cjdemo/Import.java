@@ -63,11 +63,7 @@ public class Import {
         DBConnector t = new DBConnector();
         int[] int_args = new int[]{this.id};
         String[] str = null;
-        try {
-            str = new String[]{courseName, DBConnector.getSeme(), courseTime};
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        str = new String[]{courseName};
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setLocation(400, 250);
         fileChooser.setCurrentDirectory(new File("."));

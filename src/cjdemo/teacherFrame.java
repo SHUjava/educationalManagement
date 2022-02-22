@@ -500,7 +500,7 @@ public class teacherFrame extends JFrame implements Exit {
                 conn = new DBConnector();
                 int_args1 = new int[]{id,Integer.parseInt(stuIDText2.getText()),
                         Integer.parseInt(newGradeText.getText()),choiceComBox.getSelectedItem().toString().equals("平时成绩") ? 0 : 1};
-                str_args = new String[]{courseNameText3.getText(),semesterText.getSelectedItem().toString(),timeText.getText()};
+                str_args = new String[]{courseNameText3.getText()};
                 try {
                     if(conn.teacherScoreChange(int_args1,str_args)) {
                         JOptionPane.showMessageDialog(null, "成绩修改成功");
@@ -589,6 +589,14 @@ public class teacherFrame extends JFrame implements Exit {
 
             showAnalyzePanel.setVisible(true);
             showAnalyzePanel.removeAll();
+            conn = new DBConnector();
+            int_args1 = new int[]{id};
+            str_args = new String[]{courseNameText4.getText(),semesterText2.getSelectedItem().toString()};
+            try {
+                System.out.println(conn.dataTest(int_args1,str_args));
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             JComponent panel1 = makeAnalyzePanel(1);
             showAnalyzePanel.addTab("条形图",panel1);
             JComponent panel2 = makeAnalyzePanel(2);
@@ -627,7 +635,7 @@ public class teacherFrame extends JFrame implements Exit {
         }
         else if(i==3)
         {
-            String[] info = new String[3];
+            String[] info = new String[4];
             int_args1 = new int[]{id};
             str_args = new String[]{courseNameText4.getText(),semesterText2.getSelectedItem().toString()};
             try {
@@ -668,7 +676,7 @@ public class teacherFrame extends JFrame implements Exit {
     public JTable getJTable(String cName,String semester,String time) {
         int_args = new String[1];
         int_args[0] = new String(String.valueOf(id));
-        str_args = new String[]{cName,semester,time};
+        str_args = new String[]{cName,semester};
         conn = new DBConnector();
         Vector<Object> addtional = new Vector();
         try {

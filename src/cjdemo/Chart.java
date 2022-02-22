@@ -172,7 +172,8 @@ public class Chart {
         //获取班级成绩分布数据
         DefaultPieDataset ds = new DefaultPieDataset();
         DBConnector test = new DBConnector();
-        int[] distribution = test.teacherGradeAnalysisPicture(teacherID,course,semester);
+        String[] returnInfo=new String[1];
+        int[] distribution = test.teacherGradeAnalysisPicture(teacherID,course,semester,returnInfo);
         ds.setValue(">90", distribution[0]);
         ds.setValue("80~90", distribution[1]);
         ds.setValue("70~80", distribution[2]);
