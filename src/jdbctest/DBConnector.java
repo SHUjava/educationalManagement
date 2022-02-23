@@ -15,10 +15,10 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-//    static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-    //static final String PASS = "yang0417";
-//static final String PASS = "1240863915gg";
+    //static final String PASS = "Zx010426";
+    //static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
+    //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
     static final String firstSeme = "2019-2020秋季";  // 初始学期
@@ -1447,9 +1447,13 @@ public class DBConnector {
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
         rs.next();
-        int avg = rs.getInt("avg(成绩)");
+        double avg = rs.getDouble("avg(成绩)");
+        java.math.BigDecimal b = new java.math.BigDecimal(avg);
+        avg = b.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();
+        returnInfo[1] = avg+"%";
+        System.out.println("优秀率："+avg+"%");
         rs.close();
-        returnInfo[0] = new String(String.valueOf(avg));
+        returnInfo[0] = String.valueOf(avg);
         System.out.println("平均成绩："+avg);
         sql="select count(成绩)\n" +
                 "from used_score\n" +
@@ -1477,8 +1481,11 @@ public class DBConnector {
         System.out.println(gradeA);
 
         rs.close();
-        returnInfo[1] = (gradeA)*1.0/numOfPeople*100+"%";
-        System.out.println("优秀率："+(gradeA)*1.0/numOfPeople*100+"%");
+        double excellentRate = (gradeA)*1.0/numOfPeople*100;
+        b = new java.math.BigDecimal(excellentRate);
+        excellentRate = b.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();
+        returnInfo[1] = excellentRate+"%";
+        System.out.println("优秀率："+excellentRate+"%");
         sql="select count(成绩)\n" +
                 "from used_score\n" +
                 "where 工号 = '" + int_args[0] +
@@ -1490,8 +1497,11 @@ public class DBConnector {
         rs.next();
         int gradeD = rs.getInt("count(成绩)");
         rs.close();
-        System.out.println("挂科率："+gradeD/numOfPeople*100+"%");
-        returnInfo[2] = (gradeD)*1.0/numOfPeople*100+"%";
+        double failureRate = (gradeD)*1.0/numOfPeople*100;
+        b = new java.math.BigDecimal(failureRate);
+        failureRate = b.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();
+        returnInfo[2] = failureRate+"%";
+        System.out.println("挂科率："+failureRate+"%");
         System.out.println("班级前十名表单：");
         sql = "select used_score.学号, student.student_name, used_score.平时成绩, used_score.考试成绩, used_score.成绩, used_score.绩点\n" +
                 "from used_score, student\n" +
@@ -1499,7 +1509,7 @@ public class DBConnector {
                 "' and used_score.课程编号 ='" + course_order +
                 "' and 学期 ='" + str_args[1] +
                 "'\n" +
-                "and used_score.学号 = student.student_id order by used_score.成绩;";
+                "and used_score.学号 = student.student_id order by used_score.成绩 desc;";
         System.out.println(sql);
         rs = stmt.executeQuery(sql);
         int id = 0;
