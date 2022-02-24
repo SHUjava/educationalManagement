@@ -771,6 +771,29 @@ public class DBConnector {
         }
         return creditSum;
     }
+
+    public boolean isMyClass(int ID, int CO) {
+        String sql;
+        Vector<Integer> course = new Vector<>();
+        sql = "select course_order from course where teacher_id = " + ID + " and course_semester = '"+DBConnector.seme + "';";
+        System.out.println(sql);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                int course_order = rs.getInt("course_order");
+                course.addElement(course_order);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(int i=0;i<course.size();i++){
+            if(course.get(i) ==CO){
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * @param ID 学号
      * @return int 年级

@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class teacherFrame extends JFrame implements Exit {
     JPanel showPanel;
     Font font;
     Object[][] data ;
-    JPanel showEnterGradePanel, showQueryGradePanel, showChangeGradePanel,showGradeAnalyzePanel,tablePanel,tablePanel1,showStuPanel;
+    JPanel showEnterGradePanel, showQueryGradePanel, showChangeGradePanel,showGradeAnalyzePanel,tablePanel,tablePanel0,tablePanel1,showStuPanel,showInputGradePanel;
     JTabbedPane showAnalyzePanel;
     JTextField classText1,courseNameText4,timeText3,timeText2,timeText1,classText2,timeText, courseNameText1,courseNameText2,courseNameText3,stuIDText1,stuIDText2,newGradeText,tIDText;
     JButton checkEnterInfoButton1,checkEnterInfoButton2,checkEnterInfoButton3,checkEnterInfoButton4;
@@ -258,23 +259,58 @@ public class teacherFrame extends JFrame implements Exit {
         courseNameText1.setPreferredSize(new Dimension(60, 30));
         showEnterGradePanel.add(courseNameText1);
 
-//        timeLabel = new JLabel("上课时间");
-//        timeLabel.setFont(font);
-//        timeLabel.setPreferredSize(new Dimension(60, 30));
-//        showEnterGradePanel.add(timeLabel);
-//
-//        timeText3 = new JTextField("");
-//        timeText3.setFont(font);
-//        timeText3.setPreferredSize(new Dimension(80, 30));
-//        showEnterGradePanel.add(timeText3);
-
         Import ipt = new Import(this.id);
         JButton buttonImport = ipt.getButtonImport();
         buttonImport.addActionListener(e -> {
-            ipt.setCourse(courseNameText1.getText());
-            ipt.startImport();
+            DBConnector t = new DBConnector();
+            if(t.isMyClass(this.id, Integer.parseInt(courseNameText1.getText()))){
+                ipt.setCourse(courseNameText1.getText());
+                ipt.startImport();
+                if(ipt.flag == JFileChooser.APPROVE_OPTION) {
+                    tableData = ipt.readTable();
+                    String[] col_name = {"学号", "学生姓名", "平时成绩", "考试成绩"};
+                    JTable cjtable = new JTable(tableData, col_name);
+                    System.out.println(tableData.toString());
+                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                    r.setHorizontalAlignment(JLabel.CENTER);
+                    cjtable.setDefaultRenderer(Object.class, r);
+                    JScrollPane jScrollPane = new JScrollPane(cjtable);
+                    jScrollPane.setPreferredSize(new Dimension(500, 300));
+                    tablePanel0.removeAll();
+                    tablePanel0.add(jScrollPane);
+                    tablePanel0.setVisible(true);
+                    tablePanel0.validate();
+                    tablePanel0.repaint();
+                    cjtable.setPreferredSize(new Dimension(500, 300));
+                    cjtable.setEnabled(false);  //不可编辑
+                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                    tablePanel0.add(ipt.getButtonConfirm());
+                    JButton buttonCancel = new JButton("取消");
+                    buttonCancel.setContentAreaFilled(false);
+                    buttonCancel.setFont(new java.awt.Font("Dialog", 1, 12));
+                    buttonCancel.setPreferredSize(new Dimension(70, 30));
+                    buttonCancel.addActionListener(f ->{
+                        tablePanel0.removeAll();
+                        tablePanel0.setVisible(true);
+                        tablePanel0.validate();
+                        tablePanel0.repaint();
+                        JOptionPane.showMessageDialog(null, "已清除导入数据，请重新导入", "提示", JOptionPane.INFORMATION_MESSAGE);
+                    });
+                    tablePanel0.add(buttonCancel);
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "您本学期没有这门课，请重新输入", "警告", JOptionPane.ERROR_MESSAGE);
+            }
         });
         showEnterGradePanel.add(buttonImport);
+
+        tablePanel0 = new JPanel();
+        tablePanel0.setPreferredSize(new Dimension(550, 500));
+        tablePanel0.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
+        tablePanel0.setVisible(false);
+        showEnterGradePanel.add(tablePanel0, "East");
 
 
 
@@ -712,6 +748,7 @@ public class teacherFrame extends JFrame implements Exit {
         System.out.println(tableData.toString());
         return cjtable;
     }
+
     public JTable getJTable1(String teacherID, String courseID) {
         int_args = new String[2];
         str_args = new String[0];
