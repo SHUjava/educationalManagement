@@ -177,31 +177,36 @@ public class teacherFrame extends JFrame implements Exit {
         checkStuQueryButton.setContentAreaFilled(false);
         checkStuQueryButton.addActionListener(e -> {
                     System.out.println("教师工号为：" + this.id + " 用户输入的课程编号为：" + courseIDText.getText());
-                    cjtable = getJTable1(String.valueOf(this.id), courseIDText.getText());
-                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-                    r.setHorizontalAlignment(JLabel.CENTER);
-                    cjtable.setDefaultRenderer(Object.class, r);
-                    JPanel panel_export = new JPanel();
-                    panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-                    panel_export.setPreferredSize(new Dimension(500, 50));
-                    Export export = new Export(cjtable);
-                    JButton buttonExport = export.getButtonExport();
-                    panel_export.add(buttonExport);
-                    Print print = new Print(cjtable, this, "");
-                    JButton buttonPrint = print.getButtonPrint();
-                    panel_export.add(buttonPrint);
-                    JScrollPane jScrollPane = new JScrollPane(cjtable);
-                    jScrollPane.setPreferredSize(new Dimension(500, 300));
-            tablePanel1.removeAll();
-            tablePanel1.add(panel_export);
-            tablePanel1.add(jScrollPane);
-            tablePanel1.setVisible(true);
-            tablePanel1.validate();
-                    tablePanel1.repaint();
-                    cjtable.setPreferredSize(new Dimension(500, 300));
-                    cjtable.setEnabled(false);  //不可编辑
-                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+//                    if(querySuccess(courseIDText.getText())) {
+                        cjtable = getJTable1(String.valueOf(this.id), courseIDText.getText());
+                        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                        r.setHorizontalAlignment(JLabel.CENTER);
+                        cjtable.setDefaultRenderer(Object.class, r);
+                        JPanel panel_export = new JPanel();
+                        panel_export.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+                        panel_export.setPreferredSize(new Dimension(500, 50));
+                        Export export = new Export(cjtable);
+                        JButton buttonExport = export.getButtonExport();
+                        panel_export.add(buttonExport);
+                        Print print = new Print(cjtable, this, "");
+                        JButton buttonPrint = print.getButtonPrint();
+                        panel_export.add(buttonPrint);
+                        JScrollPane jScrollPane = new JScrollPane(cjtable);
+                        jScrollPane.setPreferredSize(new Dimension(500, 300));
+                        tablePanel1.removeAll();
+                        tablePanel1.add(panel_export);
+                        tablePanel1.add(jScrollPane);
+                        tablePanel1.setVisible(true);
+                        tablePanel1.validate();
+                        tablePanel1.repaint();
+                        cjtable.setPreferredSize(new Dimension(500, 300));
+                        cjtable.setEnabled(false);  //不可编辑
+                        cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                        cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格}
+//                    }
+//                    else{
+//                        JOptionPane.showMessageDialog(null, "出现错误，请重试！");
+//                    }
                 }
         );
         showStuPanel.add(checkStuQueryButton);
@@ -497,22 +502,22 @@ public class teacherFrame extends JFrame implements Exit {
         courseNameText3.setPreferredSize(new Dimension(80, 30));
         showChangeGradePanel.add(courseNameText3);
 
-        semesterLabel = new JLabel("课程学期");
-        semesterLabel.setFont(font);
-        semesterLabel.setPreferredSize(new Dimension(60, 30));
-        showChangeGradePanel.add(semesterLabel);
-
-        semesterText = new JComboBox();
-        semesterText.setSelectedItem("2019-2020秋季");
-        for(int i=0;i< sl.length;i++){
-            semesterText.addItem(sl[i]);
-            if(Objects.equals(sl[i + 1], null)){
-                break;
-            }
-        }
-        semesterText.setFont(font);
-        semesterText.setPreferredSize(new Dimension(110, 30));
-        showChangeGradePanel.add(semesterText);
+//        semesterLabel = new JLabel("课程学期");
+//        semesterLabel.setFont(font);
+//        semesterLabel.setPreferredSize(new Dimension(60, 30));
+//        showChangeGradePanel.add(semesterLabel);
+//
+//        semesterText = new JComboBox();
+//        semesterText.setSelectedItem("2019-2020秋季");
+//        for(int i=0;i< sl.length;i++){
+//            semesterText.addItem(sl[i]);
+//            if(Objects.equals(sl[i + 1], null)){
+//                break;
+//            }
+//        }
+//        semesterText.setFont(font);
+//        semesterText.setPreferredSize(new Dimension(110, 30));
+//        showChangeGradePanel.add(semesterText);
 
 //        timeLabel = new JLabel("上课时间");
 //        timeLabel.setFont(font);
@@ -683,6 +688,12 @@ public class teacherFrame extends JFrame implements Exit {
 
 
     }
+
+//    private boolean querySuccess(String text) {
+//        str_args = new String[]{text};
+//        conn = new DBConnector();
+//        return conn.dataTest(str_args);
+//    }
 
     private JComponent makeAnalyzePanel(int i) {
         JPanel panel = new JPanel();

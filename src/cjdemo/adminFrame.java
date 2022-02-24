@@ -431,6 +431,7 @@ public class adminFrame extends JFrame implements Exit {
                 studentFacultyComboBox.addItem("任意");
                 studentFacultyComboBox.addItem("计算机系");
                 studentFacultyComboBox.addItem("物理系");
+                studentFacultyComboBox.addItem("数学系");
                 studentFacultyComboBox.setFont(font);
                 studentFacultyComboBox.setPreferredSize(new Dimension(80, 30));
                 panel.add(studentFacultyComboBox);
@@ -531,6 +532,7 @@ public class adminFrame extends JFrame implements Exit {
                 teacherFacultyComboBox.addItem("任意");
                 teacherFacultyComboBox.addItem("计算机系");
                 teacherFacultyComboBox.addItem("物理系");
+                teacherFacultyComboBox.addItem("数学系");
                 teacherFacultyComboBox.setFont(font);
                 teacherFacultyComboBox.setPreferredSize(new Dimension(90, 30));
                 panel.add(teacherFacultyComboBox);
@@ -771,6 +773,7 @@ public class adminFrame extends JFrame implements Exit {
             facultyComboBox.setSelectedItem("计算机系");
             facultyComboBox.addItem("计算机系");
             facultyComboBox.addItem("物理系");
+            facultyComboBox.addItem("数学系");
             facultyComboBox.setFont(font);
             facultyComboBox.setPreferredSize(new Dimension(80,30));
             panel.add(facultyComboBox);
@@ -853,6 +856,7 @@ public class adminFrame extends JFrame implements Exit {
             facultyComboBox.setSelectedItem("计算机系");
             facultyComboBox.addItem("计算机系");
             facultyComboBox.addItem("物理系");
+            facultyComboBox.addItem("数学系");
             facultyComboBox.setFont(font);
             facultyComboBox.setPreferredSize(new Dimension(80,30));
             panel.add(facultyComboBox);
