@@ -16,8 +16,8 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
     //static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
+//    static final String PASS = "Zbb123150@";
+    static final String PASS = "yang0417";
     //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -1116,12 +1116,14 @@ public class DBConnector {
                 break;
             case"教师"://工号
                 String[] int_args = new String[3];
-                String[] str_args = {null, null, null};
+                String[] str_args = {"", "", ""};
+                int_args[0] ="";
+                int_args[1]="";
                 int_args[2] = ""+id[0];
                 Vector<Object> ignore = new Vector<>();
                 Object[][] rs = this.search("管理员课程查询", int_args, str_args, ignore);
                 for (Object[] course:rs){
-                    String[] tmp_id = {(String)course[0], id[0]};
+                    String[] tmp_id = {(String)course[0], id[0], ""+course[4]};
                     this.delete("班级", tmp_id);
                 }
                 sql = "delete from teacher where teacher_id = "+id[0]+";";
@@ -1143,16 +1145,16 @@ public class DBConnector {
                 System.out.println(Arrays.deepToString(rs));
                 System.out.println(course_id.get(4));
                 for (Object[] student:rs){
-                    String[] choose_id = {(String)student[0], (String)course_id.get(4)};
+                    String[] choose_id = {""+student[0], ""+course_id.get(4)};
                     this.delete("选课", choose_id);
                 }
                 System.out.println("已删除该班级学生");
                 String nameOrOrder = "";
                 Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
-                if (pattern.matcher(id[1]).matches()){
-                    nameOrOrder = "course_order = '"+id[1];
+                if (pattern.matcher(id[0]).matches()){
+                    nameOrOrder = "course_order = '"+id[0];
                 }else{
-                    nameOrOrder = "course_name ='"+id[1];
+                    nameOrOrder = "course_name ='"+id[0];
                 }
                 sql = "delete from course where "+nameOrOrder+"' and teacher_id = '"+id[1]+"' and course_semester = '"+id[2]+"';";
                 System.out.println(sql);

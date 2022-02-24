@@ -192,14 +192,14 @@ public class teacherFrame extends JFrame implements Exit {
                         JButton buttonPrint = print.getButtonPrint();
                         panel_export.add(buttonPrint);
                         JScrollPane jScrollPane = new JScrollPane(cjtable);
-                        jScrollPane.setPreferredSize(new Dimension(500, 300));
+                        jScrollPane.setPreferredSize(new Dimension(490, 330));
                         tablePanel1.removeAll();
                         tablePanel1.add(panel_export);
                         tablePanel1.add(jScrollPane);
                         tablePanel1.setVisible(true);
                         tablePanel1.validate();
                         tablePanel1.repaint();
-                        cjtable.setPreferredSize(new Dimension(500, 300));
+                        cjtable.setPreferredSize(new Dimension(480, 320));
                         cjtable.setEnabled(false);  //不可编辑
                         cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                         cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格}
