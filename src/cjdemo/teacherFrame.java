@@ -263,7 +263,7 @@ public class teacherFrame extends JFrame implements Exit {
         JButton buttonImport = ipt.getButtonImport();
         buttonImport.addActionListener(e -> {
             DBConnector t = new DBConnector();
-            if(t.isMyClass(this.id, Integer.parseInt(courseNameText1.getText()))){
+            if(t.isMyClass(this.id, courseNameText1.getText())){
                 ipt.setCourse(courseNameText1.getText());
                 ipt.startImport();
                 if(ipt.flag == JFileChooser.APPROVE_OPTION) {
@@ -285,7 +285,14 @@ public class teacherFrame extends JFrame implements Exit {
                     cjtable.setEnabled(false);  //不可编辑
                     cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                     cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
-                    tablePanel0.add(ipt.getButtonConfirm());
+                    JButton buttonConfirm = ipt.getButtonConfirm();
+                    buttonConfirm.addActionListener(f ->{
+                        tablePanel0.removeAll();
+                        tablePanel0.setVisible(true);
+                        tablePanel0.validate();
+                        tablePanel0.repaint();
+                    });
+                    tablePanel0.add(buttonConfirm);
                     JButton buttonCancel = new JButton("取消");
                     buttonCancel.setContentAreaFilled(false);
                     buttonCancel.setFont(new java.awt.Font("Dialog", 1, 12));

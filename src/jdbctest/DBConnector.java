@@ -772,27 +772,51 @@ public class DBConnector {
         return creditSum;
     }
 
-    public boolean isMyClass(int ID, int CO) {
+    public boolean isMyClass(int ID, String CO) {
         String sql;
         Vector<Integer> course = new Vector<>();
-        sql = "select course_order from course where teacher_id = " + ID + " and course_semester = '"+DBConnector.seme + "';";
-        System.out.println(sql);
-        try {
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                int course_order = rs.getInt("course_order");
-                course.addElement(course_order);
+        Vector<String> course2 = new Vector<>();
+        if(CO.charAt(0)<='9'&&CO.charAt(0)>'0'){
+            sql = "select course_order from course where teacher_id = " + ID + " and course_semester = '"+DBConnector.seme + "';";
+            System.out.println(sql);
+            try {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    int course_order = rs.getInt("course_order");
+                    course.addElement(course_order);
+                }
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        for(int i=0;i<course.size();i++){
-            if(course.get(i) ==CO){
-                return true;
+            for(int i=0;i<course.size();i++){
+                if(course.get(i) ==Integer.parseInt(CO)){
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
+        else{
+            sql = "select course_name from course where " +
+                    " teacher_id = " + ID + " and course_semester = '"+DBConnector.seme + "';";
+            System.out.println(sql);
+            try {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    String course_name = rs.getString("course_name");
+                    course2.addElement(course_name);
+                }
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            for(int i=0;i<course2.size();i++){
+                if(course2.get(i).equals(CO)){
+                    return true;
+                }
+            }
+            return false;
+        }
     }
     /**
      * @param ID 学号
