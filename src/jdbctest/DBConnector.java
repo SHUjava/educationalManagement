@@ -15,8 +15,8 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    //static final String PASS = "Zx010426";
-    static final String PASS = "Zbb123150@";
+    static final String PASS = "Zx010426";
+//    static final String PASS = "Zbb123150@";
 //    static final String PASS = "yang0417";
     //static final String PASS = "1240863915gg";
     Connection conn = null;
@@ -1218,17 +1218,29 @@ public class DBConnector {
         return false;
     }
 
-    public void prepareTeacherEnterResult(int[] int_args, String[] str_args) throws CustomException, SQLException {
+    public boolean isScoreEntered(int[] int_args, String[] str_args) throws CustomException, SQLException {
         //判断此门课程成绩是否已经录入，若未录入则输出两列数据，分别为该门课程学生的学号和姓名
         Vector<Vector<Object>> tmp = new Vector<>();
         String sql;
         ResultSet rs;
-        if(int_args.length != 1 || str_args.length != 3){
-            //工号  课程名称，课程学期，上课时间
+        if(int_args.length != 1 || str_args.length != 1 ){
+            //工号  课程名称\课程号
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
         }
+        String reg="[0-9]{7}";
+        String course_name;
+        if(str_args[0].matches(reg)){
+            sql = "select course_name from course where course_order = '" + str_args[0] + "';\n";
+            rs = stmt.executeQuery(sql);
+            System.out.println(sql);
+            rs.next();
+            course_name = rs.getString("course_name");
+        }
+        else{
+            course_name=str_args[0];
+        }
         sql = "select * from course where teacher_id = '" + int_args[0] +
-                "' and course_name = '" + str_args[0] +
+                "' and course_name = '" + course_name +
                 "' and course_semester = '" + str_args[1] +
                 "' and course_time = '" + str_args[2] +
                 "';\n";
@@ -1237,25 +1249,10 @@ public class DBConnector {
         rs.next();
         String score_entered = rs.getString("score_entered");
         if(score_entered=="n"){
-            int course_id = rs.getInt("course_id");
-            rs.close();
-            sql = "select score.student_id as '学号',student.student_name as '姓名' " +
-                    "from score,student where student.student_id=score.student_id and score.course_id = '"+course_id+"';\n";
-            rs = stmt.executeQuery(sql);
-            while(rs.next())
-            {
-                int student_id = rs.getInt("学号");
-                String student_name = rs.getString("student_name");
-                Vector<Object> row = new Vector<>();
-                row.addElement(student_id);
-                row.addElement(student_name);
-                tmp.addElement(row);
-            }
-            rs.close();
-            System.out.println(tmp);//输出两列数据:学号和学生姓名
+            return false;
         }
         else{
-            System.out.println("已完成成绩录入");
+            return true;
         }
     }
     public void teacherEnterResultTwice(int[] int_args, String[] str_args, int[][] arg_args) throws CustomException, SQLException {
