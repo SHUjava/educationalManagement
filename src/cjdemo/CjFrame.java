@@ -69,8 +69,8 @@ public class CjFrame extends JFrame implements Exit {
 
 //        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"学号/工号"));
         //下面一行代码便于测试老师页面，需要时可注释
-        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,""));
-        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,""));
+        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"7777777"));
+        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,"7777777"));
         //设置容器
 //        JPanel root_panel = new JPanel();
 //        this.setContentPane(root_panel);

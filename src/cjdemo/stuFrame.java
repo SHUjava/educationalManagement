@@ -228,7 +228,7 @@ public class stuFrame extends JFrame implements Exit {
             JScrollPane jScrollPane = new JScrollPane(cjtable);
             jScrollPane.setPreferredSize(new Dimension(500, 300));
             panel_show.add(jScrollPane);
-            cjtable.setPreferredSize(new Dimension(500, 300));
+            cjtable.setPreferredSize(new Dimension(500, 500));
             cjtable.setEnabled(false);  //不可编辑
             cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
             cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
@@ -329,7 +329,7 @@ public class stuFrame extends JFrame implements Exit {
                 JScrollPane jScrollPane = new JScrollPane(cjtable);
                 jScrollPane.setPreferredSize(new Dimension(500, 300));
                 panel_show.add(jScrollPane);
-                cjtable.setPreferredSize(new Dimension(500, 300));
+                cjtable.setPreferredSize(new Dimension(500, 500));
                 cjtable.setEnabled(false);  //不可编辑
                 cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                 cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格

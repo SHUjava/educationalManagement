@@ -192,14 +192,14 @@ public class teacherFrame extends JFrame implements Exit {
                         JButton buttonPrint = print.getButtonPrint();
                         panel_export.add(buttonPrint);
                         JScrollPane jScrollPane = new JScrollPane(cjtable);
-                        jScrollPane.setPreferredSize(new Dimension(490, 330));
+                        jScrollPane.setPreferredSize(new Dimension(490, 280));
                         tablePanel1.removeAll();
                         tablePanel1.add(panel_export);
                         tablePanel1.add(jScrollPane);
                         tablePanel1.setVisible(true);
                         tablePanel1.validate();
                         tablePanel1.repaint();
-                        cjtable.setPreferredSize(new Dimension(480, 320));
+                        cjtable.setPreferredSize(new Dimension(480, 800));
                         cjtable.setEnabled(false);  //不可编辑
                         cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                         cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格}
@@ -213,7 +213,7 @@ public class teacherFrame extends JFrame implements Exit {
 
         tablePanel1 = new JPanel();
         tablePanel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        tablePanel1.setPreferredSize(new Dimension(500, 300));
+        tablePanel1.setPreferredSize(new Dimension(500, 400));
         showStuPanel.add(tablePanel1);
 
         /**
@@ -280,13 +280,13 @@ public class teacherFrame extends JFrame implements Exit {
                     r.setHorizontalAlignment(JLabel.CENTER);
                     cjtable.setDefaultRenderer(Object.class, r);
                     JScrollPane jScrollPane = new JScrollPane(cjtable);
-                    jScrollPane.setPreferredSize(new Dimension(500, 300));
+                    jScrollPane.setPreferredSize(new Dimension(500, 270));
                     tablePanel0.removeAll();
                     tablePanel0.add(jScrollPane);
                     tablePanel0.setVisible(true);
                     tablePanel0.validate();
                     tablePanel0.repaint();
-                    cjtable.setPreferredSize(new Dimension(500, 300));
+                    cjtable.setPreferredSize(new Dimension(500, 800));
                     cjtable.setEnabled(false);  //不可编辑
                     cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                     cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
@@ -423,14 +423,14 @@ public class teacherFrame extends JFrame implements Exit {
             JButton buttonPrint = print.getButtonPrint();
             panel_export.add(buttonPrint);
             JScrollPane jScrollPane = new JScrollPane(cjtable);
-            jScrollPane.setPreferredSize(new Dimension(500, 300));
+            jScrollPane.setPreferredSize(new Dimension(500, 280));
             tablePanel.removeAll();
             tablePanel.add(panel_export);
             tablePanel.add(jScrollPane);
             tablePanel.setVisible(true);
             tablePanel.validate();
             tablePanel.repaint();
-            cjtable.setPreferredSize(new Dimension(500, 300));
+            cjtable.setPreferredSize(new Dimension(500, 800));
             cjtable.setEnabled(false);  //不可编辑
             cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
             cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
@@ -439,7 +439,7 @@ public class teacherFrame extends JFrame implements Exit {
         showQueryGradePanel.add(checkEnterInfoButton2);
         tablePanel = new JPanel();
         tablePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        tablePanel.setPreferredSize(new Dimension(500, 300));
+        tablePanel.setPreferredSize(new Dimension(500, 400));
         showQueryGradePanel.add(tablePanel);
 
         /**
@@ -732,9 +732,9 @@ public class teacherFrame extends JFrame implements Exit {
             r.setHorizontalAlignment(JLabel.CENTER);
             cjtable.setDefaultRenderer(Object.class, r);
             JScrollPane jScrollPane = new JScrollPane(cjtable);
-            jScrollPane.setPreferredSize(new Dimension(500, 300));
+            jScrollPane.setPreferredSize(new Dimension(500, 280));
             panel.add(jScrollPane);
-            cjtable.setPreferredSize(new Dimension(500, 300));
+            cjtable.setPreferredSize(new Dimension(500, 800));
             cjtable.setEnabled(false);  //不可编辑
             cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
             cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格

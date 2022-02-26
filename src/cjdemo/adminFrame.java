@@ -180,7 +180,7 @@ public class adminFrame extends JFrame implements Exit {
         functionPanel.add(searchInfoButton);
 
         showSearchInfoPanel = new JTabbedPane();
-        showSearchInfoPanel.setPreferredSize(new Dimension(500,400));
+        showSearchInfoPanel.setPreferredSize(new Dimension(500,420));
         JComponent panel1=makeSearchInfoPanel(1);
         showSearchInfoPanel.addTab("班级成绩查询", panel1);
         JComponent panel2=makeSearchInfoPanel(2);
@@ -278,7 +278,7 @@ public class adminFrame extends JFrame implements Exit {
 
     protected JComponent makeSearchInfoPanel(int mode){
         JPanel panel=new JPanel(false);
-        panel.setPreferredSize(new Dimension(500,400) );
+        panel.setPreferredSize(new Dimension(500,450) );
         panel.setLayout(new FlowLayout(FlowLayout.CENTER,8,10));
 
         switch (mode){
@@ -342,14 +342,14 @@ public class adminFrame extends JFrame implements Exit {
                             JButton buttonPrint = print.getButtonPrint();
                             panel_export.add(buttonPrint);
                             JScrollPane jScrollPane = new JScrollPane(cjtable);
-                            jScrollPane.setPreferredSize(new Dimension(500, 300));
+                            jScrollPane.setPreferredSize(new Dimension(500, 280));
                             tablePanel.removeAll();
                             tablePanel.add(panel_export);
                             tablePanel.add(jScrollPane);
                             tablePanel.setVisible(true);
                             tablePanel.validate();
                             tablePanel.repaint();
-                            cjtable.setPreferredSize(new Dimension(500, 300));
+                            cjtable.setPreferredSize(new Dimension(500, 400));
                             cjtable.setEnabled(false);  //不可编辑
                             cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                             cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
@@ -372,7 +372,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 tablePanel = new JPanel();
                 tablePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-                tablePanel.setPreferredSize(new Dimension(500, 300));
+                tablePanel.setPreferredSize(new Dimension(500, 400));
                 panel.add(tablePanel);
                 break;
             case 2:
@@ -457,14 +457,15 @@ public class adminFrame extends JFrame implements Exit {
                             r.setHorizontalAlignment(JLabel.CENTER);
                             cjtable.setDefaultRenderer(Object.class, r);
                             JScrollPane jScrollPane = new JScrollPane(cjtable);
-                            jScrollPane.setPreferredSize(new Dimension(500, 300));
+                            jScrollPane.setPreferredSize(new Dimension(500, 280));
                             queryInfoPanel.removeAll();
                             queryInfoPanel.add(jScrollPane);
                             queryInfoPanel.setVisible(true);
                             queryInfoPanel.validate();
                             queryInfoPanel.repaint();
-                            cjtable.setPreferredSize(new Dimension(500, 300));
+                            cjtable.setPreferredSize(new Dimension(500, 1500));
                             cjtable.setEnabled(false);  //不可编辑
+                            cjtable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                             cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                             cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
 
@@ -488,7 +489,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 queryInfoPanel = new JPanel();
                 queryInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-                queryInfoPanel.setPreferredSize(new Dimension(500, 300));
+                queryInfoPanel.setPreferredSize(new Dimension(500, 400));
                 panel.add(queryInfoPanel);
                 break;
             case 3:
@@ -509,7 +510,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 teacherIDText2 = new JTextField("");
                 teacherIDText2.setFont(font);
-                teacherIDText2.setPreferredSize(new Dimension(120, 30));
+                teacherIDText2.setPreferredSize(new Dimension(60, 30));
                 panel.add(teacherIDText2);
 
                 teacherNameLabel = new JLabel("教师姓名");
@@ -519,7 +520,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 teacherNameText = new JTextField("");
                 teacherNameText.setFont(font);
-                teacherNameText.setPreferredSize(new Dimension(120, 30));
+                teacherNameText.setPreferredSize(new Dimension(60, 30));
                 panel.add(teacherNameText);
 
                 teacherFacultyLabel = new JLabel("教师院系");
@@ -553,13 +554,13 @@ public class adminFrame extends JFrame implements Exit {
                     r.setHorizontalAlignment(JLabel.CENTER);
                     cjtable.setDefaultRenderer(Object.class, r);
                     JScrollPane jScrollPane = new JScrollPane(cjtable);
-                    jScrollPane.setPreferredSize(new Dimension(500, 300));
+                    jScrollPane.setPreferredSize(new Dimension(500, 280));
                     queryTeacherInfoPanel.removeAll();
                     queryTeacherInfoPanel.add(jScrollPane);
                     queryTeacherInfoPanel.setVisible(true);
                     queryTeacherInfoPanel.validate();
                     queryTeacherInfoPanel.repaint();
-                    cjtable.setPreferredSize(new Dimension(500, 300));
+                    cjtable.setPreferredSize(new Dimension(500, 400));
                     cjtable.setEnabled(false);  //不可编辑
                     cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                     cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
@@ -581,7 +582,7 @@ public class adminFrame extends JFrame implements Exit {
 
                 queryTeacherInfoPanel = new JPanel();
                 queryTeacherInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-                queryTeacherInfoPanel.setPreferredSize(new Dimension(500, 300));
+                queryTeacherInfoPanel.setPreferredSize(new Dimension(500, 400));
                 panel.add(queryTeacherInfoPanel);
                 break;
             case 4:
@@ -672,13 +673,13 @@ public class adminFrame extends JFrame implements Exit {
                     r.setHorizontalAlignment(JLabel.CENTER);
                     cjtable.setDefaultRenderer(Object.class, r);
                     JScrollPane jScrollPane = new JScrollPane(cjtable);
-                    jScrollPane.setPreferredSize(new Dimension(500, 200));
+                    jScrollPane.setPreferredSize(new Dimension(500, 280));
                     queryCourseInfoPanel.removeAll();
                     queryCourseInfoPanel.add(jScrollPane);
                     queryCourseInfoPanel.setVisible(true);
                     queryCourseInfoPanel.validate();
                     queryCourseInfoPanel.repaint();
-                    cjtable.setPreferredSize(new Dimension(500, 200));
+                    cjtable.setPreferredSize(new Dimension(480, 600));
                     cjtable.setEnabled(false);  //不可编辑
                     cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
                     cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
@@ -704,7 +705,7 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(clearInputInfoButton3);
                 queryCourseInfoPanel = new JPanel();
                 queryCourseInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-                queryCourseInfoPanel.setPreferredSize(new Dimension(500, 200));
+                queryCourseInfoPanel.setPreferredSize(new Dimension(500, 400));
                 panel.add(queryCourseInfoPanel);
                 break;
         }
