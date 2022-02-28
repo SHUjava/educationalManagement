@@ -268,52 +268,62 @@ public class teacherFrame extends JFrame implements Exit {
         JButton buttonImport = ipt.getButtonImport();
         buttonImport.addActionListener(e -> {
             DBConnector t = new DBConnector();
-            if(t.isMyClass(this.id, courseNameText1.getText())){
-                ipt.setCourse(courseNameText1.getText());
-                ipt.startImport();
-                if(ipt.flag == JFileChooser.APPROVE_OPTION) {
-                    tableData = ipt.readTable();
-                    String[] col_name = {"学号", "学生姓名", "平时成绩", "考试成绩"};
-                    JTable cjtable = new JTable(tableData, col_name);
-                    System.out.println(tableData.toString());
-                    DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-                    r.setHorizontalAlignment(JLabel.CENTER);
-                    cjtable.setDefaultRenderer(Object.class, r);
-                    JScrollPane jScrollPane = new JScrollPane(cjtable);
-                    jScrollPane.setPreferredSize(new Dimension(500, 270));
-                    tablePanel0.removeAll();
-                    tablePanel0.add(jScrollPane);
-                    tablePanel0.setVisible(true);
-                    tablePanel0.validate();
-                    tablePanel0.repaint();
-                    cjtable.setPreferredSize(new Dimension(500, 800));
-                    cjtable.setEnabled(false);  //不可编辑
-                    cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
-                    cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
-                    JButton buttonConfirm = ipt.getButtonConfirm();
-                    buttonConfirm.addActionListener(f ->{
-                        tablePanel0.removeAll();
-                        tablePanel0.setVisible(true);
-                        tablePanel0.validate();
-                        tablePanel0.repaint();
-                    });
-                    tablePanel0.add(buttonConfirm);
-                    JButton buttonCancel = new JButton("取消");
-                    buttonCancel.setContentAreaFilled(false);
-                    buttonCancel.setFont(new java.awt.Font("Dialog", 1, 12));
-                    buttonCancel.setPreferredSize(new Dimension(70, 30));
-                    buttonCancel.addActionListener(f ->{
-                        tablePanel0.removeAll();
-                        tablePanel0.setVisible(true);
-                        tablePanel0.validate();
-                        tablePanel0.repaint();
-                        JOptionPane.showMessageDialog(null, "已清除导入数据，请重新导入", "提示", JOptionPane.INFORMATION_MESSAGE);
-                    });
-                    tablePanel0.add(buttonCancel);
+            try {
+                if(Objects.equals(courseNameText1.getText(), "")){
+                    JOptionPane.showMessageDialog(null, "您的输入为空，请重新输入", "警告", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "您本学期没有这门课，请重新输入", "警告", JOptionPane.ERROR_MESSAGE);
+                else if(!t.isMyClass(this.id, courseNameText1.getText())){
+                    JOptionPane.showMessageDialog(null, "您本学期没有这门课，请重新输入", "警告", JOptionPane.ERROR_MESSAGE);
+                }
+                else if(t.isScoreEntered(new int[]{this.id},new String[]{courseNameText1.getText(),DBConnector.getSeme()})){
+                    JOptionPane.showMessageDialog(null, "该课程成绩已录入！", "警告", JOptionPane.ERROR_MESSAGE);
+                }
+                else {
+                    ipt.setCourse(courseNameText1.getText());
+                    ipt.startImport();
+                    if(ipt.flag == JFileChooser.APPROVE_OPTION) {
+                        tableData = ipt.readTable();
+                        String[] col_name = {"学号", "学生姓名", "平时成绩", "考试成绩"};
+                        JTable cjtable = new JTable(tableData, col_name);
+                        System.out.println(tableData.toString());
+                        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+                        r.setHorizontalAlignment(JLabel.CENTER);
+                        cjtable.setDefaultRenderer(Object.class, r);
+                        JScrollPane jScrollPane = new JScrollPane(cjtable);
+                        jScrollPane.setPreferredSize(new Dimension(500, 270));
+                        tablePanel0.removeAll();
+                        tablePanel0.add(jScrollPane);
+                        tablePanel0.setVisible(true);
+                        tablePanel0.validate();
+                        tablePanel0.repaint();
+                        cjtable.setPreferredSize(new Dimension(500, 800));
+                        cjtable.setEnabled(false);  //不可编辑
+                        cjtable.getTableHeader().setReorderingAllowed(false);   //不可整列移动
+                        cjtable.getTableHeader().setResizingAllowed(false);   //不可拉动表格
+                        JButton buttonConfirm = ipt.getButtonConfirm();
+                        buttonConfirm.addActionListener(f ->{
+                            tablePanel0.removeAll();
+                            tablePanel0.setVisible(true);
+                            tablePanel0.validate();
+                            tablePanel0.repaint();
+                        });
+                        tablePanel0.add(buttonConfirm);
+                        JButton buttonCancel = new JButton("取消");
+                        buttonCancel.setContentAreaFilled(false);
+                        buttonCancel.setFont(new java.awt.Font("Dialog", Font.BOLD, 12));
+                        buttonCancel.setPreferredSize(new Dimension(70, 30));
+                        buttonCancel.addActionListener(f ->{
+                            tablePanel0.removeAll();
+                            tablePanel0.setVisible(true);
+                            tablePanel0.validate();
+                            tablePanel0.repaint();
+                            JOptionPane.showMessageDialog(null, "已清除导入数据，请重新导入", "提示", JOptionPane.INFORMATION_MESSAGE);
+                        });
+                        tablePanel0.add(buttonCancel);
+                    }
+                }
+            } catch (CustomException | SQLException | IOException ex) {
+                ex.printStackTrace();
             }
         });
         showEnterGradePanel.add(buttonImport);
