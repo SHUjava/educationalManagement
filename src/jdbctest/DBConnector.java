@@ -15,9 +15,9 @@ public class DBConnector {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/educationalmanagementdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     static final String USER = "root";
-    static final String PASS = "Zx010426";
+    //static final String PASS = "Zx010426";
 //    static final String PASS = "Zbb123150@";
-//    static final String PASS = "yang0417";
+    static final String PASS = "yang0417";
     //static final String PASS = "1240863915gg";
     Connection conn = null;
     Statement stmt = null;
@@ -139,17 +139,31 @@ public class DBConnector {
                 if (int_args.length != 1 || str_args.length != 0) {
                     throw new CustomException("输入参数个数不正确" + int_args.length + "   " + str_args.length);
                 }
-                sql = "select 课程编号, 课程名, 学分, 成绩, 绩点, 学期\n" +
+                sql = "select 工号, 课程编号, 学期, 课程名, 学分, 成绩, 绩点\n" +
                         "from used_score\n" +
-                        "where 学号='" + int_args[0] + "';\n";
+                        "where 学号='" + int_args[0] + "' order by CASE 学期 WHEN '2019-2020秋季' THEN 0 " +
+                        "WHEN '2019-2020冬季' THEN 1 WHEN '2019-2020春季' THEN 2 " +
+                        "WHEN '2020-2021秋季' THEN 3 WHEN '2019-2020冬季' THEN 4 ELSE 5 END;\n";
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
+                    int teacher_id = rs.getInt("工号");
                     int course_order = rs.getInt("课程编号");
+                    String semester = rs.getString("学期");
+                    int[] TI = new int[]{teacher_id};
+                    String[] CO = new String[]{String.valueOf(course_order),semester};
                     String course_name = rs.getString("课程名");
                     int credit = rs.getInt("学分");
-                    int score = (int) Double.parseDouble(rs.getString("成绩"));
+                    int score=-1;
+                    if(isScoreEntered(TI, CO)){
+                        score = (int) Double.parseDouble(rs.getString("成绩"));
+                    }
+                    else{
+                        rs.getString("成绩");
+                    }
                     double gpa = rs.getDouble("绩点");
-                    String semester = rs.getString("学期");
+                    if(score==-1){
+                        continue;
+                    }
                     Vector<Object> row = new Vector<>();
                     row.addElement(course_order);
                     row.addElement(course_name);
@@ -1221,9 +1235,10 @@ public class DBConnector {
     public boolean isScoreEntered(int[] int_args, String[] str_args) throws CustomException, SQLException {
         //判断此门课程成绩是否已经录入，若未录入则输出两列数据，分别为该门课程学生的学号和姓名
         Vector<Vector<Object>> tmp = new Vector<>();
+        Statement stmt0 = conn.createStatement();
         String sql;
         ResultSet rs;
-        if(int_args.length != 1 || str_args.length != 1 ){
+        if(int_args.length != 1 || str_args.length != 2 ){
             //工号  课程名称\课程号
             throw new CustomException("输入参数个数不正确"+int_args.length+"   "+str_args.length);
         }
@@ -1231,7 +1246,7 @@ public class DBConnector {
         String course_name;
         if(str_args[0].matches(reg)){
             sql = "select course_name from course where course_order = '" + str_args[0] + "';\n";
-            rs = stmt.executeQuery(sql);
+            rs = stmt0.executeQuery(sql);
             System.out.println(sql);
             rs.next();
             course_name = rs.getString("course_name");
@@ -1242,18 +1257,12 @@ public class DBConnector {
         sql = "select * from course where teacher_id = '" + int_args[0] +
                 "' and course_name = '" + course_name +
                 "' and course_semester = '" + str_args[1] +
-                "' and course_time = '" + str_args[2] +
                 "';\n";
 
-        rs = stmt.executeQuery(sql);
+        rs = stmt0.executeQuery(sql);
         rs.next();
         String score_entered = rs.getString("score_entered");
-        if(score_entered=="n"){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return !Objects.equals(score_entered, "n");
     }
     public void teacherEnterResultTwice(int[] int_args, String[] str_args, int[][] arg_args) throws CustomException, SQLException {
         //完成将学生成绩录入两遍，对两次录入数据不同的记录进行选择
