@@ -5,6 +5,7 @@ import jdbctest.DBConnector;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
@@ -47,8 +48,8 @@ public class CjFrame extends JFrame implements Exit {
      * id :           传给子页面ID标识
      */
     //账号、密码文本框组件
-    JTextField id_textField = new JTextField(20);
-    JPasswordField pw_textField = new JPasswordField(20);
+    JTextField IDTextField = new JTextField(20);
+    JPasswordField PWTextField = new JPasswordField(20);
     String choose = "学生";
     int id = 0;
     String name;
@@ -63,49 +64,93 @@ public class CjFrame extends JFrame implements Exit {
         ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
         this.setIconImage(imageIcon.getImage().getScaledInstance(100,140,100));
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(null);
-        this.setResizable(false);
+//        this.setSize(800,700);
+//        this.setLocationRelativeTo(null);//居中显示
+//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        JLabel label0 = new JLabel();
+//        ImageIcon img0 = new ImageIcon("image/face.jpg");//创建图片对象
+//        label0.setBounds(0,0, img0.getIconWidth(), img0.getIconHeight());
+//        label0.setIcon(img0);
+//        this.getLayeredPane().add(label0,Integer.MIN_VALUE);
+//
+//        ((JPanel)this.getContentPane()).setOpaque(false);
+//        this.add(label0);
+
+
+        ImageIcon icon=new ImageIcon("image/face7_7.png");
+        //Image im=new Image(icon);
+        //将图片放入label中
+        JLabel label=new JLabel(icon);
+
+        //设置label的大小
+        label.setBounds(0,0,icon.getIconWidth(),icon.getIconHeight());
+
+//        JFrame frame=new JFrame();
+
+        //获取窗口的第二层，将label放入
+        this.getLayeredPane().add(label,new Integer(Integer.MIN_VALUE));
+        this.setLayout(new BorderLayout(5, 20));
+        ((JPanel) this.getContentPane()).setBorder(BorderFactory.createEmptyBorder(150, 210, 150, 210));
+        //获取frame的顶层容器,并设置为透明
+        JPanel j=(JPanel)this.getContentPane();
+        j.setOpaque(false);
+
+
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(380,380));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 8));
+        panel.setOpaque(false);
+//        panel.setBackground(Color.WHITE);
+//        panel.setBackground(Color.GRAY);
+
+        JLabel label1 = new JLabel();
+        label1.setPreferredSize(new Dimension(340,70));
+        ImageIcon img = new ImageIcon("image/logo.png");//创建图片对象
+        label1.setIcon(img);
+        panel.add(label1);
 
 //        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"学号/工号"));
         //下面一行代码便于测试老师页面，需要时可注释
-        id_textField.addFocusListener(new JTextFieldHintListener(id_textField,"7777777"));
-        pw_textField.addFocusListener(new JTextFieldHintListener(pw_textField,"7777777"));
-        //设置容器
-//        JPanel root_panel = new JPanel();
-//        this.setContentPane(root_panel);
 
-        //向容器内添加文本框组件
-//        root_panel.add(id_textField);
-//        root_panel.add(pw_textField);
-        this.add(id_textField);
-        this.add(pw_textField);
+        IDTextField.setPreferredSize(new Dimension(320,40));
+//        IDTextField.setOpaque(false);
+        PWTextField.setPreferredSize(new Dimension(320,40));
+        IDTextField.addFocusListener(new JTextFieldHintListener(IDTextField,""));
+        IDTextField.setBorder(new EmptyBorder(0,0,0,0));
+        PWTextField.addFocusListener(new JTextFieldHintListener(PWTextField,""));
+        PWTextField.setBorder(new EmptyBorder(0,0,0,0));
+
 
 
 
 //        创建label
-        JLabel id_label = new JLabel("账号:");
+        JLabel IDLabel = new JLabel("账号:");
+        IDLabel.setPreferredSize(new Dimension(50,50));
         //给此标签主动设置焦点，避免最初焦点定位到账号输入框，使提示文字消失
-        id_label.setFocusable(true);
-        id_label.requestFocus();
-        id_label.setFont(new Font("Dialog",1,14));
+        IDLabel.setFocusable(true);
+        IDLabel.requestFocus();
+        IDLabel.setFont(new Font("Dialog",1,15));
 //        id_label.dispatchEvent(new FocusEvent(id_label,FocusEvent.FOCUS_GAINED,true));
 //        id_label.requestFocusInWindow();
-        JLabel pw_label = new JLabel("密码:");
-        pw_label.setFont(new Font("Dialog",1,14));
+        panel.add(IDLabel);
+        panel.add(IDTextField);
+        JLabel PWLabel = new JLabel("密码:");
+        PWLabel.setPreferredSize(new Dimension(50,50));
+        PWLabel.setFont(new Font("Dialog",1,15));
 //        添加Label
-        this.add(id_label);
-        this.add(pw_label);
+        panel.add(PWLabel);
+        panel.add(PWTextField);
+
 
         //登录按钮组件
-        JButton login_button = new JButton("登录");
-        login_button.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
-        //向容器内添加登录按钮组件
-//        root_panel.add(login_button);
-        this.add(login_button);
-        //按钮添加监听器
-        login_button.addActionListener((e)->{
-//            System.out.println(choose);
+        JButton loginButton = new JButton("登录");
+        loginButton.setPreferredSize(new Dimension(120,40));
+        loginButton.setFont(new Font("Dialog",1,15));
+
+        loginButton.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue));
+
+        loginButton.addActionListener((e)->{
+
             if (is_login("student") && choose.equals("学生") ) {
                login_success();
                 try {
@@ -122,68 +167,91 @@ public class CjFrame extends JFrame implements Exit {
                 } catch (SQLException | CustomException ex){
                     ex.printStackTrace();
                 }
-                this.setVisible(false);
+                doExit();
+
             }
             else if(is_login("admin") && choose.equals("管理员")){
                 login_success();
                 new adminFrame();
-                this.setVisible(false);
+                doExit();
             }
             else{
                 System.out.println("登录失败,请重新登录");
                 //将账号和密码信息清空
-                id_textField.setText("");
-                pw_textField.setText("");
+                IDTextField.setText("");
+                PWTextField.setText("");
                 JOptionPane.showMessageDialog(null,"登录失败,请重新登录");
 
             }
         });
 
-        JLabel label_status = new JLabel("身份:");
-        label_status.setFont(new Font("楷体",Font.BOLD,12));
-        this.add(label_status);
-        JRadioButton radioButton1_test = new JRadioButton("学生",true);
-        radioButton1_test.addActionListener(new MyActionListener());
-        JRadioButton radioButton2_test = new JRadioButton("教师");
-        radioButton2_test.addActionListener(new MyActionListener());
-        JRadioButton radioButton3_test = new JRadioButton("管理员");
-        radioButton3_test.addActionListener(new MyActionListener());
+        JPanel statusPanel = new JPanel();
+        statusPanel.setPreferredSize(new Dimension(430,50));
+        statusPanel.setOpaque(false);
+        statusPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 25, 8));
+
+        JLabel labelStatus = new JLabel("身份:");
+        labelStatus.setPreferredSize(new Dimension(50,50));
+        labelStatus.setFont(new Font("Dialog",1,15));
+        statusPanel.add(labelStatus,"Center");
+
+        JRadioButton radioButtonStu = new JRadioButton("学生",true);
+        radioButtonStu.addActionListener(new MyActionListener());
+        radioButtonStu.setContentAreaFilled(false);
+        JRadioButton radioButtonTeacher = new JRadioButton("教师");
+        radioButtonTeacher.addActionListener(new MyActionListener());
+        radioButtonTeacher.setContentAreaFilled(false);
+        JRadioButton radioButtonAdmin = new JRadioButton("管理员");
+        radioButtonAdmin.addActionListener(new MyActionListener());
+        radioButtonAdmin.setContentAreaFilled(false);
         ButtonGroup group = new ButtonGroup();
-        group.add(radioButton1_test);
-        group.add(radioButton2_test);
-        group.add(radioButton3_test);
-        this.add(radioButton1_test);
-        this.add(radioButton2_test);
-        this.add(radioButton3_test);
+        group.add(radioButtonStu);
+        group.add(radioButtonTeacher);
+        group.add(radioButtonAdmin);
+//        panel.add(group);
+        statusPanel.add(radioButtonStu,"Center");
+        statusPanel.add(radioButtonTeacher,"Center");
+        statusPanel.add(radioButtonAdmin,"Center");
+        panel.add(statusPanel);
 
-//        设置卡片式布局的面板
-//        JPanel cards = new JPanel(new CardLayout());
-//        cards.add(root_panel,"card");
-//        CardLayout c = (CardLayout)(cards.getLayout()) ;
-//        c.show(cards,"card");
-//        this.add(cards);
+//        JLabel label = new JLabel("");
+//        label.setPreferredSize(new Dimension(50,50));
+//        label.setFont(new Font("楷体",Font.BOLD,12));
+//        panel.add(label);
 
-        //绝对布局
-//        Container c = getContentPane();
-        id_label.setBounds(90,30,100,100);
-        id_textField.setBounds(140,60,300,50);
-        pw_label.setBounds(90,80,100,200);
-        pw_textField.setBounds(140,150,300,50);
-        label_status.setBounds(90,200,100,100);
-        radioButton1_test.setBounds(140,225,100,50);
-        radioButton2_test.setBounds(260,225,100,50);
-        radioButton3_test.setBounds(380,225,100,50);
-        login_button.setBounds(230,280,100,40);
+
+        panel.add(loginButton,"Center");
+
+
+
+//        id_textField.setBounds(140,60,300,50);
+////        pw_label.setBounds(90,80,100,200);
+//        pw_textField.setBounds(140,150,300,50);
+//        label_status.setBounds(90,200,100,100);
+//        radioButton1_test.setBounds(140,225,100,50);
+//        radioButton2_test.setBounds(260,225,100,50);
+//        radioButton3_test.setBounds(380,225,100,50);
+////        login_button.setBounds(230,280,100,40);
 //        status.setBounds(140,340,320,50);
 
 
         //设置窗口大小
 //        this.setSize(100,60);
 //        this.setBounds(700,300,550,500);
-        this.setSize(550,450);
-        this.setLocationRelativeTo(null);//居中显示
+
 
         //设置窗口可显示
+//        this.setLayout(new BorderLayout(5, 20));
+//        ((JPanel) this.getContentPane()).setBorder(BorderFactory.createEmptyBorder(180, 210, 180, 210));
+//        this.setResizable(false);
+//        this.add(panel,"Center");
+        this.add(panel);
+        this.add(panel);
+        this.setSize(800,640);
+        this.setLocationRelativeTo(null);
+
+//        this.setSize(icon.getIconWidth(),icon.getIconHeight());
+        this.setVisible(true);
         this.setVisible(true);
 
     }
@@ -211,8 +279,8 @@ public class CjFrame extends JFrame implements Exit {
         DBConnector connector = new DBConnector();
         String Str_id;
         String Str_pw;
-        Str_id = id_textField.getText().trim();
-        Str_pw = pw_textField.getText().trim();
+        Str_id = IDTextField.getText().trim();
+        Str_pw = PWTextField.getText().trim();
         if (Str_id.length() == 0 || Str_pw.length() == 0) return false;
         int intID = Integer.parseInt(Str_id);
         try {
