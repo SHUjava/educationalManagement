@@ -4,6 +4,7 @@ import jdbctest.CustomException;
 import jdbctest.DBConnector;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.sql.SQLException;
 
@@ -32,12 +33,15 @@ public class clearPWFrame extends JFrame implements Exit {
         inputID.setPreferredSize(new Dimension(70, 30));
 
         JTextField IDText = new JTextField("");
+        IDText.setBorder(new EmptyBorder(0,0,0,0));
+
         IDText.setPreferredSize(new Dimension(60,30));
 
         rootPanel.add(inputID, "North");
         rootPanel.add(IDText, "North");
 
         JButton checkButton = new JButton("确认");
+        checkButton.setContentAreaFilled(false);
         checkButton.setPreferredSize(new Dimension(80, 40));
         rootPanel.add(checkButton, "North");
         checkButton.addActionListener(e -> {

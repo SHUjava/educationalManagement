@@ -5,6 +5,7 @@ import jdbctest.DBConnector;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -289,6 +290,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(teacherIDLabel1);
 
                 teacherIDText1 = new JTextField("");
+                teacherIDText1.setBorder(new EmptyBorder(0,0,0,0));
+
                 teacherIDText1.setFont(font);
                 teacherIDText1.setPreferredSize(new Dimension(60, 30));
                 panel.add(teacherIDText1);
@@ -299,6 +302,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(courseIDLabel);
 
                 courseIDText = new JTextField("");
+                courseIDText.setBorder(new EmptyBorder(0,0,0,0));
+
                 courseIDText.setFont(font);
                 courseIDText.setPreferredSize(new Dimension(80, 30));
                 panel.add(courseIDText);
@@ -382,6 +387,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(studentIDLabel);
 
                 studentIDText1 = new JTextField("");
+                studentIDText1.setBorder(new EmptyBorder(0,0,0,0));
+
                 studentIDText1.setFont(font);
                 studentIDText1.setPreferredSize(new Dimension(60, 30));
                 panel.add(studentIDText1);
@@ -392,6 +399,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(studentAdmissionDateLabel);
 
                 studentAdmissionDateText = new JTextField("");
+                studentAdmissionDateText.setBorder(new EmptyBorder(0,0,0,0));
+
                 studentAdmissionDateText.setFont(font);
                 studentAdmissionDateText.setPreferredSize(new Dimension(80, 30));
                 panel.add(studentAdmissionDateText);
@@ -402,6 +411,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(studentNameLabel);
 
                 studentNameText1 = new JTextField("");
+                studentNameText1.setBorder(new EmptyBorder(0,0,0,0));
+
                 studentNameText1.setFont(font);
                 studentNameText1.setPreferredSize(new Dimension(90, 30));
                 panel.add(studentNameText1);
@@ -509,6 +520,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(teacherIDLabel2);
 
                 teacherIDText2 = new JTextField("");
+                teacherIDText2.setBorder(new EmptyBorder(0,0,0,0));
+
                 teacherIDText2.setFont(font);
                 teacherIDText2.setPreferredSize(new Dimension(60, 30));
                 panel.add(teacherIDText2);
@@ -519,6 +532,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(teacherNameLabel);
 
                 teacherNameText = new JTextField("");
+                teacherNameText.setBorder(new EmptyBorder(0,0,0,0));
+
                 teacherNameText.setFont(font);
                 teacherNameText.setPreferredSize(new Dimension(60, 30));
                 panel.add(teacherNameText);
@@ -592,6 +607,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(courseIDLabel2);
 
                 courseIDText2 = new JTextField("");
+                courseIDText2.setBorder(new EmptyBorder(0,0,0,0));
+
                 courseIDText2.setFont(font);
                 courseIDText2.setPreferredSize(new Dimension(50, 30));
                 panel.add(courseIDText2);
@@ -602,6 +619,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(courseCreditLabel);
 
                 courseCreditText = new JTextField("");
+                courseCreditText.setBorder(new EmptyBorder(0,0,0,0));
+
                 courseCreditText.setFont(font);
                 courseCreditText.setPreferredSize(new Dimension(50, 30));
                 panel.add(courseCreditText);
@@ -612,6 +631,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(teacherIDLabel3);
 
                 teacherIDText3 = new JTextField("");
+                teacherIDText3.setBorder(new EmptyBorder(0,0,0,0));
+
                 teacherIDText3.setFont(font);
                 teacherIDText3.setPreferredSize(new Dimension(50, 30));
                 panel.add(teacherIDText3);
@@ -622,6 +643,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(courseNameLabel2);
 
                 courseNameText2 = new JTextField("");
+                courseNameText2.setBorder(new EmptyBorder(0,0,0,0));
+
                 courseNameText2.setFont(font);
                 courseNameText2.setPreferredSize(new Dimension(50, 30));
                 panel.add(courseNameText2);
@@ -652,6 +675,8 @@ public class adminFrame extends JFrame implements Exit {
                 panel.add(courseTimeLabel);
 
                 courseTimeText = new JTextField("");
+                courseTimeText.setBorder(new EmptyBorder(0,0,0,0));
+
                 courseTimeText.setFont(font);
                 courseTimeText.setPreferredSize(new Dimension(50, 30));
                 panel.add(courseTimeText);
@@ -729,6 +754,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(studentIDLabel4);
 
             JTextField studentIDText4 = new JTextField("");
+            studentIDText4.setBorder(new EmptyBorder(0,0,0,0));
+
             studentIDText4.setFont(font);
             studentIDText4.setPreferredSize(new Dimension(70,30));
             panel.add(studentIDText4);
@@ -738,6 +765,8 @@ public class adminFrame extends JFrame implements Exit {
             dateLabel4.setPreferredSize(new Dimension(80,30));
             panel.add(dateLabel4);
             JTextField dateText4 = new JTextField("");
+            dateText4.setBorder(new EmptyBorder(0,0,0,0));
+
             dateText4.setFont(font);
             dateText4.setPreferredSize(new Dimension(70,30));
             panel.add(dateText4);
@@ -748,6 +777,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(nameLabel);
 
             JTextField nameText = new JTextField("");
+            nameText.setBorder(new EmptyBorder(0,0,0,0));
+
             nameText.setFont(font);
             nameText.setPreferredSize(new Dimension(70,30));
             panel.add(nameText);
@@ -834,6 +865,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(teacherIDLabel4);
 
             JTextField teacherIDText4 = new JTextField("");
+            teacherIDText4.setBorder(new EmptyBorder(0,0,0,0));
+
             teacherIDText4.setFont(font);
             teacherIDText4.setPreferredSize(new Dimension(50,30));
             panel.add(teacherIDText4);
@@ -844,6 +877,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(teacherNameLabel4);
 
             JTextField teacherNameText4 = new JTextField("");
+            teacherNameText4.setBorder(new EmptyBorder(0,0,0,0));
+
             teacherNameText4.setFont(font);
             teacherNameText4.setPreferredSize(new Dimension(50,30));
             panel.add(teacherNameText4);
@@ -909,6 +944,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(IDLabel);
 
             JTextField IDText = new JTextField("");
+            IDText.setBorder(new EmptyBorder(0,0,0,0));
+
             IDText.setFont(font);
             IDText.setPreferredSize(new Dimension(50,30));
             panel.add(IDText);
@@ -919,6 +956,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(creditLabel);
 
             JTextField creditText = new JTextField("");
+            creditText.setBorder(new EmptyBorder(0,0,0,0));
+
             creditText.setFont(font);
             creditText.setPreferredSize(new Dimension(50,30));
             panel.add(creditText);
@@ -929,6 +968,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(tIDLabel);
 
             JTextField tIDText = new JTextField("");
+            tIDText.setBorder(new EmptyBorder(0,0,0,0));
+
             tIDText.setFont(font);
             tIDText.setPreferredSize(new Dimension(50,30));
             panel.add(tIDText);
@@ -939,6 +980,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(percentLabel);
 
             JTextField percentText = new JTextField("");
+            percentText.setBorder(new EmptyBorder(0,0,0,0));
+
             percentText.setFont(font);
             percentText.setPreferredSize(new Dimension(40,30));
             panel.add(percentText);
@@ -949,6 +992,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(cNameLabel);
 
             JTextField cNameText = new JTextField("");
+            cNameText.setBorder(new EmptyBorder(0,0,0,0));
+
             cNameText.setFont(font);
             cNameText.setPreferredSize(new Dimension(40,30));
             panel.add(cNameText);
@@ -978,6 +1023,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(timeLabel);
 
             JTextField timeText = new JTextField("");
+            timeText.setBorder(new EmptyBorder(0,0,0,0));
+
             timeText.setFont(font);
             timeText.setPreferredSize(new Dimension(40,30));
             panel.add(timeText);
@@ -1038,6 +1085,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(IDLabel4);
 
             JTextField IDText4 = new JTextField("");
+            IDText4.setBorder(new EmptyBorder(0,0,0,0));
+
             IDText4.setFont(font);
             IDText4.setPreferredSize(new Dimension(50,30));
             panel.add(IDText4);
@@ -1047,6 +1096,8 @@ public class adminFrame extends JFrame implements Exit {
             IDLabel5.setPreferredSize(new Dimension(90,30));
             panel.add(IDLabel5);
             JTextField IDText5 = new JTextField("");
+            IDText5.setBorder(new EmptyBorder(0,0,0,0));
+
             IDText5.setFont(font);
             IDText5.setPreferredSize(new Dimension(50,30));
             panel.add(IDText5);
@@ -1057,6 +1108,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(IDLabel6);
 
             JTextField IDText6 = new JTextField("");
+            IDText6.setBorder(new EmptyBorder(0,0,0,0));
+
             IDText6.setFont(font);
             IDText6.setPreferredSize(new Dimension(50,30));
             panel.add(IDText6);
@@ -1067,6 +1120,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(IDLabel7);
 
             JTextField IDText7 = new JTextField("");
+            IDText7.setBorder(new EmptyBorder(0,0,0,0));
+
             IDText7.setFont(font);
             IDText7.setPreferredSize(new Dimension(50,30));
             panel.add(IDText7);
@@ -1154,6 +1209,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(studentIDLabel5);
 
             JTextField studentIDText5 = new JTextField("");
+            studentIDText5.setBorder(new EmptyBorder(0,0,0,0));
+
             studentIDText5.setFont(font);
             studentIDText5.setPreferredSize(new Dimension(50,30));
             panel.add(studentIDText5);
@@ -1201,6 +1258,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(teacherIDLabel5);
 
             JTextField teacherIDText5 = new JTextField("");
+            teacherIDText5.setBorder(new EmptyBorder(0,0,0,0));
+
             teacherIDText5.setFont(font);
             teacherIDText5.setPreferredSize(new Dimension(50,30));
             panel.add(teacherIDText5);
@@ -1248,6 +1307,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(courseLabel);
 
             JTextField courseText = new JTextField("");
+            courseText.setBorder(new EmptyBorder(0,0,0,0));
+
             courseText.setFont(font);
             courseText.setPreferredSize(new Dimension(50,30));
             panel.add(courseText);
@@ -1258,6 +1319,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(teacherIDLabel6);
 
             JTextField teacherIDText6 = new JTextField("");
+            teacherIDText6.setBorder(new EmptyBorder(0,0,0,0));
+
             teacherIDText6.setFont(font);
             teacherIDText6.setPreferredSize(new Dimension(50,30));
             panel.add(teacherIDText6);
@@ -1332,6 +1395,8 @@ public class adminFrame extends JFrame implements Exit {
             panel.add(courseLabel);
 
             JTextField courseText = new JTextField("");
+            courseText.setBorder(new EmptyBorder(0,0,0,0));
+
             courseText.setFont(font);
             courseText.setPreferredSize(new Dimension(50,30));
             panel.add(courseText);
@@ -1341,6 +1406,8 @@ public class adminFrame extends JFrame implements Exit {
             stuIDLabel6.setPreferredSize(new Dimension(100,30));
             panel.add(stuIDLabel6);
             JTextField stuIDText6 = new JTextField("");
+            stuIDText6.setBorder(new EmptyBorder(0,0,0,0));
+
             stuIDText6.setFont(font);
             stuIDText6.setPreferredSize(new Dimension(50,30));
             panel.add(stuIDText6);

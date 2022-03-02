@@ -1,6 +1,7 @@
 package cjdemo;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.sql.SQLException;
 
@@ -38,6 +39,8 @@ public class changePWFrame extends JFrame implements Exit {
         JLabel changePWFirst = new JLabel("输入密码");
         changePWFirst.setPreferredSize(new Dimension(70, 30));
         firstPW = new JPasswordField("");
+        firstPW.setBorder(new EmptyBorder(0,0,0,0));
+
         firstPW.setPreferredSize(new Dimension(60, 30));
         firstPW.setToolTipText("请输入长度在6-20位的新密码");
         rootPanel.add(changePWFirst, "North");
@@ -46,12 +49,15 @@ public class changePWFrame extends JFrame implements Exit {
         JLabel changePWSecond = new JLabel("确认密码");
         changePWSecond.setPreferredSize(new Dimension(70, 30));
         secondPW = new JPasswordField("");
+        secondPW.setBorder(new EmptyBorder(0,0,0,0));
+
         secondPW.setPreferredSize(new Dimension(60, 30));
         secondPW.setToolTipText("请输入相同的密码");
         rootPanel.add(changePWSecond, "North");
         rootPanel.add(secondPW, "North");
 
         JButton checkButton = new JButton("确认");
+        checkButton.setContentAreaFilled(false);
         checkButton.setPreferredSize(new Dimension(80, 40));
         rootPanel.add(checkButton, "North");
         checkButton.addActionListener(e -> {

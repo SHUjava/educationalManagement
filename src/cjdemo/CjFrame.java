@@ -63,7 +63,7 @@ public class CjFrame extends JFrame implements Exit {
         //添加图标校徽
         ImageIcon imageIcon = new ImageIcon("image/SHU_LOGO.png");
         this.setIconImage(imageIcon.getImage().getScaledInstance(100,140,100));
-
+        this.setResizable(false);
 //        this.setSize(800,700);
 //        this.setLocationRelativeTo(null);//居中显示
 //        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

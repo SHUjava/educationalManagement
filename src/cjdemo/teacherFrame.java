@@ -1,6 +1,7 @@
 package cjdemo;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -168,6 +169,8 @@ public class teacherFrame extends JFrame implements Exit {
 
         JTextField courseIDText = new JTextField("");
         courseIDText.setFont(font);
+        courseIDText.setBorder(new EmptyBorder(0,0,0,0));
+
         courseIDText.setPreferredSize(new Dimension(80, 30));
         showStuPanel.add(courseIDText);
 
@@ -260,6 +263,8 @@ public class teacherFrame extends JFrame implements Exit {
         showEnterGradePanel.add(courseNameLabel);
 
         courseNameText1 = new JTextField("");
+        courseNameText1.setBorder(new EmptyBorder(0,0,0,0));
+
         courseNameText1.setFont(font);
         courseNameText1.setPreferredSize(new Dimension(60, 30));
         showEnterGradePanel.add(courseNameText1);
@@ -381,6 +386,8 @@ public class teacherFrame extends JFrame implements Exit {
         showQueryGradePanel.add(courseNameLabel2);
 
         courseNameText2 = new JTextField("");
+        courseNameText2.setBorder(new EmptyBorder(0,0,0,0));
+
         courseNameText2.setFont(font);
         courseNameText2.setPreferredSize(new Dimension(80, 30));
         showQueryGradePanel.add(courseNameText2);
@@ -498,6 +505,8 @@ public class teacherFrame extends JFrame implements Exit {
         showChangeGradePanel.add(stuIDLabel);
 
         stuIDText2 = new JTextField("");
+        stuIDText2.setBorder(new EmptyBorder(0,0,0,0));
+
         stuIDText2.setFont(font);
         stuIDText2.setPreferredSize(new Dimension(80, 30));
         showChangeGradePanel.add(stuIDText2);
@@ -508,6 +517,8 @@ public class teacherFrame extends JFrame implements Exit {
         showChangeGradePanel.add(courseNameLabel);
 
         courseNameText3 = new JTextField("");
+        courseNameText3.setBorder(new EmptyBorder(0,0,0,0));
+
         courseNameText3.setFont(font);
         courseNameText3.setPreferredSize(new Dimension(80, 30));
         showChangeGradePanel.add(courseNameText3);
@@ -558,6 +569,7 @@ public class teacherFrame extends JFrame implements Exit {
         showChangeGradePanel.add(newGradeLabel);
 
         newGradeText = new JTextField("");
+        newGradeText.setBorder(new EmptyBorder(0,0,0,0));
         newGradeText.setFont(font);
         newGradeText.setPreferredSize(new Dimension(60, 30));
         showChangeGradePanel.add(newGradeText);
@@ -626,6 +638,8 @@ public class teacherFrame extends JFrame implements Exit {
         showGradeAnalyzePanel.add(courseNameLabel3);
 
         courseNameText4 = new JTextField("");
+        courseNameText4.setBorder(new EmptyBorder(0,0,0,0));
+
         courseNameText4.setFont(font);
         courseNameText4.setPreferredSize(new Dimension(70, 30));
         showGradeAnalyzePanel.add(courseNameText4);
