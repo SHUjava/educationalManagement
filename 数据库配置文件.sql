@@ -18,6 +18,9 @@
 --
 -- Table structure for table `course`
 --
+DROP database IF EXISTS `educationalmanagementdb`;
+create database educationalmanagementdb;
+use educationalmanagementdb;
 
 DROP TABLE IF EXISTS `course`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

@@ -66,7 +66,7 @@ public class CjFrame extends JFrame implements Exit {
         this.setResizable(false);
 //        this.setSize(800,700);
 //        this.setLocationRelativeTo(null);//居中显示
-//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+          this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        JLabel label0 = new JLabel();
 //        ImageIcon img0 = new ImageIcon("image/face.jpg");//创建图片对象
 //        label0.setBounds(0,0, img0.getIconWidth(), img0.getIconHeight());
