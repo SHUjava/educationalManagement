@@ -238,8 +238,8 @@ public class adminFrame extends JFrame implements Exit {
         showAddInfoPanel.addTab("新增教师",panel2);
         panel3=makeAddInfoPanel(3);
         showAddInfoPanel.addTab("新增课程",panel3);
-        panel4=makeAddInfoPanel(4);
-        showAddInfoPanel.addTab("新增选课",panel4);
+//        panel4=makeAddInfoPanel(4);
+//        showAddInfoPanel.addTab("新增选课",panel4);
         showAddInfoPanel.setVisible(false);
         showPanel.add(showAddInfoPanel);
 
@@ -270,8 +270,8 @@ public class adminFrame extends JFrame implements Exit {
         showDropInfoPanel.addTab("删除教师",panel6);
         JComponent panel7=makeDropInfoPanel(3);
         showDropInfoPanel.addTab("删除班级",panel7);
-        JComponent panel8=makeDropInfoPanel(4);
-        showDropInfoPanel.addTab("删除选课",panel8);
+//        JComponent panel8=makeDropInfoPanel(4);
+//        showDropInfoPanel.addTab("删除选课",panel8);
         showDropInfoPanel.setVisible(false);
         showPanel.add(showDropInfoPanel);
     }
